@@ -1,0 +1,90 @@
+.box {
+  width: 150px;
+  height: 150px;
+  background-color: #e2e8f0;
+  border: 2px dashed #cbd5e0;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  background-image: url("../../../assets/logo_white.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Title */
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 6px;
+}
+
+/* Subtitle */
+.subtitle {
+  font-size: 1rem;
+  color: var(--text-color);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+/* Button */
+.btn {
+  background-color: var(--primary-color);
+  color: #fff;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .box {
+    width: 120px;
+    height: 120px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .box {
+    width: 100px;
+    height: 100px;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+  }
+
+  .btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}
