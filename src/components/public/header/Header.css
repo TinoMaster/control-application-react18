@@ -37,7 +37,7 @@ nav {
   border-radius: 0.75rem;
   width: 3rem;
   height: 3rem;
-  background-image: url("../../../assets/logo_white.png");
+  background-image: url("../../../assets/logo_png.png");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -61,7 +61,6 @@ nav {
 }
 
 .nav-links a {
-  font-size: 1rem;
   color: inherit;
   transition: color 0.3s ease;
   text-decoration: none;

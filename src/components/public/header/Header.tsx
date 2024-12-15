@@ -94,9 +94,9 @@ const Header = () => {
           </div>
           <ul className="nav-links">
             {PUBLIC_NAV_LINKS.map((link) => (
-              <li key={link.name}>
-                <a href={link.path}>{link.label}</a>
-              </li>
+              <Link to={link.path} key={link.name}>
+                {link.label}
+              </Link>
             ))}
 
             <BtnLoginRegister />

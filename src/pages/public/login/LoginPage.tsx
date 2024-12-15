@@ -5,116 +5,94 @@ import {
   FormControl,
   FormControlLabel,
   Paper,
-  TextField,
   Typography,
 } from "@mui/material";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { loginSchema, TLoginSchema } from "../../../core/models/zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import CustomInput from "../../../components/common/ui/CustomInput";
+
+const boxLoginStyle = {
+  maxWidth: "400px",
+  width: "100%",
+  color: "var(--text-color)",
+  backgroundColor: "var(--bg-dark)",
+  borderRadius: "8px",
+  padding: "20px",
+  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+};
+
+const boxImageTitleStyle = {
+  textAlign: "center",
+  marginBottom: "20px",
+  backgroundColor: "var(--bg-dark)",
+  color: "var(--text-color)",
+};
+
+const imageStyle = {
+  width: "100px",
+  height: "100px",
+  borderRadius: "50%",
+  overflow: "hidden",
+  margin: "0 auto",
+  backgroundImage: "url(../../../assets/logo_white.png)",
+  backgroundSize: "contain",
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
+  mb: 2,
+};
 
 const LoginPage = () => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TLoginSchema>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit: SubmitHandler<TLoginSchema> = (data) => console.log(data);
+
   return (
     <Box
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
     >
-      <Box
-        sx={{
-          maxWidth: "400px",
-          width: "100%",
-          color: "var(--text-color)",
-          backgroundColor: "var(--bg-dark)",
-          borderRadius: "8px",
-          padding: "20px",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <Box
-          sx={{
-            textAlign: "center",
-            marginBottom: "20px",
-            backgroundColor: "var(--bg-dark)",
-            color: "var(--text-color)",
-          }}
-        >
-          <Paper
-            sx={{
-              width: "100px",
-              height: "100px",
-              borderRadius: "50%",
-              overflow: "hidden",
-              margin: "0 auto",
-              backgroundImage: "url(../../../assets/logo_white.png)",
-              backgroundSize: "contain",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              mb: 2,
-            }}
-          />
+      <Box sx={boxLoginStyle}>
+        <Box sx={boxImageTitleStyle}>
+          <Paper sx={imageStyle} />
           <Typography variant="h6">Entra con tus credenciales</Typography>
         </Box>
         <FormControl
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={handleSubmit(onSubmit)}
           variant="standard"
           component="form"
           sx={{ width: "100%" }}
         >
-          <TextField
-            label="Correo Electrónico"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            required
+          <CustomInput
+            name="email"
+            control={control}
+            label="Correo Electrónico"
             type="email"
-            slotProps={{
-              input: {
-                style: { color: "white", borderColor: "white" }, // Color del texto y del borde
-              },
-              inputLabel: {
-                style: { color: "white" }, // Color del texto
-              },
-            }}
-            placeholder="Ingrese su correo electrónico"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "white", // Color del borde normal
-                },
-                "&:hover fieldset": {
-                  borderColor: "var(--primary-color)", // Color del borde al pasar el mouse
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "var(--primary-light)", // Color del borde al enfocar
-                },
-              },
-            }}
+            placeholder="Ingrese su correo electrónico"
+            error={!!errors.email}
+            helperText={errors.email?.message}
           />
-          <TextField
-            label="Contraseña"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            required
+
+          <CustomInput
+            name="password"
+            control={control}
+            label="Contraseña"
             type="password"
-            slotProps={{
-              input: {
-                style: { color: "white", borderColor: "white" }, // Color del texto y del borde
-              },
-              inputLabel: {
-                style: { color: "white" }, // Color del texto
-              },
-            }}
-            placeholder="Ingrese su contraseña"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "white", // Color del borde normal
-                },
-                "&:hover fieldset": {
-                  borderColor: "var(--primary-color)", // Color del borde al pasar el mouse
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "var(--primary-light)", // Color del borde al enfocar
-                },
-              },
-            }}
+            placeholder="Ingrese su contraseña"
+            error={!!errors.password}
+            helperText={errors.password?.message}
           />
+
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <FormControlLabel
               control={
@@ -128,11 +106,10 @@ const LoginPage = () => {
               }
               label="Recuerdame"
             />
-            <a href="javascript:void(0)" className="forgot-password">
-              ¿Olvidaste tu contraseña?
-            </a>
+            <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
           </Box>
           <Button
+            type="submit"
             variant="contained"
             sx={{
               my: 2,
@@ -144,17 +121,28 @@ const LoginPage = () => {
           </Button>
         </FormControl>
         <Button
+          type="button"
           variant="contained"
           sx={{ width: "100%", backgroundColor: "white", color: "gray" }}
         >
           Continua con Google
         </Button>
-        <p className="signup-text">
-          No tienes una cuenta?{" "}
-          <a href="javascript:void(0)" className="signup-link">
-            Registrarse
-          </a>
-        </p>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            mt: 2,
+          }}
+        >
+          <span className="or-text">O</span>
+        </Box>
+
+        <Box sx={{ textAlign: "center", mt: 2 }}>
+          <p className="signup-text">
+            No tienes una cuenta? <Link to="/register">Registrarse</Link>
+          </p>
+        </Box>
       </Box>
     </Box>
   );

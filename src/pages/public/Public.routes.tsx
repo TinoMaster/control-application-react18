@@ -4,6 +4,9 @@ import { lazy, Suspense } from "react";
 
 const Home = lazy(() => import("../public/home/Home"));
 const LoginPage = lazy(() => import("../public/login/LoginPage"));
+const RegisterOwnerPage = lazy(
+  () => import("../public/register/RegisterOwner")
+);
 
 export const PublicRoutes = () => {
   return (
@@ -12,6 +15,7 @@ export const PublicRoutes = () => {
         <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="home" element={<Home />} />
         <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterOwnerPage />} />
       </RoutesWithNotFound>
     </Suspense>
   );

@@ -5,7 +5,7 @@
   border: 2px dashed #cbd5e0;
   border-radius: 12px;
   margin-bottom: 10px;
-  background-image: url("../../../assets/logo_white.png");
+  background-image: url("../../../assets/logo_png.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -25,27 +25,6 @@
   color: var(--text-color);
   margin-bottom: 24px;
   line-height: 1.5;
-}
-
-/* Button */
-.btn {
-  background-color: var(--primary-color);
-  color: #fff;
-  font-weight: bold;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn:hover {
-  background-color: var(--primary-dark);
-  transform: translateY(-2px);
-}
-
-.btn:active {
-  transform: translateY(0);
 }
 
 /* Responsiveness */

@@ -4,7 +4,7 @@ import Header from "../header/Header";
 
 export const PublicLayout = () => {
   return (
-    <Container sx={{ marginTop: "64px", height: "calc(100vh-64px)", padding: 0 }}>
+    <Container sx={{ marginTop: "100px", height: "calc(100vh-100px)", padding: 0 }}>
       <Header />
       <PublicRoutes />
     </Container>
