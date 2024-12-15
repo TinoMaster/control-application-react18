@@ -11,17 +11,17 @@ export const BtnLoginRegister = () => {
         sx={{ mr: 1, backgroundColor: "var(--primary-color)" }}
         size="small"
       >
-        Login
+        Acceder
       </Button>
-      <Button
+      {/* <Button
         variant="contained"
         component={Link}
         to="/register"
         sx={{ backgroundColor: "var(--primary-color)" }}
         size="small"
       >
-        Register
-      </Button>
+        Registrarse
+      </Button> */}
     </Box>
   );
 };

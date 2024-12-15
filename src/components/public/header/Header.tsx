@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { APP_TITLE, PUBLIC_NAV_LINKS } from "../../../core/data/global.data";
-import { Box, Drawer, IconButton, ListItemIcon, MenuItem } from "@mui/material";
+import { Box, Drawer, IconButton, MenuItem } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuOpenRoundedIcon from "@mui/icons-material/MenuOpenRounded";
 import { Link } from "react-router-dom";
@@ -29,15 +29,26 @@ const Header = () => {
   };
 
   const drawerContent = () => (
-    <Box sx={{ backgroundColor: "var(--bg-dark)" }}>
+    <Box
+      sx={{
+        backgroundImage:
+          "linear-gradient(to bottom, var(--bg-dark-light), var(--bg-dark), var(--bg-dark-dark))",
+      }}
+    >
       <Box
         sx={{
           color: "white",
           display: "flex",
-          justifyContent: "flex-end",
-          padding: "0.8rem 0.8rem 0 0",
+          justifyContent: "space-between",
+          padding: "0.8rem 0.8rem ",
+          alignItems: "center",
+          backgroundColor: "var(--bg-dark)",
         }}
       >
+        <Box onClick={toggleDrawer}>
+          <BtnLoginRegister />
+        </Box>
+
         <IconButton
           onClick={toggleDrawer}
           aria-label="Toggle left drawer"
@@ -54,6 +65,7 @@ const Header = () => {
             flexDirection: "column",
             alignItems: "center",
             color: "white",
+            my: 2,
           }}
         >
           {PUBLIC_NAV_LINKS.map((link) => (
@@ -64,17 +76,9 @@ const Header = () => {
               onClick={toggleDrawer}
               color="inherit"
             >
-              <ListItemIcon>
-                {link.icon && (
-                  <link.icon sx={{ color: "white", fontSize: "1.8rem" }} />
-                )}
-              </ListItemIcon>
               {link.label}
             </MenuItem>
           ))}
-        </Box>
-        <Box onClick={toggleDrawer} sx={{ my: 2 }}>
-          <BtnLoginRegister />
         </Box>
       </Box>
     </Box>

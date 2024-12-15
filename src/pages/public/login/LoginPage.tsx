@@ -4,6 +4,7 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  Grid2,
   Paper,
   Typography,
 } from "@mui/material";
@@ -73,25 +74,30 @@ const LoginPage = () => {
           component="form"
           sx={{ width: "100%" }}
         >
-          <CustomInput
-            name="email"
-            control={control}
-            label="Correo Electrónico"
-            type="email"
-            placeholder="Ingrese su correo electrónico"
-            error={!!errors.email}
-            helperText={errors.email?.message}
-          />
-
-          <CustomInput
-            name="password"
-            control={control}
-            label="Contraseña"
-            type="password"
-            placeholder="Ingrese su contraseña"
-            error={!!errors.password}
-            helperText={errors.password?.message}
-          />
+          <Grid2 container spacing={2}>
+            <Grid2 size={12}>
+              <CustomInput
+                name="email"
+                control={control}
+                label="Correo Electrónico"
+                type="email"
+                placeholder="Ingrese su correo electrónico"
+                error={!!errors.email}
+                helperText={errors.email?.message}
+              />
+            </Grid2>
+            <Grid2 size={12}>
+              <CustomInput
+                name="password"
+                control={control}
+                label="Contraseña"
+                type="password"
+                placeholder="Ingrese su contraseña"
+                error={!!errors.password}
+                helperText={errors.password?.message}
+              />
+            </Grid2>
+          </Grid2>
 
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <FormControlLabel

@@ -6,17 +6,17 @@ import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 export const APP_TITLE = "Control";
 
 export const PUBLIC_NAV_LINKS: INavLinkItem[] = [
-  { name: "home", path: "/home", label: "Home", icon: HomeIcon },
+  { name: "home", path: "/home", label: "Inicio", icon: HomeIcon },
   {
     name: "about",
     path: "/about",
-    label: "About",
+    label: "Acerca de",
     icon: NotListedLocationIcon,
   },
   {
     name: "contact",
     path: "/contact",
-    label: "Contact",
+    label: "Contacto",
     icon: PermContactCalendarIcon,
   },
 ];
