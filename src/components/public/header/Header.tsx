@@ -1,17 +1,11 @@
 import { useState, useEffect } from "react";
 import { APP_TITLE, PUBLIC_NAV_LINKS } from "../../../core/data/global.data";
-import "./Header.css";
-import {
-  Box,
-  Button,
-  Drawer,
-  IconButton,
-  ListItemIcon,
-  MenuItem,
-} from "@mui/material";
+import { Box, Drawer, IconButton, ListItemIcon, MenuItem } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuOpenRoundedIcon from "@mui/icons-material/MenuOpenRounded";
 import { Link } from "react-router-dom";
+import { BtnLoginRegister } from "../btn-login-register/BtnLoginRegister";
+import "./Header.css";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -54,7 +48,14 @@ const Header = () => {
       </Box>
 
       <Box>
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", color: "white" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            color: "white",
+          }}
+        >
           {PUBLIC_NAV_LINKS.map((link) => (
             <MenuItem
               component={Link}
@@ -72,23 +73,8 @@ const Header = () => {
             </MenuItem>
           ))}
         </Box>
-        <Box sx={{ my: 2, display: "flex", justifyContent: "center" }}>
-          <Button
-            variant="contained"
-            component={Link}
-            to="/login"
-            sx={{ mr: 1, backgroundColor: "var(--primary-color)" }}
-          >
-            Login
-          </Button>
-          <Button
-            variant="contained"
-            component={Link}
-            to="/register"
-            sx={{ backgroundColor: "var(--primary-color)" }}
-          >
-            Register
-          </Button>
+        <Box onClick={toggleDrawer} sx={{ my: 2 }}>
+          <BtnLoginRegister />
         </Box>
       </Box>
     </Box>
@@ -112,7 +98,10 @@ const Header = () => {
                 <a href={link.path}>{link.label}</a>
               </li>
             ))}
+
+            <BtnLoginRegister />
           </ul>
+
           <div className="menu-button">
             <IconButton
               onClick={toggleDrawer}
