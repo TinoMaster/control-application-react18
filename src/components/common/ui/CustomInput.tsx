@@ -38,6 +38,7 @@ const CustomInput = ({
           error={error}
           helperText={helperText}
           sx={{
+            margin: "0",
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
                 borderColor: "white", // Color del borde normal
@@ -50,11 +51,12 @@ const CustomInput = ({
               },
             },
           }}
-          InputLabelProps={{
-            style: { color: "white" }, // Color del label
-          }}
-          inputProps={{
-            style: { color: "white" }, // Color del texto
+          slotProps={{
+            inputLabel: {
+              style: { color: "white" }, // Color del label
+            },input: {
+              style: { color: "white" },
+            }
           }}
         />
       )}
