@@ -32,8 +32,14 @@ const RegisterOwner = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<TRegisterOwnerDataModel> = (data) => {
-    authService.registerOwner(data);
+  const onSubmit: SubmitHandler<TRegisterOwnerDataModel> = async (data) => {
+    const response = await authService.registerOwner(data);
+
+    console.log(response);
+
+    if (response.status === 200) {
+      console.log(response.data);
+    }
   };
 
   return (

@@ -1,16 +1,17 @@
 header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  max-width: 100%;
+  position: sticky;
+  border-radius: 20px;
+  top: 10px;
   z-index: 10;
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 header.bg-indigo {
-  background-color: var(--bg-dark);
   color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  background-color: rgba(23, 132, 139, 0.1);
 }
 
 header.bg-transparent {
