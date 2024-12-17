@@ -1,16 +1,12 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Button,
-  Grid2 as Grid,
-  Typography,
-  Container,
-} from "@mui/material";
+import { Button, Grid2 as Grid, Typography, Container } from "@mui/material";
 import {
   registerOwnerSchema,
   TRegisterOwnerDataModel,
 } from "../../../core/models/zod";
 import CustomInput from "../../../components/common/ui/CustomInput";
+import { authService } from "../../../core/services";
 
 const RegisterOwner = () => {
   const {
@@ -37,7 +33,7 @@ const RegisterOwner = () => {
   });
 
   const onSubmit: SubmitHandler<TRegisterOwnerDataModel> = (data) => {
-    console.log("Datos del formulario:", data);
+    authService.registerOwner(data);
   };
 
   return (
