@@ -1,12 +1,12 @@
 import { BusinessModel } from './business.model';
-import { RoleModel } from './roles.model';
+import { Role } from './roles.model';
 
 export interface UserModel {
   id: number;
   name: string;
   email: string;
   password?: string;
-  role: RoleModel;
+  role: Role;
   active: boolean;
   businesses: number[];
   createdAt: Date;
@@ -17,7 +17,7 @@ export interface UserRegisterModel {
   name: string;
   email: string;
   password: string;
-  role: RoleModel;
+  role: Role;
   active: boolean;
   business: BusinessModel;
 }

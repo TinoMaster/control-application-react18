@@ -5,9 +5,3 @@ export enum Role {
   EMPLOYEE = 'EMPLOYEE',
   SUPERADMIN = 'SUPERADMIN',
 }
-
-export interface RoleModel {
-  id: number;
-  name: Role;
-  description: string;
-}
