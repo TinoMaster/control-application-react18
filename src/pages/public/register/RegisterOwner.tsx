@@ -33,7 +33,8 @@ const RegisterOwner = () => {
   });
 
   const onSubmit: SubmitHandler<TRegisterOwnerDataModel> = async (data) => {
-    const response = await authService.registerOwner(data);
+    /* TODO: fix this */
+    const response = await authService.registerOwner(data as any);
 
     console.log(response);
 

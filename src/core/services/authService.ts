@@ -1,13 +1,13 @@
-import { TRegisterOwnerDataModel } from "../models/zod";
+import { UserRegisterModel } from "../models/api";
 import { IRegisterOwnerResponse, IResponse } from "../types/request.types";
 
 /* const urlBase = "http://localhost:3000"; */
 
 class AuthService {
-  private urlBase = "http://localhost:3000/auth";
+  private urlBase = "http://localhost:3000/api/v1/public";
 
   async registerOwner(
-    data: TRegisterOwnerDataModel
+    data: UserRegisterModel
   ): Promise<IResponse<IRegisterOwnerResponse>> {
     const response = await fetch(`${this.urlBase}/register`, {
       method: "POST",
