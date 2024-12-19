@@ -8,6 +8,7 @@ import {
   Modal,
   CircularProgress,
   Snackbar,
+  Alert,
 } from "@mui/material";
 import {
   registerOwnerSchema,
@@ -17,11 +18,14 @@ import {
 import CustomInput from "../../../components/common/ui/CustomInput";
 import { authService } from "../../../core/services";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const RegisterOwner = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  /* const [success, setSuccess] = useState(false); */
+  const [success, setSuccess] = useState(false);
+
+  const navigate = useNavigate();
 
   const {
     handleSubmit,
@@ -33,23 +37,37 @@ const RegisterOwner = () => {
   });
 
   const onSubmit: SubmitHandler<TRegisterOwnerDataModel> = async (data) => {
+    setLoading(true);
+    setError("");
     const response = await authService.registerOwner(data);
 
-    console.log(response);
-
     if (response.status === 200) {
-      console.log(response.data.message);
+      setSuccess(true);
+      setTimeout(() => {
+        navigate("/waiting-confirmation");
+      }, 1000);
+    } else {
+      setError(response.data.message);
     }
+    setLoading(false);
   };
 
   return (
     <>
       <Snackbar
-        open={!!error}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={!!error || success}
         autoHideDuration={6000}
         onClose={() => setError("")}
         message={error}
-      />
+      >
+        <Alert
+          severity={success ? "success" : "error"}
+          onClose={() => setError("")}
+        >
+          {success ? "Usuario registrado correctamente" : error}
+        </Alert>
+      </Snackbar>
       <Modal
         open={loading}
         onClose={() => setLoading(false)}
@@ -194,6 +212,7 @@ const RegisterOwner = () => {
                 type="submit"
                 variant="contained"
                 fullWidth
+                disabled={loading}
                 sx={{ backgroundColor: "var(--primary-color)", py: 1 }}
               >
                 Registrar
