@@ -7,6 +7,9 @@ const LoginPage = lazy(() => import("../public/login/LoginPage"));
 const RegisterOwnerPage = lazy(
   () => import("../public/register/RegisterOwner")
 );
+const WaitingConfirmationPage = lazy(
+  () => import("../public/waiting-for-confirmation/WaitingConfirmation")
+);
 
 export const PublicRoutes = () => {
   return (
@@ -16,6 +19,10 @@ export const PublicRoutes = () => {
         <Route path="home" element={<Home />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterOwnerPage />} />
+        <Route
+          path="waiting-confirmation"
+          element={<WaitingConfirmationPage />}
+        />
       </RoutesWithNotFound>
     </Suspense>
   );

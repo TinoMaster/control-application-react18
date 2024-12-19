@@ -6,7 +6,6 @@ export interface BusinessModel {
   description: string;
   address: AddressModel;
   phone: string;
-  email: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

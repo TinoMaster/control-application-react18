@@ -15,10 +15,10 @@ export const registerOwnerSchema = z
       .string()
       .min(3, "El nombre de la empresa debe tener al menos 3 caracteres"),
     businessPhone: z.string().min(8),
-    businessEmail: z.string().email(),
     businessDescription: z.string().min(3),
     addressStreet: z.string().min(3),
     addressNumber: z.string().min(1),
+    addressMunicipality: z.string().min(3),
     addressCity: z.string().min(3),
     addressZipCode: z.string().min(5),
   })
@@ -28,3 +28,19 @@ export const registerOwnerSchema = z
   });
 
 export type TRegisterOwnerDataModel = z.infer<typeof registerOwnerSchema>;
+
+export const zRegisterDefaultValues: TRegisterOwnerDataModel = {
+  name: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  businessName: "",
+  businessPhone: "",
+  addressMunicipality: "",
+  businessDescription: "",
+  addressStreet: "",
+  addressNumber: "",
+  addressCity: "",
+  addressZipCode: "",
+};

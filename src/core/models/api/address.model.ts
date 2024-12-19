@@ -3,5 +3,6 @@ export interface AddressModel {
     street: string;
     number: string;
     city: string;
+    municipality: string;
     zip: string;
 }

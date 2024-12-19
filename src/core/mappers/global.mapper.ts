@@ -18,9 +18,9 @@ export const registerFormToRegisterOwnerMapper = (
         number: data.addressNumber,
         city: data.addressCity,
         zip: data.addressZipCode,
+        municipality: data.addressMunicipality,
       },
       phone: data.businessPhone,
-      email: data.businessEmail,
     },
   };
 };
