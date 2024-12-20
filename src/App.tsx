@@ -4,7 +4,8 @@ import { PrivateLayout } from "./components/private";
 import { PublicLayout } from "./components/public";
 
 function App() {
-  const isLogged = false;
+  const token = localStorage.getItem("token");
+  const isLogged = token ? true : false;
 
   return (
     <BrowserRouter>
