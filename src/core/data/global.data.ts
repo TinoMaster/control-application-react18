@@ -20,3 +20,13 @@ export const PUBLIC_NAV_LINKS: INavLinkItem[] = [
     icon: PermContactCalendarIcon,
   },
 ];
+
+export const PRIVATE_NAV_LINKS: INavLinkItem[] = [
+  { name: "dashboard", path: "/dashboard", label: "Dashboard", icon: HomeIcon },
+  {
+    name: "profile",
+    path: "/profile",
+    label: "Perfil",
+    icon: NotListedLocationIcon,
+  },
+];

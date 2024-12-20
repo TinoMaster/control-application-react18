@@ -86,9 +86,8 @@ const LoginPage = () => {
       }
 
       setTimeout(() => {
-        navigate(
-          response.data?.active ? "/app/dashboard" : "/waiting-confirmation"
-        );
+        if (!response.data?.active) navigate("/waiting-confirmation");
+        else window.location.replace("/");
       }, 1000);
     } else {
       setError(response.message);
