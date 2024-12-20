@@ -9,6 +9,7 @@ import {
   CircularProgress,
   Snackbar,
   Alert,
+  FormControl,
 } from "@mui/material";
 import {
   registerOwnerSchema,
@@ -47,7 +48,7 @@ const RegisterOwner = () => {
         navigate("/waiting-confirmation");
       }, 1000);
     } else {
-      setError(response.data.message);
+      setError(response.message);
     }
     setLoading(false);
   };
@@ -81,7 +82,7 @@ const RegisterOwner = () => {
         <Typography variant="h4" gutterBottom>
           Registrar Negocio
         </Typography>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <FormControl onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             {/* Campos personales */}
             <Grid size={{ xs: 12, sm: 6 }}>
@@ -219,7 +220,7 @@ const RegisterOwner = () => {
               </Button>
             </Grid>
           </Grid>
-        </form>
+        </FormControl>
       </Container>
     </>
   );
