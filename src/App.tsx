@@ -1,7 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
-import { PrivateLayout } from "./components/private";
 import { PublicLayout } from "./components/public";
+import AppContainer from "./AppContainer";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -9,7 +9,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      {isLogged ? <PrivateLayout /> : <PublicLayout />}
+      {isLogged ? <AppContainer /> : <PublicLayout />}
     </BrowserRouter>
   );
 }

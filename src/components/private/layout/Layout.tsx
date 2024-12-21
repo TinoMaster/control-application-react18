@@ -35,7 +35,7 @@ export const PrivateLayout = () => {
       sx={{
         display: "flex",
         backgroundColor: "var(--bg-light)",
-        width: "100",
+        width: "100%",
         color: "var(--text-color)",
       }}
     >
@@ -59,7 +59,7 @@ export const PrivateLayout = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "flex-end",
-            height: "64px",
+            height: "69px",
           }}
         >
           <IconButton onClick={handleDrawerToggle}>
@@ -74,14 +74,28 @@ export const PrivateLayout = () => {
               "linear-gradient(to bottom, var(--bg-dark-light), var(--bg-dark), var(--bg-dark-dark))",
             color: "white",
             height: "100%",
+            border: "2px solid var(--primary-color)",
+            margin: "1px",
           }}
         >
-          <Typography variant="body1" sx={{ padding: "0 10px" }}>
-            Paginas
+          <Typography variant="body1" sx={{ padding: "0 15px" }}>
+            <span
+              style={{
+                font: "bold",
+                backgroundColor: "var(--primary-color)",
+                color: "white",
+                padding: "2px 8px",
+                borderRadius: "4px",
+                fontSize: "12px",
+                textTransform: "uppercase",
+              }}
+            >
+              Paginas
+            </span>
           </Typography>
           {PRIVATE_NAV_LINKS.map((item, index) => (
             <ListItem key={index}>
-              <ListItemButton sx={{ padding: 0 }}>
+              <ListItemButton sx={{ padding: 0, borderRadius: "4px" }}>
                 <NavLink
                   to={item.path}
                   style={({ isActive }) => ({
@@ -96,7 +110,7 @@ export const PrivateLayout = () => {
                     gap: "8px",
                   })}
                 >
-                  {item.icon && <item.icon />}
+                  {item.icon && <item.icon style={{ fontSize: "21px" }} />}
                   <ListItemText primary={item.label} />
                 </NavLink>
               </ListItemButton>
@@ -111,7 +125,6 @@ export const PrivateLayout = () => {
         sx={{
           flexGrow: 1,
           padding: theme.spacing(3),
-          marginLeft: isMobile ? 0 : open ? `${drawerWidth}px` : "0",
           transition: theme.transitions.create("margin", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,

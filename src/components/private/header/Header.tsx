@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import UserOptions from "../user-options/UserOptions";
+import { useAppContext } from "../../../core/context/use/useAppContext";
 
 interface HeaderProps {
   handleDrawerToggle: () => void;
@@ -15,6 +16,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ handleDrawerToggle, theme }: HeaderProps) => {
+  const { appTitle } = useAppContext();
   return (
     <AppBar
       position="fixed"
@@ -39,7 +41,7 @@ export const Header = ({ handleDrawerToggle, theme }: HeaderProps) => {
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography variant="h6" noWrap component="div">
-          Dashboard
+          {appTitle}
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <IconButton
