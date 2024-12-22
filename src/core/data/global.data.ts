@@ -29,6 +29,9 @@ export const AppRoutes = {
     store: "/store",
     reports: "/reports",
   },
+  super_admin: {
+    auth_requests: "/auth-requests",
+  },
 };
 
 export const PUBLIC_NAV_LINKS: INavLinkItem[] = [
@@ -94,5 +97,14 @@ export const PRIVATE_NAV_LINKS: INavLinkItem[] = [
     path: AppRoutes.private.reports,
     label: "Reportes",
     icon: SummarizeIcon,
+  },
+];
+
+export const SUPERADMIN_NAV_LINKS: INavLinkItem[] = [
+  {
+    name: "auth_requests",
+    path: AppRoutes.super_admin.auth_requests,
+    label: "Solicitudes",
+    icon: AssignmentIndIcon,
   },
 ];

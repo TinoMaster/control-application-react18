@@ -1,4 +1,4 @@
-import { Role, UserRegisterModel } from "../models/api";
+import { ERole, UserRegisterModel } from "../models/api";
 import { TRegisterOwnerDataModel } from "../models/zod";
 
 export const registerFormToRegisterOwnerMapper = (
@@ -8,7 +8,7 @@ export const registerFormToRegisterOwnerMapper = (
     name: data.name + " " + data.lastName,
     email: data.email,
     password: data.password,
-    role: Role.OWNER,
+    role: ERole.OWNER,
     active: true,
     business: {
       name: data.businessName,

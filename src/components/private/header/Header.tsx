@@ -2,7 +2,6 @@ import {
   AppBar,
   Box,
   IconButton,
-  Theme,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -12,21 +11,21 @@ import { useAppContext } from "../../../core/context/use/useAppContext";
 
 interface HeaderProps {
   handleDrawerToggle: () => void;
-  theme: Theme;
 }
 
-export const Header = ({ handleDrawerToggle, theme }: HeaderProps) => {
+export const Header = ({ handleDrawerToggle }: HeaderProps) => {
+  const { materialTheme } = useAppContext();
   const { appTitle } = useAppContext();
   return (
     <AppBar
       position="fixed"
       sx={{
-        zIndex: theme.zIndex.drawer + 1,
-        transition: theme.transitions.create(
+        zIndex: materialTheme.zIndex.drawer + 1,
+        transition: materialTheme.transitions.create(
           ["width", "margin", "background-color", "color"],
           {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
+            easing: materialTheme.transitions.easing.sharp,
+            duration: materialTheme.transitions.duration.leavingScreen,
           }
         ),
         backdropFilter: "blur(10px)",

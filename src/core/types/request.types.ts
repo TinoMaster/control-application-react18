@@ -1,4 +1,4 @@
-import { Role } from "../models/api";
+import { ERole } from "../models/api";
 
 export interface IResponse<T> {
   status: number;
@@ -14,6 +14,6 @@ export interface IRegisterOwnerResponse {
 export interface ILoginResponse {
   token: string;
   refreshToken: string;
-  role: Role;
+  role: ERole;
   active: boolean;
 }

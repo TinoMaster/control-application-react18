@@ -1,4 +1,4 @@
-import { Role } from './roles.model';
+import { ERole } from './roles.model';
 
 interface TokenModel {
   token: string;
@@ -11,6 +11,6 @@ export interface AuthDataModel {
 
 export interface LoginResponseModel extends TokenModel {
   refreshToken: string;
-  role: Role;
+  role: ERole;
 }
 export interface AuthModel extends TokenModel {}
