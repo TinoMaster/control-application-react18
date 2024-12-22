@@ -8,7 +8,7 @@ export interface UserModel {
   password?: string;
   role: ERole;
   active: boolean;
-  businesses: number[];
+  businesses: BusinessModel[];
   createdAt: Date;
   updatedAt: Date;
 }

@@ -7,13 +7,17 @@ interface IContextProps {
 }
 
 export interface IAuthContext {
-  isLoggedIn: boolean;
+  isLoggedIn: () => boolean;
   role: TRole;
 }
 
 export const AuthProvider = ({ children }: IContextProps) => {
   const role: TRole = localStorage.getItem("role") as TRole;
-  const isLoggedIn = true;
+  const token = localStorage.getItem("token");
+
+  const isLoggedIn = (): boolean => {
+    return token !== null && token !== "" && role !== null;
+  };
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, role }} children={children} />

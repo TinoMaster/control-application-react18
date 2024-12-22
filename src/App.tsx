@@ -19,7 +19,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      {!isLoggedIn ? <PublicLayout /> : privateContainerToRender()}
+      {!isLoggedIn() ? <PublicLayout /> : privateContainerToRender()}
     </BrowserRouter>
   );
 }

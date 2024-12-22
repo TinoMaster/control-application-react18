@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Divider,
   Drawer,
@@ -13,26 +14,32 @@ import {
 import { useAppContext } from "../../../core/context/use/useAppContext";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { ERole } from "../../../core/models/api";
-import { PRIVATE_NAV_LINKS, SUPERADMIN_NAV_LINKS } from "../../../core/data/global.data";
+import {
+  AppRoutes,
+  PRIVATE_NAV_LINKS,
+  SUPERADMIN_NAV_LINKS,
+} from "../../../core/data/global.data";
 import { NavLink } from "react-router-dom";
+import { useSuperAdminContext } from "../../../core/context/use/useSuperAdminContext";
 
 interface SidebarProps {
-    open: boolean;
-    handleDrawerToggle: () => void;
+  open: boolean;
+  handleDrawerToggle: () => void;
 }
 
-export const Sidebar = ({open, handleDrawerToggle}:SidebarProps) => {
-  const {role, materialTheme } = useAppContext();
+export const Sidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
+  const { role, materialTheme } = useAppContext();
+  const { authRequests } = useSuperAdminContext();
   const drawerWidth = 240;
   const isMobile = useMediaQuery(materialTheme.breakpoints.down("sm"));
 
   const routesLinkToRender = () => {
-      if (role === ERole.SUPERADMIN) {
-        return SUPERADMIN_NAV_LINKS;
-      } else {
-        return PRIVATE_NAV_LINKS;
-      }
-    };
+    if (role === ERole.SUPERADMIN) {
+      return SUPERADMIN_NAV_LINKS;
+    } else {
+      return PRIVATE_NAV_LINKS;
+    }
+  };
 
   return (
     <Drawer
@@ -90,23 +97,33 @@ export const Sidebar = ({open, handleDrawerToggle}:SidebarProps) => {
         {routesLinkToRender().map((item, index) => (
           <ListItem key={index}>
             <ListItemButton sx={{ padding: 0, borderRadius: "4px" }}>
-              <NavLink
-                to={item.path}
-                style={({ isActive }) => ({
-                  textDecoration: "none",
-                  backgroundColor: isActive ? "white" : "transparent",
-                  color: isActive ? "var(--bg-dark)" : "#fefefe",
-                  width: "100%",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                })}
+              <Badge
+                badgeContent={
+                  item.path === AppRoutes.super_admin.auth_requests
+                    ? authRequests.length
+                    : 0
+                }
+                color="secondary"
+                sx={{ width: "100%" }}
               >
-                {item.icon && <item.icon style={{ fontSize: "21px" }} />}
-                <ListItemText primary={item.label} />
-              </NavLink>
+                <NavLink
+                  to={item.path}
+                  style={({ isActive }) => ({
+                    textDecoration: "none",
+                    backgroundColor: isActive ? "white" : "transparent",
+                    color: isActive ? "var(--bg-dark)" : "#fefefe",
+                    width: "100%",
+                    padding: "8px 16px",
+                    borderRadius: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  })}
+                >
+                  {item.icon && <item.icon style={{ fontSize: "21px" }} />}
+                  <ListItemText primary={item.label} />
+                </NavLink>
+              </Badge>
             </ListItemButton>
           </ListItem>
         ))}

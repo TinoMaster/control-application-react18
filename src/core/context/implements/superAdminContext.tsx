@@ -1,6 +1,8 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { SuperAdminContext } from "../use/useSuperAdminContext";
 import { IAuthRequest } from "../../types/admin/admin.types";
+import { authRequestsService } from "../../services/admin/authRequests";
+import { UserModelListToAuthRequestListMapper } from "../../mappers/global.mapper";
 
 interface IContextProps {
   children: ReactNode;
@@ -29,6 +31,19 @@ export const SuperAdminProvider = ({ children }: IContextProps) => {
     simulatedAuthRequests
   );
   const superAdmin = true;
+
+  const getRequests = async () => {
+    const res = await authRequestsService.getRequests();
+    
+    if(res.status === 200){
+      const requests = UserModelListToAuthRequestListMapper(res.data || []);
+      setAuthRequests(requests);
+    }
+  };
+
+  useEffect(() => {
+    getRequests();
+  }, []);
 
   const deleteAuthRequestById = (id: number) => {
     setAuthRequests(

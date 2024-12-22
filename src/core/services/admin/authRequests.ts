@@ -1,14 +1,25 @@
+import { UserModel } from "../../models/api";
+import { IResponse } from "../../types/request.types";
 import { handleFetchError } from "../../utilities/helpers/errorManager";
 
 class AuthRequestsService {
-  private urlBase = "http://localhost:5000/api/v1/admin/auth-requests";
+  private urlBase = "http://localhost:5000/api/v1/superadmin/auth-requests";
 
-  async getRequests() {
+  private getToken(): string | null {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("Token not found. User must log in.");
+    }
+    return token;
+  }
+
+  async getRequests(): Promise<IResponse<UserModel[]>> {
     try {
       const response = await fetch(this.urlBase, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${this.getToken()}`,
         },
       });
       return response.json();
@@ -24,6 +35,7 @@ class AuthRequestsService {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${this.getToken()}`,
         },
       });
       return response.json();

@@ -27,6 +27,24 @@ const modalStyle = {
   alignItems: "center",
 };
 
+const titleStyle = {
+  fontSize: {
+    xs: "1.5rem", // Tamaño para pantallas pequeñas
+    sm: "2rem", // Tamaño para pantallas medianas
+  },
+};
+
+const tableCellsStyle = {
+  fontSize: "0.8rem",
+  whiteSpace: "nowrap",
+};
+
+const tableCellHeadersStyle = {
+  fontSize: "0.8rem",
+  whiteSpace: "nowrap",
+  fontWeight: "bold",
+};
+
 const AuthRequests = () => {
   const { deleteAuthRequestById, authRequests } = useSuperAdminContext();
   const [loading, setLoading] = useState(false);
@@ -90,34 +108,44 @@ const AuthRequests = () => {
         </Alert>
       </Snackbar>
       <Box sx={{ padding: 3 }}>
-        <Typography variant="h4" gutterBottom>
-          Gestire le richieste di autorizzazione
+        <Typography gutterBottom sx={titleStyle} variant="h4">
+          Solicitudes de Autenticación
         </Typography>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow sx={{ "& > *": { backgroundColor: "#efefef" } }}>
-                <TableCell>Nombre Cliente</TableCell>
-                <TableCell>Correo</TableCell>
-                <TableCell>Solicitud</TableCell>
-                <TableCell>Negocio</TableCell>
-                <TableCell>Telefono</TableCell>
-                <TableCell>Dirección</TableCell>
-                <TableCell>Acciones</TableCell>
+                <TableCell sx={tableCellHeadersStyle}>Cliente</TableCell>
+                <TableCell sx={tableCellHeadersStyle}>Correo</TableCell>
+                <TableCell sx={tableCellHeadersStyle}>Solicitud</TableCell>
+                <TableCell sx={tableCellHeadersStyle}>Negocio</TableCell>
+                <TableCell sx={tableCellHeadersStyle}>Telefono</TableCell>
+                <TableCell sx={tableCellHeadersStyle}>Dirección</TableCell>
+                <TableCell sx={tableCellHeadersStyle}>Acciones</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {authRequests?.map((request) => (
                 <TableRow key={request.userId}>
-                  <TableCell>{request.user_name}</TableCell>
-                  <TableCell>{request.user_email}</TableCell>
-                  <TableCell>
+                  <TableCell sx={tableCellsStyle}>
+                    {request.user_name}
+                  </TableCell>
+                  <TableCell sx={tableCellsStyle}>
+                    {request.user_email}
+                  </TableCell>
+                  <TableCell sx={tableCellsStyle}>
                     {formatDateToString(request.user_data_request)}
                   </TableCell>
-                  <TableCell>{request.business_name}</TableCell>
-                  <TableCell>{request.business_phone}</TableCell>
-                  <TableCell>{request.business_address}</TableCell>
-                  <TableCell sx={{ display: "flex", gap: 2 }}>
+                  <TableCell sx={tableCellsStyle}>
+                    {request.business_name}
+                  </TableCell>
+                  <TableCell sx={tableCellsStyle}>
+                    {request.business_phone}
+                  </TableCell>
+                  <TableCell sx={tableCellsStyle}>
+                    {request.business_address}
+                  </TableCell>
+                  <TableCell sx={tableCellsStyle}>
                     <IconButton
                       onClick={() => onPermit(request.userId)}
                       color="success"

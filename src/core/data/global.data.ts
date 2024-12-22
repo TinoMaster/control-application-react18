@@ -31,6 +31,8 @@ export const AppRoutes = {
   },
   super_admin: {
     auth_requests: "/auth-requests",
+    dashboard: "/dashboard",
+    clients: "/clients",
   },
 };
 
@@ -101,6 +103,18 @@ export const PRIVATE_NAV_LINKS: INavLinkItem[] = [
 ];
 
 export const SUPERADMIN_NAV_LINKS: INavLinkItem[] = [
+  {
+    name: "dashboard",
+    path: AppRoutes.super_admin.dashboard,
+    label: "Dashboard",
+    icon: DashboardIcon,
+  },
+  {
+    name: "clients",
+    path: AppRoutes.super_admin.clients,
+    label: "Clientes",
+    icon: Groups3Icon,
+  },
   {
     name: "auth_requests",
     path: AppRoutes.super_admin.auth_requests,
