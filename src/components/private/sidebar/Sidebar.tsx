@@ -85,6 +85,7 @@ export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
             <ListItemButton sx={{ padding: 0, borderRadius: "4px" }}>
               <Badge badgeContent={0} color="secondary" sx={{ width: "100%" }}>
                 <NavLink
+                  onClick={handleDrawerToggle}
                   to={item.path}
                   style={({ isActive }) => ({
                     textDecoration: "none",
