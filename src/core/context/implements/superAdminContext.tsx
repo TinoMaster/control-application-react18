@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { SuperAdminContext } from "../use/useSuperAdminContext";
 import { IAuthRequest } from "../../types/admin/admin.types";
-import { authRequestsService } from "../../services/admin/authRequests";
+import { authRequestsService } from "../../services/admin/authRequestsService";
 import { UserModelListToAuthRequestListMapper } from "../../mappers/global.mapper";
 
 interface IContextProps {

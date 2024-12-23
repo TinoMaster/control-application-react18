@@ -9,7 +9,6 @@ import {
   CircularProgress,
   Snackbar,
   Alert,
-  FormControl,
 } from "@mui/material";
 import {
   registerOwnerSchema,
@@ -40,6 +39,7 @@ const RegisterOwner = () => {
   const onSubmit: SubmitHandler<TRegisterOwnerDataModel> = async (data) => {
     setLoading(true);
     setError("");
+
     const response = await authService.registerOwner(data);
 
     if (response.status === 200) {
@@ -82,7 +82,7 @@ const RegisterOwner = () => {
         <Typography variant="h4" gutterBottom>
           Registrar Negocio
         </Typography>
-        <FormControl onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             {/* Campos personales */}
             <Grid size={{ xs: 12, sm: 6 }}>
@@ -176,7 +176,8 @@ const RegisterOwner = () => {
               <CustomInput
                 name="addressStreet"
                 control={control}
-                label="Calle"
+                label="Dirección"
+                placeholder="Ej: calle 41 e/42 y 36"
                 error={!!errors.addressStreet}
                 helperText={errors.addressStreet?.message}
               />
@@ -220,7 +221,7 @@ const RegisterOwner = () => {
               </Button>
             </Grid>
           </Grid>
-        </FormControl>
+        </form>
       </Container>
     </>
   );

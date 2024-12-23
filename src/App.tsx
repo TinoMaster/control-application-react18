@@ -8,6 +8,7 @@ import SuperAdminContainer from "./pages/admin/SuperAdminContainer";
 
 function App() {
   const { isLoggedIn, role } = useAuthContext();
+  console.log(role);
 
   const privateContainerToRender = () => {
     if (role === ERole.SUPERADMIN) {

@@ -11,10 +11,12 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useAppContext } from "../../../core/context/use/useAppContext";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { PRIVATE_NAV_LINKS } from "../../../core/data/global.data";
+
 import { NavLink } from "react-router-dom";
+import { useAppContext } from "../../core/context/use/useAppContext";
+import { useSuperAdminContext } from "../../core/context/use/useSuperAdminContext";
+import { AppRoutes, SUPERADMIN_NAV_LINKS } from "../../core/data/global.data";
 
 interface SidebarProps {
   open: boolean;
@@ -23,7 +25,7 @@ interface SidebarProps {
 
 export const Sidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
   const { materialTheme } = useAppContext();
-
+  const { authRequests } = useSuperAdminContext();
   const drawerWidth = 240;
   const isMobile = useMediaQuery(materialTheme.breakpoints.down("sm"));
 
@@ -80,10 +82,18 @@ export const Sidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
             Paginas
           </span>
         </Typography>
-        {PRIVATE_NAV_LINKS.map((item, index) => (
+        {SUPERADMIN_NAV_LINKS.map((item, index) => (
           <ListItem key={index}>
             <ListItemButton sx={{ padding: 0, borderRadius: "4px" }}>
-              <Badge badgeContent={0} color="secondary" sx={{ width: "100%" }}>
+              <Badge
+                badgeContent={
+                  item.path === AppRoutes.super_admin.auth_requests
+                    ? authRequests.length
+                    : 0
+                }
+                color="secondary"
+                sx={{ width: "100%" }}
+              >
                 <NavLink
                   to={item.path}
                   style={({ isActive }) => ({

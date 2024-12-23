@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { authRequestsService } from "../../../core/services/admin/authRequests";
+import { authRequestsService } from "../../../core/services/admin/authRequestsService";
 import { useSuperAdminContext } from "../../../core/context/use/useSuperAdminContext";
 import { formatDateToString } from "../../../core/utilities/helpers/dateFormat";
 import AddTaskIcon from "@mui/icons-material/AddTask";
