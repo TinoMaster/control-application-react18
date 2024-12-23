@@ -21,7 +21,7 @@ interface SidebarProps {
   handleDrawerToggle: () => void;
 }
 
-export const Sidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
+export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
   const { materialTheme } = useAppContext();
 
   const drawerWidth = 240;

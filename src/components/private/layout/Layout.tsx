@@ -5,7 +5,8 @@ import { Header } from "../header/Header";
 import { useAppContext } from "../../../core/context/use/useAppContext";
 import { ERole } from "../../../core/models/api";
 import { SuperAdminRoutes } from "../../../pages/admin/Admin.routes";
-import { Sidebar } from "../sidebar/Sidebar";
+import { SuperAdminSidebar } from "../../admin/Sidebar";
+import { PrivateSidebar } from "../sidebar/Sidebar";
 
 export const PrivateLayout = () => {
   const { role, materialTheme } = useAppContext();
@@ -35,7 +36,15 @@ export const PrivateLayout = () => {
       {/* Header */}
       <Header handleDrawerToggle={handleDrawerToggle} />
       {/* Sidebar */}
-      <Sidebar open={open} handleDrawerToggle={handleDrawerToggle} />
+      {role === ERole.SUPERADMIN && (
+        <SuperAdminSidebar
+          open={open}
+          handleDrawerToggle={handleDrawerToggle}
+        />
+      )}
+      {role !== ERole.SUPERADMIN && (
+        <PrivateSidebar open={open} handleDrawerToggle={handleDrawerToggle} />
+      )}
       {/* Contenido Principal */}
       <Box
         component="main"
