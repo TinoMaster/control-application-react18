@@ -4,11 +4,20 @@ import { handleFetchError } from "../../utilities/helpers/errorManager";
 import { requestService } from "../RequestService";
 
 class ClientsService {
-  private urlBase = "http://localhost:5000/api/v1/superadmin/users";
+  private urlBase = "http://localhost:5000/api/v1";
 
   async getClients(): Promise<IResponse<UserModel[]>> {
     try {
-      return await requestService.fetch<UserModel[]>(this.urlBase);
+      return await requestService.fetch<UserModel[]>(`${this.urlBase}/superadmin/users`);
+    } catch (error: any) {
+      console.log(error);
+      return handleFetchError(error);
+    }
+  }
+
+  async getClientById(id: string): Promise<IResponse<UserModel>> {
+    try {
+      return await requestService.fetch<UserModel>(`${this.urlBase}/private/users/${id}`);
     } catch (error: any) {
       console.log(error);
       return handleFetchError(error);

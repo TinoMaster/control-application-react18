@@ -19,6 +19,7 @@ import { formatDateToString } from "../../../core/utilities/helpers/dateFormat";
 import InfoIcon from "@mui/icons-material/Info";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import { Link } from "react-router-dom";
 
 const modalStyle = {
   display: "flex",
@@ -126,9 +127,11 @@ const AdminClients = () => {
                   <TableCell sx={tableCellsStyle}>{client.role}</TableCell>
 
                   <TableCell sx={tableCellsStyle}>
+                    <Link to={`/clients/${client.id}`}>
                     <IconButton color="success" size="small">
                       <InfoIcon />
                     </IconButton>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}
