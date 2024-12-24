@@ -9,6 +9,7 @@ import Groups3Icon from "@mui/icons-material/Groups3";
 import StoreIcon from "@mui/icons-material/Store";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import { ERole } from "../models/api";
 
 export const APP_TITLE = "Control";
 
@@ -81,6 +82,7 @@ export const PRIVATE_NAV_LINKS: INavLinkItem[] = [
     path: AppRoutes.private.employees,
     label: "Empleados",
     icon: AssignmentIndIcon,
+    rolesExcluded: [ERole.USER, ERole.EMPLOYEE],
   },
   {
     name: "clients",

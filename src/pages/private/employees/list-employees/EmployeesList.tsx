@@ -52,7 +52,7 @@ const EmployeesList = () => {
         sx={{
           padding: "16px 0",
           display: "flex",
-          flexDirection: "column",
+          flexDirection: { xs: "column", sm: "row" },
           gap: 2,
         }}
       >
@@ -67,9 +67,6 @@ const EmployeesList = () => {
     <Box
       sx={{
         padding: "16px 0",
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
       }}
     >
       <p>No hay empleados</p>

@@ -131,7 +131,7 @@ const LoginPage = () => {
         <Box sx={boxLoginStyle}>
           <Box sx={boxImageTitleStyle}>
             <Paper sx={imageStyle} />
-            <Typography variant="h6">Entra con tus credenciales</Typography>
+            <Typography color="var(--primary-color)" variant="h6">Entra con tus credenciales</Typography>
           </Box>
           <FormControl
             onSubmit={handleSubmit(onSubmit)}
@@ -144,6 +144,7 @@ const LoginPage = () => {
                 <CustomInput
                   name="email"
                   control={control}
+                  darkMode
                   label="Correo Electrónico"
                   type="email"
                   placeholder="Ingrese su correo electrónico"
@@ -155,6 +156,7 @@ const LoginPage = () => {
                 <CustomInput
                   name="password"
                   control={control}
+                  darkMode
                   label="Contraseña"
                   type="password"
                   placeholder="Ingrese su contraseña"
@@ -164,7 +166,7 @@ const LoginPage = () => {
               </Grid2>
             </Grid2>
 
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", color: "white" }}>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -172,6 +174,7 @@ const LoginPage = () => {
                     sx={{
                       color: "white",
                       "&.Mui-checked": { color: "var(--primary-color)" },
+                      
                     }}
                   />
                 }
@@ -204,12 +207,13 @@ const LoginPage = () => {
               justifyContent: "center",
               alignItems: "center",
               mt: 2,
+              color: "white",
             }}
           >
             <span className="or-text">O</span>
           </Box>
 
-          <Box sx={{ textAlign: "center", mt: 2 }}>
+          <Box sx={{ textAlign: "center", mt: 2, color: "white" }}>
             <p className="signup-text">
               No tienes una cuenta? <Link to="/register">Registrarse</Link>
             </p>

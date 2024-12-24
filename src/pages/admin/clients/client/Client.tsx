@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { clientsService } from "../../../../core/services/admin/clientsService";
-import { ERole, UserModel } from "../../../../core/models/api";
+import { BusinessModel, ERole, UserModel } from "../../../../core/models/api";
 import {
   Box,
   Button,
@@ -25,11 +25,19 @@ import { formatDateToString } from "../../../../core/utilities/helpers/dateForma
 const Client = () => {
   const { id } = useParams();
   const [client, setClient] = useState<UserModel | undefined>(undefined);
+  const [businessesToRender, setBusinessesToRender] = useState<BusinessModel[]>(
+    []
+  );
 
   const getClient = useCallback(async () => {
     const response = await clientsService.getClientById(id || "");
     if (response.status === 200) {
       setClient(response.data);
+      if (response.data?.role === ERole.OWNER) {
+        setBusinessesToRender(response.data?.businessesOwned);
+      } else {
+        setBusinessesToRender(response.data?.businesses || []);
+      }
     }
   }, [id]);
 
@@ -176,7 +184,7 @@ const Client = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {client?.businesses.map((business, index) => (
+              {businessesToRender.map((business, index) => (
                 <TableRow key={index}>
                   <TableCell sx={{ fontSize: "12px" }}>
                     {business.name}

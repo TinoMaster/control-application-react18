@@ -39,16 +39,16 @@ const UserModelToAuthRequestMapper = (user: UserModel): IAuthRequest => {
     user_name: user.name,
     user_email: user.email,
     user_data_request: new Date(),
-    business_name: user.businesses[0].name,
+    business_name: user.businessesOwned[0].name,
     business_address:
-      user.businesses[0].address.street +
+      user.businessesOwned[0].address.street +
       " " +
-      user.businesses[0].address.number +
+      user.businessesOwned[0].address.number +
       ", " +
-      user.businesses[0].address.city +
+      user.businessesOwned[0].address.city +
       ", " +
-      user.businesses[0].address.municipality,
-    business_phone: user.businesses[0].phone,
+      user.businessesOwned[0].address.municipality,
+    business_phone: user.businessesOwned[0].phone,
   };
 };
 
@@ -80,6 +80,7 @@ export const zodEmployeeToEmployeeMapper = (
       role: ERole.EMPLOYEE,
       active: true,
       businesses: businesses,
+      businessesOwned: []
     },
     dni: data.dni,
   };

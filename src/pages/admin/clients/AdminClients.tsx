@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { UserModel } from "../../../core/models/api";
+import { ERole, UserModel } from "../../../core/models/api";
 import { clientsService } from "../../../core/services/admin/clientsService";
 import { formatDateToString } from "../../../core/utilities/helpers/dateFormat";
 import InfoIcon from "@mui/icons-material/Info";
@@ -49,6 +49,8 @@ const AdminClients = () => {
   const [loading, setLoading] = useState(false);
   /* const [openSnackbar, setOpenSnackbar] = useState(false); */
   const [clients, setClients] = useState<UserModel[]>([]);
+
+  console.log(clients);
 
   const getClients = async () => {
     setLoading(true);
@@ -109,10 +111,10 @@ const AdminClients = () => {
                   <TableCell sx={tableCellsStyle}>{client.name}</TableCell>
                   <TableCell sx={tableCellsStyle}>{client.email}</TableCell>
                   <TableCell sx={tableCellsStyle}>
-                    {formatDateToString(client.createdAt)}
+                    {formatDateToString(client.createdAt || new Date())}
                   </TableCell>
                   <TableCell sx={tableCellsStyle}>
-                    {client.active ? formatDateToString(client.updatedAt) : "-"}
+                    {client.active ? formatDateToString(client.updatedAt || new Date()) : "-"}
                   </TableCell>
                   <TableCell sx={tableCellsStyle}>
                     {client.active ? (
@@ -122,7 +124,7 @@ const AdminClients = () => {
                     )}
                   </TableCell>
                   <TableCell sx={tableCellsStyle}>
-                    {client.businesses.length}
+                    {client.role === ERole.OWNER? client.businessesOwned.length : client.businesses.length}
                   </TableCell>
                   <TableCell sx={tableCellsStyle}>{client.role}</TableCell>
 

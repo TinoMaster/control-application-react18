@@ -15,6 +15,7 @@ import { useAppContext } from "../../../core/context/use/useAppContext";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { PRIVATE_NAV_LINKS } from "../../../core/data/global.data";
 import { NavLink } from "react-router-dom";
+import { INavLinkItem } from "../../../core/types/global.types";
 
 interface SidebarProps {
   open: boolean;
@@ -22,7 +23,10 @@ interface SidebarProps {
 }
 
 export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
-  const { materialTheme } = useAppContext();
+  const { materialTheme, role } = useAppContext();
+  const routes: INavLinkItem[] = PRIVATE_NAV_LINKS.filter(
+    (route) => !route.rolesExcluded?.includes(role)
+  );
 
   const drawerWidth = 240;
   const isMobile = useMediaQuery(materialTheme.breakpoints.down("sm"));
@@ -80,7 +84,7 @@ export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
             Paginas
           </span>
         </Typography>
-        {PRIVATE_NAV_LINKS.map((item, index) => (
+        {routes.map((item, index) => (
           <ListItem key={index}>
             <ListItemButton sx={{ padding: 0, borderRadius: "4px" }}>
               <Badge badgeContent={0} color="secondary" sx={{ width: "100%" }}>

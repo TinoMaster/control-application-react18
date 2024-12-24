@@ -21,9 +21,10 @@ export const BusinessProvider = ({ children }: IContextProps) => {
   const getBusinesses = useCallback(async () => {
     if (userEmail) {
       const response = await appService.getUser(userEmail);
+      console.log(response);
       if (response.status === 200) {
-        setBusinessList(response.data?.businesses || []);
-        setBusiness(response.data?.businesses[0] || ({} as BusinessModel));
+        setBusinessList(response.data?.businessesOwned || []);
+        setBusiness(response.data?.businessesOwned[0] || ({} as BusinessModel));
       }
     }
   }, [userEmail]);
