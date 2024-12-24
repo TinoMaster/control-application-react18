@@ -9,8 +9,8 @@ export interface UserModel {
   role: ERole;
   active: boolean;
   businesses: BusinessModel[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface UserRegisterModel {

@@ -1,5 +1,12 @@
-import { ERole, UserModel, UserRegisterModel } from "../models/api";
+import {
+  BusinessModel,
+  ERole,
+  UserModel,
+  UserRegisterModel,
+} from "../models/api";
+import { EmployeeModel } from "../models/api/employee";
 import { TRegisterOwnerDataModel } from "../models/zod";
+import { TRegisterEmployeeDataModel } from "../models/zod/registerEmployee";
 import { IAuthRequest } from "../types/admin/admin.types";
 
 export const registerFormToRegisterOwnerMapper = (
@@ -49,4 +56,31 @@ export const UserModelListToAuthRequestListMapper = (
   users: UserModel[]
 ): IAuthRequest[] => {
   return users.map(UserModelToAuthRequestMapper);
+};
+
+export const zodEmployeeToEmployeeMapper = (
+  data: TRegisterEmployeeDataModel,
+  businesses: BusinessModel[]
+): EmployeeModel => {
+  return {
+    id: "",
+    phone: data.phone,
+    address: {
+      street: data.addressStreet,
+      number: data.addressNumber,
+      city: data.addressCity,
+      municipality: data.addressMunicipality,
+      zip: data.addressZipCode,
+    },
+    user: {
+      id: 0,
+      name: data.name + " " + data.lastName,
+      email: data.email,
+      password: data.password,
+      role: ERole.EMPLOYEE,
+      active: true,
+      businesses: businesses,
+    },
+    dni: data.dni,
+  };
 };

@@ -25,6 +25,9 @@ import {
 } from "../../../../core/models/zod/registerEmployee";
 import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { EmployeeModel } from "../../../../core/models/api/employee";
+import { zodEmployeeToEmployeeMapper } from "../../../../core/mappers/global.mapper";
+import { employeeService } from "../../../../core/services/employeeService";
 
 const NewEmployee = () => {
   const { businessList, business } = useBusinessContext();
@@ -53,7 +56,29 @@ const NewEmployee = () => {
   });
 
   const onSubmit: SubmitHandler<TRegisterEmployeeDataModel> = async (data) => {
-    console.log(data);
+    const businessesToSave = businessList.filter((b) =>
+      data.businesses.includes(b.id as number)
+    );
+
+    setLoading(true);
+    setError("");
+
+    const dataToSave: EmployeeModel = zodEmployeeToEmployeeMapper(
+      data,
+      businessesToSave
+    );
+
+    const response = await employeeService.saveEmployee(dataToSave);
+
+    if (response.status === 200) {
+      setSuccess(true);
+      setTimeout(() => {
+        navigate("/employees/list");
+      }, 1000);
+    } else {
+      setError(response.message);
+    }
+    setLoading(false);
   };
 
   useEffect(() => {

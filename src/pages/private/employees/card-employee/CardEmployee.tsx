@@ -7,21 +7,23 @@ import {
   CardHeader,
   Typography,
 } from "@mui/material";
+import { EmployeeModel } from "../../../../core/models/api/employee";
+import { formatDateToString } from "../../../../core/utilities/helpers/dateFormat";
 
-const worker = {
-  name: "John Doe",
-  position: "Software Engineer",
-  email: "johndoe@example.com",
-  phone: "123-456-7890",
-  address: "123 Main St, Cityville, Country",
-  id: "A12345",
-  createdAt: "2023-01-01",
-};
+interface CardEmployeeProps {
+  employee: EmployeeModel;
+}
 
-export const CardEmployee = () => {
+export const CardEmployee = ({ employee }: CardEmployeeProps) => {
   return (
     <Card
-      sx={{ width: "100%", maxWidth: 400, margin: "0 auto", boxShadow: 3, borderRadius: 2 }}
+      sx={{
+        width: "100%",
+        maxWidth: 400,
+        margin: "0 auto",
+        boxShadow: 3,
+        borderRadius: 2,
+      }}
     >
       <CardHeader
         avatar={
@@ -34,13 +36,13 @@ export const CardEmployee = () => {
               border: "2px dashed",
             }}
           >
-            {worker.name.charAt(0)}
+            {employee.user.name.charAt(0)}
           </Avatar>
         }
-        title={<Typography variant="h6">{worker.name}</Typography>}
+        title={<Typography variant="h6">{employee.user.name}</Typography>}
         subheader={
           <Typography variant="body2" color="text.secondary">
-            {worker.position}
+            {employee.user.role}
           </Typography>
         }
         action={
@@ -55,19 +57,21 @@ export const CardEmployee = () => {
       <CardContent>
         <Box sx={{ mt: 2 }}>
           <Typography variant="body2" color="text.secondary">
-            <strong>Email:</strong> {worker.email}
+            <strong>Email:</strong> {employee.user.email}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            <strong>Phone:</strong> {worker.phone}
+            <strong>Phone:</strong> {employee.phone}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            <strong>Address:</strong> {worker.address}
+            <strong>Address:</strong>{" "}
+            {`${employee.address.street} ${employee.address.number}, ${employee.address.city}, ${employee.address.municipality}`}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            <strong>ID:</strong> {worker.id}
+            <strong>ID:</strong> {employee.dni}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            <strong>Created On:</strong> {worker.createdAt}
+            <strong>Created On:</strong>{" "}
+            {formatDateToString(employee.user.createdAt as Date)}
           </Typography>
         </Box>
       </CardContent>
