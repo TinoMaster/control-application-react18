@@ -9,6 +9,7 @@ interface CustomInputProps {
   placeholder?: string;
   error?: boolean;
   helperText?: string;
+  darkMode?: boolean;
 }
 
 const CustomInput = ({
@@ -19,6 +20,7 @@ const CustomInput = ({
   placeholder,
   error,
   helperText,
+  darkMode = false,
 }: CustomInputProps) => {
   return (
     <Controller
@@ -41,7 +43,7 @@ const CustomInput = ({
             margin: "0",
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
-                borderColor: "white", // Color del borde normal
+                borderColor: darkMode ? "white" : "black", // Color del borde normal
               },
               "&:hover fieldset": {
                 borderColor: "var(--primary-color)", // Color del borde al pasar el mouse
@@ -53,9 +55,9 @@ const CustomInput = ({
           }}
           slotProps={{
             inputLabel: {
-              style: { color: "white" }, // Color del label
+              style: { color: darkMode ? "white" : "black" }, 
             },input: {
-              style: { color: "white" },
+              style: { color: darkMode ? "white" : "black" },
             }
           }}
         />

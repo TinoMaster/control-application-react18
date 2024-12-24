@@ -56,7 +56,6 @@ export const PrivateLayout = () => {
             duration: materialTheme.transitions.duration.leavingScreen,
           }),
           minHeight: "100vh",
-          height: "2000px",
           maxWidth: "100vw",
         }}
       >
