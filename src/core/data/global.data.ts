@@ -9,6 +9,7 @@ import Groups3Icon from "@mui/icons-material/Groups3";
 import StoreIcon from "@mui/icons-material/Store";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import BusinessIcon from '@mui/icons-material/Business';
 import { ERole } from "../models/api";
 
 export const APP_TITLE = "Control";
@@ -26,6 +27,7 @@ export const AppRoutes = {
     sales: "/sales",
     inventory: "/inventory",
     employees: "/employees",
+    business: "/businesses",
     clients: "/clients",
     store: "/store",
     reports: "/reports",
@@ -78,13 +80,6 @@ export const PRIVATE_NAV_LINKS: INavLinkItem[] = [
     icon: InventoryIcon,
   },
   {
-    name: "employees",
-    path: AppRoutes.private.employees,
-    label: "Empleados",
-    icon: AssignmentIndIcon,
-    rolesExcluded: [ERole.USER, ERole.EMPLOYEE],
-  },
-  {
     name: "clients",
     path: AppRoutes.private.clients,
     label: "Clientes",
@@ -101,6 +96,20 @@ export const PRIVATE_NAV_LINKS: INavLinkItem[] = [
     path: AppRoutes.private.reports,
     label: "Reportes",
     icon: SummarizeIcon,
+  },
+  {
+    name: "employees",
+    path: AppRoutes.private.employees,
+    label: "Empleados",
+    icon: AssignmentIndIcon,
+    rolesExcluded: [ERole.USER, ERole.EMPLOYEE],
+  },
+  {
+    name: "businesses",
+    path: AppRoutes.private.business,
+    label: "Negocios",
+    icon: BusinessIcon,
+    rolesExcluded: [ERole.USER, ERole.EMPLOYEE],
   },
 ];
 
