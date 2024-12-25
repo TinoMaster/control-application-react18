@@ -1,10 +1,11 @@
+import { apiConfig } from "../config/api.config";
 import { EmployeeModel } from "../models/api/employee";
 import { IResponse } from "../types/request.types";
 import { handleFetchError } from "../utilities/helpers/errorManager";
 import { requestService } from "./RequestService";
 
 class EmployeeService {
-  private urlBase = "http://localhost:5000/api/v1";
+  private urlBase = apiConfig.baseUrl;
 
   async getEmployees(): Promise<IResponse<EmployeeModel[]>> {
     try {

@@ -5,6 +5,7 @@ export interface BusinessModel {
   name: string;
   description: string;
   address: AddressModel;
+  users: number[];
   phone: string;
   createdAt?: Date;
   updatedAt?: Date;

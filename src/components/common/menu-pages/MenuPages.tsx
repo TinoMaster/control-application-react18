@@ -5,9 +5,14 @@ import { INavLinkItem } from "../../../core/types/global.types";
 interface IMenuPagesProps {
   title?: string;
   links: INavLinkItem[];
+  variant?: "primary" | "secondary";
 }
 
-export const MenuPages = ({ title, links }: IMenuPagesProps) => {
+export const MenuPages = ({
+  title,
+  links,
+  variant = "primary",
+}: IMenuPagesProps) => {
   return (
     <Box
       sx={{
@@ -40,7 +45,11 @@ export const MenuPages = ({ title, links }: IMenuPagesProps) => {
             to={link.path}
             style={({ isActive }) => ({
               textDecoration: "none",
-              backgroundColor: isActive ? "var(--primary-color)" : "gray",
+              backgroundColor: isActive
+                ? variant === "primary"
+                  ? "var(--primary-color)"
+                  : "var(--secondary-color)"
+                : "gray",
               color: isActive ? "white" : "#fefefe",
               borderRadius: "4px",
               display: "flex",

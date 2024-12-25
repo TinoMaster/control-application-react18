@@ -7,7 +7,7 @@ interface PrivateRouteProps {
   allowedRoles: string[]; // Los roles permitidos para esta ruta
 }
 
-const AdminRoute = ({ children, allowedRoles }: PrivateRouteProps) => {
+const PrivateRoute = ({ children, allowedRoles }: PrivateRouteProps) => {
   const role: TRole = localStorage.getItem("role") as TRole;
 
   if (allowedRoles.includes(role)) {
@@ -17,4 +17,4 @@ const AdminRoute = ({ children, allowedRoles }: PrivateRouteProps) => {
   }
 };
 
-export default AdminRoute;
+export default PrivateRoute;

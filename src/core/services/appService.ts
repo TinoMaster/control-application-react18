@@ -1,10 +1,11 @@
+import { apiConfig } from "../config/api.config";
 import { UserModel } from "../models/api";
 import { IResponse } from "../types/request.types";
 import { handleFetchError } from "../utilities/helpers/errorManager";
 import { requestService } from "./RequestService";
 
 class AppService {
-  private urlBase = "http://localhost:5000/api/v1";
+  private urlBase = apiConfig.baseUrl;
 
   async getUser(email: string): Promise<IResponse<UserModel>> {
     try {

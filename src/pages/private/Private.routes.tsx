@@ -1,7 +1,7 @@
 import { Navigate, Route } from "react-router-dom";
 import { RoutesWithNotFound } from "../../components/common";
 import { lazy } from "react";
-import AdminRoute from "../../core/guards/admin.guard";
+import PrivateRoute from "../../core/guards/routes.guard";
 import { ERole } from "../../core/models/api";
 
 const DashBoardPage = lazy(() => import("../private/dashboard/Dashboard"));
@@ -33,9 +33,9 @@ export const PrivateRoutes = () => {
       <Route
         path="employees"
         element={
-          <AdminRoute allowedRoles={[ERole.OWNER, ERole.ADMIN]}>
+          <PrivateRoute allowedRoles={[ERole.OWNER, ERole.ADMIN]}>
             <EmployeesLayoutPage />
-          </AdminRoute>
+          </PrivateRoute>
         }
       >
         <Route index element={<Navigate to="list" replace />} />
@@ -46,14 +46,21 @@ export const PrivateRoutes = () => {
       <Route
         path="businesses"
         element={
-          <AdminRoute allowedRoles={[ERole.OWNER, ERole.ADMIN]}>
+          <PrivateRoute allowedRoles={[ERole.OWNER, ERole.ADMIN]}>
             <BusinessesLayoutPage />
-          </AdminRoute>
+          </PrivateRoute>
         }
       >
         <Route index element={<Navigate to="list" replace />} />
         <Route path="list" element={<BusinessesListPage />} />
-        <Route path="new" element={<NewBusinessPage />} />
+        <Route
+          path="new"
+          element={
+            <PrivateRoute allowedRoles={[ERole.OWNER]}>
+              <NewBusinessPage />{" "}
+            </PrivateRoute>
+          }
+        />
       </Route>
       <Route path="*" element={<Navigate to="/404" replace />} />
     </RoutesWithNotFound>

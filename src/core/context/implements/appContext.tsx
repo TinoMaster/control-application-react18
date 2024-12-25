@@ -8,7 +8,6 @@ interface IContextProps {
 }
 
 export interface IAppContext {
-  appTitle: string;
   role: TRole;
   materialTheme: Theme;
 }
@@ -16,11 +15,10 @@ export interface IAppContext {
 export const AppProvider = ({ children }: IContextProps) => {
   const materialTheme = useTheme();
   const role: TRole = localStorage.getItem("role") as TRole;
-  const appTitle = "CONTROL";
 
   return (
     <AppContext.Provider
-      value={{ appTitle, role, materialTheme }}
+      value={{ role, materialTheme }}
       children={children}
     />
   );

@@ -16,6 +16,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { PRIVATE_NAV_LINKS } from "../../../core/data/global.data";
 import { NavLink } from "react-router-dom";
 import { INavLinkItem } from "../../../core/types/global.types";
+import { filterRoutesByRole } from "../../../core/utilities/helpers/filterRoutesByRole";
 
 interface SidebarProps {
   open: boolean;
@@ -24,9 +25,7 @@ interface SidebarProps {
 
 export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
   const { materialTheme, role } = useAppContext();
-  const routes: INavLinkItem[] = PRIVATE_NAV_LINKS.filter(
-    (route) => !route.rolesExcluded?.includes(role)
-  );
+  const routes: INavLinkItem[] = filterRoutesByRole(PRIVATE_NAV_LINKS, role);
 
   const drawerWidth = 240;
   const isMobile = useMediaQuery(materialTheme.breakpoints.down("sm"));

@@ -1,13 +1,8 @@
-import {
-  AppBar,
-  Box,
-  IconButton,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import UserOptions from "../user-options/UserOptions";
 import { useAppContext } from "../../../core/context/use/useAppContext";
+import { useBusinessContext } from "../../../core/context/use/useBusinessContext";
 
 interface HeaderProps {
   handleDrawerToggle: () => void;
@@ -15,7 +10,7 @@ interface HeaderProps {
 
 export const Header = ({ handleDrawerToggle }: HeaderProps) => {
   const { materialTheme } = useAppContext();
-  const { appTitle } = useAppContext();
+  const {business} = useBusinessContext();
   return (
     <AppBar
       position="fixed"
@@ -40,7 +35,7 @@ export const Header = ({ handleDrawerToggle }: HeaderProps) => {
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography variant="h6" noWrap component="div">
-          {appTitle}
+          {business.name}
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <IconButton

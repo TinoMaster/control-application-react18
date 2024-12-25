@@ -1,3 +1,4 @@
+import { apiConfig } from "../config/api.config";
 import { registerFormToRegisterOwnerMapper } from "../mappers/global.mapper";
 import { TLoginSchema, TRegisterOwnerDataModel } from "../models/zod";
 import {
@@ -8,7 +9,7 @@ import {
 import { handleFetchError } from "../utilities/helpers/errorManager";
 
 class AuthService {
-  private urlBase = "http://localhost:5000/api/v1/public";
+  private urlBase = `${apiConfig.baseUrl}/public`;
 
   async registerOwner(
     data: TRegisterOwnerDataModel
