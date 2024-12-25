@@ -109,7 +109,7 @@ export const PRIVATE_NAV_LINKS: INavLinkItem[] = [
     path: AppRoutes.private.business,
     label: "Negocios",
     icon: BusinessIcon,
-    rolesExcluded: [ERole.USER, ERole.EMPLOYEE],
+    rolesExcluded: [ERole.USER, ERole.EMPLOYEE, ERole.ADMIN],
   },
 ];
 

@@ -46,21 +46,14 @@ export const PrivateRoutes = () => {
       <Route
         path="businesses"
         element={
-          <PrivateRoute allowedRoles={[ERole.OWNER, ERole.ADMIN]}>
+          <PrivateRoute allowedRoles={[ERole.OWNER]}>
             <BusinessesLayoutPage />
           </PrivateRoute>
         }
       >
         <Route index element={<Navigate to="list" replace />} />
         <Route path="list" element={<BusinessesListPage />} />
-        <Route
-          path="new"
-          element={
-            <PrivateRoute allowedRoles={[ERole.OWNER]}>
-              <NewBusinessPage />{" "}
-            </PrivateRoute>
-          }
-        />
+        <Route path="new" element={<NewBusinessPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/404" replace />} />
     </RoutesWithNotFound>
