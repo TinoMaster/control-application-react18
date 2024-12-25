@@ -12,7 +12,10 @@ const BusinessesList = () => {
           padding: "16px 0",
           display: "flex",
           gap: 5,
-          flexDirection: "column",
+          flexDirection: {
+            xs: "column",
+            sm: "row",
+          },
         }}
       >
         {Array.from({ length: 3 }).map((_, index) => (
@@ -20,7 +23,7 @@ const BusinessesList = () => {
             key={index}
             variant="rectangular"
             height={200}
-            width="100%"
+            width={500}
             sx={{ width: "100%", margin: "auto", borderRadius: "8px" }}
           />
         ))}
@@ -33,9 +36,6 @@ const BusinessesList = () => {
       <Box
         sx={{
           padding: "16px 0",
-          display: "flex",
-          gap: 5,
-          flexDirection: "column",
         }}
       >
         <p>No se encontraron negocios</p>
@@ -48,8 +48,13 @@ const BusinessesList = () => {
       sx={{
         padding: "16px 0",
         display: "flex",
-        gap: 5,
-        flexDirection: "column",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        gap: 2,
+        flexDirection: {
+          xs: "column",
+          sm: "row",
+        },
       }}
     >
       {businessList.map((business) => (

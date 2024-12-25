@@ -6,6 +6,7 @@ import {
 } from "../models/api";
 import { EmployeeModel } from "../models/api/employee";
 import { TRegisterOwnerDataModel } from "../models/zod";
+import { RegisterBusinessDataModel } from "../models/zod/registerBusiness";
 import { TRegisterEmployeeDataModel } from "../models/zod/registerEmployee";
 import { IAuthRequest } from "../types/admin/admin.types";
 
@@ -80,8 +81,27 @@ export const zodEmployeeToEmployeeMapper = (
       role: ERole.EMPLOYEE,
       active: true,
       businesses: businesses,
-      businessesOwned: []
+      businessesOwned: [],
     },
     dni: data.dni,
+  };
+};
+
+export const zodRegisterBusinessToBusinessMapper = (
+  data: RegisterBusinessDataModel,
+  ownerId: number
+): BusinessModel => {
+  return {
+    name: data.name,
+    description: data.description,
+    address: {
+      street: data.addressStreet,
+      number: data.addressNumber,
+      city: data.addressCity,
+      municipality: data.addressMunicipality,
+      zip: data.addressZipCode,
+    },
+    phone: data.phone,
+    owner: ownerId,
   };
 };

@@ -96,7 +96,7 @@ export const BusinessCard = ({ business }: IBusinessCardProps) => {
             variant="body2"
             color="text.secondary"
           >
-            <strong>Personal en el negocio:</strong> {business.users.length}
+            <strong>Personal en el negocio:</strong> {business.users?.length || 0}
           </Typography>
           <Typography
             fontSize={"0.8rem"}
