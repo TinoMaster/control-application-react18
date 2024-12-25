@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { BusinessModel } from "../../../../core/models/api";
 import { formatDateToString } from "../../../../core/utilities/helpers/dateFormat";
+import { Link } from "react-router-dom";
 
 interface IBusinessCardProps {
   business: BusinessModel;
@@ -54,16 +55,19 @@ export const BusinessCard = ({ business }: IBusinessCardProps) => {
           </Typography>
         }
         action={
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "var(--secondary-color)",
-              mt: 1,
-              fontSize: "0.7rem",
-            }}
-          >
-            ver detalles
-          </Button>
+          <Link to={`/businesses/${business.id}`}>
+            <Button
+              variant="contained"
+              size="small"
+              sx={{
+                backgroundColor: "var(--secondary-color)",
+                mt: 1,
+                fontSize: "0.7rem",
+              }}
+            >
+              ver detalles
+            </Button>
+          </Link>
         }
       />
       <CardContent>
@@ -96,7 +100,8 @@ export const BusinessCard = ({ business }: IBusinessCardProps) => {
             variant="body2"
             color="text.secondary"
           >
-            <strong>Personal en el negocio:</strong> {business.users?.length || 0}
+            <strong>Personal en el negocio:</strong>{" "}
+            {business.users?.length || 0}
           </Typography>
           <Typography
             fontSize={"0.8rem"}

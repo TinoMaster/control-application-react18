@@ -10,7 +10,20 @@ class EmployeeService {
   async getEmployees(): Promise<IResponse<EmployeeModel[]>> {
     try {
       return await requestService.fetch<EmployeeModel[]>(
-        `${this.urlBase}/admin/employees`
+        `${this.urlBase}/superadmin/employees`
+      );
+    } catch (error: any) {
+      console.log(error);
+      return handleFetchError(error);
+    }
+  }
+
+  async getEmployeesByBusinessId(
+    id: string
+  ): Promise<IResponse<EmployeeModel[]>> {
+    try {
+      return await requestService.fetch<EmployeeModel[]>(
+        `${this.urlBase}/admin/employees/byBusiness/${id}`
       );
     } catch (error: any) {
       console.log(error);

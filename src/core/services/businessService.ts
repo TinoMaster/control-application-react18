@@ -18,6 +18,17 @@ class BusinessService {
     }
   }
 
+  async getBusinessById(id: string): Promise<IResponse<BusinessModel>> {
+    try {
+      return await requestService.fetch<BusinessModel>(
+        `${this.urlBase}/owner/businesses/${id}`
+      );
+    } catch (error: any) {
+      console.log(error);
+      return handleFetchError(error);
+    }
+  }
+
   async saveBusiness(
     business: BusinessModel
   ): Promise<IResponse<BusinessModel>> {

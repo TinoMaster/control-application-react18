@@ -14,16 +14,22 @@ import {
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 import { NavLink } from "react-router-dom";
-import { useAppContext } from "../../core/context/use/useAppContext";
-import { useSuperAdminContext } from "../../core/context/use/useSuperAdminContext";
-import { AppRoutes, SUPERADMIN_NAV_LINKS } from "../../core/data/global.data";
+import { useAppContext } from "../../../core/context/use/useAppContext";
+import { useSuperAdminContext } from "../../../core/context/use/useSuperAdminContext";
+import {
+  AppRoutes,
+  SUPERADMIN_NAV_LINKS,
+} from "../../../core/data/global.data";
 
 interface SidebarProps {
   open: boolean;
   handleDrawerToggle: () => void;
 }
 
-export const SuperAdminSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
+export const SuperAdminSidebar = ({
+  open,
+  handleDrawerToggle,
+}: SidebarProps) => {
   const { materialTheme } = useAppContext();
   const { authRequests } = useSuperAdminContext();
   const drawerWidth = 240;

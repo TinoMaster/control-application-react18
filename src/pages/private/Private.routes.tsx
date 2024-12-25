@@ -23,6 +23,9 @@ const NewBusinessPage = lazy(
 const BusinessesListPage = lazy(
   () => import("./businesses/businesses-list/BusinessesList")
 );
+const BusinessDetailPage = lazy(
+  () => import("./businesses/business-detail/BusinessDetail")
+);
 
 export const PrivateRoutes = () => {
   return (
@@ -54,6 +57,7 @@ export const PrivateRoutes = () => {
         <Route index element={<Navigate to="list" replace />} />
         <Route path="list" element={<BusinessesListPage />} />
         <Route path="new" element={<NewBusinessPage />} />
+        <Route path=":id" element={<BusinessDetailPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/404" replace />} />
     </RoutesWithNotFound>
