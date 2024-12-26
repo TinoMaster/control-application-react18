@@ -8,9 +8,13 @@ import {
   Checkbox,
   CircularProgress,
   Container,
+  FormControl,
   FormControlLabel,
+  FormHelperText,
   Grid2 as Grid,
+  MenuItem,
   Modal,
+  Select,
   Snackbar,
   Typography,
 } from "@mui/material";
@@ -29,6 +33,7 @@ import { EmployeeModel } from "../../../../core/models/api/employee";
 import { zodEmployeeToEmployeeMapper } from "../../../../core/mappers/global.mapper";
 import { employeeService } from "../../../../core/services/employeeService";
 import { useAuthContext } from "../../../../core/context/use/useAuthContext";
+import { ERole } from "../../../../core/models/api";
 
 const NewEmployee = () => {
   const { businessList, business } = useBusinessContext();
@@ -203,7 +208,7 @@ const NewEmployee = () => {
               />
             </Grid>
             {/* Dirección */}
-            <Grid size={{ xs: 12, sm: 6 }}>
+            <Grid size={12}>
               <CustomInput
                 name="addressStreet"
                 control={control}
@@ -240,6 +245,33 @@ const NewEmployee = () => {
                 helperText={errors.addressZipCode?.message}
               />
             </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <Controller
+                name="role"
+                control={control}
+                render={({ field }) => (
+                  <FormControl fullWidth error={!!errors.role}>
+                    <Select
+                      {...field}
+                      labelId="role-label"
+                      id="role"
+                      value={field.value || ""}
+                    >
+                      <MenuItem value="" disabled>
+                        Seleccionar
+                      </MenuItem>
+                      <MenuItem value={ERole.USER}>Espectador</MenuItem>
+                      <MenuItem value={ERole.ADMIN}>Administrador</MenuItem>
+                      <MenuItem value={ERole.EMPLOYEE}>Empleado</MenuItem>
+                    </Select>
+                    {errors.role && (
+                      <FormHelperText>{errors.role.message}</FormHelperText>
+                    )}
+                  </FormControl>
+                )}
+              />
+            </Grid>
+
             <Grid
               display={businessList.length === 1 ? "none" : "block"}
               size={12}

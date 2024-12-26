@@ -18,6 +18,17 @@ class EmployeeService {
     }
   }
 
+  async getEmployeeById(id: string): Promise<IResponse<EmployeeModel>> {
+    try {
+      return await requestService.fetch<EmployeeModel>(
+        `${this.urlBase}/admin/employees/${id}`
+      );
+    } catch (error: any) {
+      console.log(error);
+      return handleFetchError(error);
+    }
+  }
+
   async getEmployeesByBusinessId(
     id: string
   ): Promise<IResponse<EmployeeModel[]>> {
@@ -40,6 +51,20 @@ class EmployeeService {
         {
           method: "POST",
           body: JSON.stringify(employee),
+        }
+      );
+    } catch (error: any) {
+      console.log(error);
+      return handleFetchError(error);
+    }
+  }
+
+  async deleteEmployee(id: string): Promise<IResponse<null>> {
+    try {
+      return await requestService.fetch<null>(
+        `${this.urlBase}/admin/employees/${id}`,
+        {
+          method: "DELETE",
         }
       );
     } catch (error: any) {

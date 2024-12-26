@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ERole } from "../api";
 
 export const registerEmployeeSchema = z
   .object({
@@ -6,6 +7,9 @@ export const registerEmployeeSchema = z
     lastName: z.string().min(3, "El apellido debe tener al menos 3 caracteres"),
     email: z.string().email("Introduce un correo válido"),
     dni: z.string().min(8, "Introduce un DNI válido"),
+    role: z.nativeEnum(ERole, {
+      errorMap: () => ({ message: "Selecciona un rol" }),
+    }),
     password: z
       .string()
       .min(6, "La contraseña debe tener al menos 6 caracteres"),
@@ -40,5 +44,6 @@ export const zEmployeeDefaultValues: TRegisterEmployeeDataModel = {
   addressMunicipality: "",
   addressCity: "",
   addressZipCode: "",
+  role: ERole.EMPLOYEE,
   businesses: [],
 };

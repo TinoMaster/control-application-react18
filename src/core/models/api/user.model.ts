@@ -2,7 +2,7 @@ import { BusinessModel } from './business.model';
 import { ERole } from './roles.model';
 
 export interface UserModel {
-  id: number;
+  id?: number;
   name: string;
   email: string;
   password?: string;

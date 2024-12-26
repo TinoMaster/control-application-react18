@@ -45,7 +45,7 @@ export const Header = ({ handleDrawerToggle }: HeaderProps) => {
           <Typography variant="h6" noWrap>
             {business.name}
           </Typography>
-          {businessList.length > 0 && (
+          {businessList.length > 1 && (
             <ChooseBusiness
               selectedId={business.id || 0}
               options={businessList}

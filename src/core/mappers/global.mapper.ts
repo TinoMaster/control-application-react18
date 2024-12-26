@@ -36,7 +36,7 @@ export const registerFormToRegisterOwnerMapper = (
 
 const UserModelToAuthRequestMapper = (user: UserModel): IAuthRequest => {
   return {
-    userId: user.id,
+    userId: user.id || 0,
     user_name: user.name,
     user_email: user.email,
     user_data_request: new Date(),
@@ -74,11 +74,10 @@ export const zodEmployeeToEmployeeMapper = (
       zip: data.addressZipCode,
     },
     user: {
-      id: 0,
       name: data.name + " " + data.lastName,
       email: data.email,
       password: data.password,
-      role: ERole.EMPLOYEE,
+      role: data.role,
       active: true,
       businesses: businesses,
       businessesOwned: [],
