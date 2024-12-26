@@ -45,6 +45,20 @@ class BusinessService {
       return handleFetchError(error);
     }
   }
+
+  async deleteBusiness(id: string): Promise<IResponse<null>> {
+    try {
+      return await requestService.fetch<null>(
+        `${this.urlBase}/owner/businesses/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+    } catch (error: any) {
+      console.log(error);
+      return handleFetchError(error);
+    }
+  }
 }
 
 export const businessService = new BusinessService();

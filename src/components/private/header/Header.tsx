@@ -3,6 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import UserOptions from "../user-options/UserOptions";
 import { useAppContext } from "../../../core/context/use/useAppContext";
 import { useBusinessContext } from "../../../core/context/use/useBusinessContext";
+import { ChooseBusiness } from "../choose-business/ChooseBusiness";
 
 interface HeaderProps {
   handleDrawerToggle: () => void;
@@ -10,7 +11,7 @@ interface HeaderProps {
 
 export const Header = ({ handleDrawerToggle }: HeaderProps) => {
   const { materialTheme } = useAppContext();
-  const {business} = useBusinessContext();
+  const { business, businessList, onChangeBusiness } = useBusinessContext();
   return (
     <AppBar
       position="fixed"
@@ -33,10 +34,26 @@ export const Header = ({ handleDrawerToggle }: HeaderProps) => {
         color: "white",
       }}
     >
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h6" noWrap component="div">
-          {business.name}
-        </Typography>
+      <Toolbar
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Box sx={{ display: { xs: "none", sm: "flex" } }}>
+          <Typography variant="h6" noWrap>
+            {business.name}
+          </Typography>
+          {businessList.length > 0 && (
+            <ChooseBusiness
+              selectedId={business.id || 0}
+              options={businessList}
+              onChangeBusiness={onChangeBusiness}
+            />
+          )}
+        </Box>
+
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <IconButton
             color="inherit"

@@ -1,27 +1,34 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CardEmployee } from "../card-employee/CardEmployee";
 import { EmployeeModel } from "../../../../core/models/api/employee";
 import { employeeService } from "../../../../core/services/employeeService";
 import { Box, Skeleton } from "@mui/material";
+import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
 
 const EmployeesList = () => {
+  const { business } = useBusinessContext();
   const [employees, setEmployees] = useState<EmployeeModel[]>([]);
 
   const [loading, setLoading] = useState(false);
 
-  const getEmployees = async () => {
+  const getEmployees = useCallback(async () => {
+    if (!business.id) {
+      return;
+    }
     setLoading(true);
-    const response = await employeeService.getEmployees();
+    const response = await employeeService.getEmployeesByBusinessId(
+      business.id?.toString() || ""
+    );
     console.log(response);
     if (response.status === 200) {
       setEmployees(response.data || []);
     }
     setLoading(false);
-  };
+  }, [business.id]);
 
   useEffect(() => {
     getEmployees();
-  }, []);
+  }, [getEmployees]);
 
   if (loading) {
     return (
@@ -52,6 +59,7 @@ const EmployeesList = () => {
         sx={{
           padding: "16px 0",
           display: "flex",
+          flexWrap: "wrap",
           flexDirection: { xs: "column", sm: "row" },
           gap: 2,
         }}

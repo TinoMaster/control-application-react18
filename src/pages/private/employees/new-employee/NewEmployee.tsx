@@ -28,9 +28,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { EmployeeModel } from "../../../../core/models/api/employee";
 import { zodEmployeeToEmployeeMapper } from "../../../../core/mappers/global.mapper";
 import { employeeService } from "../../../../core/services/employeeService";
+import { useAuthContext } from "../../../../core/context/use/useAuthContext";
 
 const NewEmployee = () => {
   const { businessList, business } = useBusinessContext();
+  const { reloadUser } = useAuthContext();
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -72,6 +75,7 @@ const NewEmployee = () => {
 
     if (response.status === 200) {
       setSuccess(true);
+      reloadUser();
       setTimeout(() => {
         navigate("/employees/list");
       }, 1000);

@@ -13,9 +13,13 @@ import { Link } from "react-router-dom";
 
 interface IBusinessCardProps {
   business: BusinessModel;
+  currentBusinessId: number;
 }
 
-export const BusinessCard = ({ business }: IBusinessCardProps) => {
+export const BusinessCard = ({
+  business,
+  currentBusinessId,
+}: IBusinessCardProps) => {
   return (
     <Card
       sx={{
@@ -24,8 +28,25 @@ export const BusinessCard = ({ business }: IBusinessCardProps) => {
         margin: { xs: "0 auto", sm: "0" },
         boxShadow: 3,
         borderRadius: 2,
+        border: "2px solid",
+        position: "relative",
+        borderColor:
+          currentBusinessId === business.id
+            ? "var(--secondary-color)"
+            : "white",
       }}
     >
+      <Typography
+        sx={{
+          position: "absolute",
+          top: 0,
+          right: "10px",
+          fontSize: "0.7rem",
+          color: "success.main",
+        }}
+      >
+        {currentBusinessId === business.id && "Seleccionado"}
+      </Typography>
       <CardHeader
         avatar={
           <Avatar

@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { BusinessModel, ERole } from "../../models/api";
 import { BusinessContext } from "../use/useBusinessContext";
 import { useAuthContext } from "../use/useAuthContext";
+import { selectBusiness } from "../../utilities/helpers/selectBusiness";
 
 interface IContextProps {
   children: ReactNode;
@@ -12,6 +13,7 @@ export interface IBusinessContext {
   business: BusinessModel;
   loading: boolean;
   addBusinessToBusinessList: (newBusiness: BusinessModel) => void;
+  onChangeBusiness: (id: number) => void;
 }
 
 export const BusinessProvider = ({ children }: IContextProps) => {
@@ -28,23 +30,35 @@ export const BusinessProvider = ({ children }: IContextProps) => {
 
       if (user.role === ERole.OWNER) {
         setBusinessList(user.businessesOwned);
-        setBusiness(user.businessesOwned[0]);
+        setBusiness(selectBusiness(businessList) || user.businessesOwned[0]);
       } else {
         setBusinessList(user.businesses);
-        setBusiness(user.businesses[0]);
+        setBusiness(selectBusiness(businessList) || user.businesses[0]);
       }
     }
-  }, [user]);
+  }, [user, businessList]);
 
   const addBusinessToBusinessList = (newBusiness: BusinessModel) => {
     setBusinessList([...businessList, newBusiness]);
-    console.log(newBusiness);
-    console.log(businessList)
+  };
+
+  const onChangeBusiness = (id: number) => {
+    const newBusiness = businessList.find((b) => b.id === id);
+    if (newBusiness) {
+      localStorage.setItem("businessId", newBusiness.id?.toString() || "");
+      setBusiness(newBusiness);
+    }
   };
 
   return (
     <BusinessContext.Provider
-      value={{ businessList, business, loading, addBusinessToBusinessList }}
+      value={{
+        businessList,
+        business,
+        loading,
+        addBusinessToBusinessList,
+        onChangeBusiness,
+      }}
       children={children}
     />
   );

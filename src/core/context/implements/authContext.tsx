@@ -13,6 +13,7 @@ export interface IAuthContext {
   role: TRole;
   user: UserModel | undefined;
   loadingUser: boolean;
+  reloadUser: () => void;
 }
 
 export const AuthProvider = ({ children }: IContextProps) => {
@@ -21,6 +22,10 @@ export const AuthProvider = ({ children }: IContextProps) => {
   const role: TRole = localStorage.getItem("role") as TRole;
   const token = localStorage.getItem("token");
   const userEmail = token ? decodeJWT(token).sub : null;
+
+  const [reload, setReload] = useState(false);
+
+  const reloadUser = () => setReload(!reload);
 
   const getUser = async (email: string) => {
     setLoadingUser(true);
@@ -35,7 +40,7 @@ export const AuthProvider = ({ children }: IContextProps) => {
     if (userEmail) {
       getUser(userEmail);
     }
-  }, [userEmail]);
+  }, [userEmail, reload]);
 
   const isLoggedIn = (): boolean => {
     return token !== null && token !== "" && role !== null;
@@ -43,7 +48,7 @@ export const AuthProvider = ({ children }: IContextProps) => {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, role, user, loadingUser }}
+      value={{ isLoggedIn, role, user, loadingUser, reloadUser }}
       children={children}
     />
   );

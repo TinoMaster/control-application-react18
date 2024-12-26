@@ -3,7 +3,7 @@ import { Box, Skeleton } from "@mui/material";
 import { BusinessCard } from "../business-card/BusinessCard";
 
 const BusinessesList = () => {
-  const { businessList, loading } = useBusinessContext();
+  const { businessList, loading, business } = useBusinessContext();
 
   if (loading) {
     return (
@@ -57,8 +57,12 @@ const BusinessesList = () => {
         },
       }}
     >
-      {businessList.map((business) => (
-        <BusinessCard key={business.id} business={business} />
+      {businessList.map((bus) => (
+        <BusinessCard
+          key={bus.id}
+          business={bus}
+          currentBusinessId={business.id || 0}
+        />
       ))}
     </Box>
   );
