@@ -41,7 +41,7 @@ export const Header = ({ handleDrawerToggle }: HeaderProps) => {
           alignItems: "center",
         }}
       >
-        <Box sx={{ display: { xs: "none", sm: "flex" } }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography variant="h6" noWrap>
             {business.name}
           </Typography>
