@@ -1,26 +1,47 @@
-import { ReactNode, useState } from "react";
-import { ITheme } from "../../data/global.data";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { ThemeContext } from "../use/useThemeContext";
+import { ThemeModel } from "../../models/api/theme.model";
+import { appService } from "../../services/appService";
+import {
+  chooseThemeById,
+  defaultTheme,
+} from "../../utilities/helpers/chooseTheme";
 
 interface IContextProps {
   children: ReactNode;
 }
 
 export interface IThemeContext {
-  theme: ITheme;
-  setTheme: (theme: ITheme) => void;
+  themes: ThemeModel[];
+  selectedTheme: ThemeModel;
+  setSelectedTheme: (theme: ThemeModel) => void;
 }
 
-const defaultTheme: ITheme = {
-  primaryColor: "#1976d2",
-  secondaryColor: "#f44336",
-  backgroundColor: "#f5f5f5",
-  textColor: "#212121",
-};
+export const AppThemeProvider = ({ children }: IContextProps) => {
+  const themeId = localStorage.getItem("themeId");
+  const [themes, setThemes] = useState<ThemeModel[]>([]);
+  const [selectedTheme, setSelectedTheme] = useState(
+    themeId ? chooseThemeById(Number(themeId), themes) : defaultTheme
+  );
 
-export const ThemeProvider = ({ children }: IContextProps) => {
-  const [theme, setTheme] = useState(defaultTheme);
+  const getThemes = useCallback(async () => {
+    const response = await appService.getThemes();
+    if (response.status === 200) {
+      setThemes(response.data || []);
+      if (response.data && !themeId) {
+        setSelectedTheme(response.data[1]);
+      }
+    }
+  }, [themeId]);
+
+  useEffect(() => {
+    getThemes();
+  }, [getThemes]);
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }} children={children} />
+    <ThemeContext.Provider
+      value={{ themes, selectedTheme, setSelectedTheme }}
+      children={children}
+    />
   );
 };

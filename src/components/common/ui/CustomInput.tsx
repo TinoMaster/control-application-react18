@@ -1,5 +1,6 @@
 import { TextField } from "@mui/material";
 import { Control, Controller } from "react-hook-form";
+import { useThemeContext } from "../../../core/context/use/useThemeContext";
 
 interface CustomInputProps {
   name: string;
@@ -9,7 +10,6 @@ interface CustomInputProps {
   placeholder?: string;
   error?: boolean;
   helperText?: string;
-  darkMode?: boolean;
 }
 
 const CustomInput = ({
@@ -20,8 +20,8 @@ const CustomInput = ({
   placeholder,
   error,
   helperText,
-  darkMode = false,
 }: CustomInputProps) => {
+  const {selectedTheme} = useThemeContext();
   return (
     <Controller
       name={name}
@@ -43,21 +43,21 @@ const CustomInput = ({
             margin: "0",
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
-                borderColor: darkMode ? "white" : "black", // Color del borde normal
+                borderColor: selectedTheme.text_color, // Color del borde normal
               },
               "&:hover fieldset": {
-                borderColor: "var(--primary-color)", // Color del borde al pasar el mouse
+                borderColor: selectedTheme.secondary_color, // Color del borde al pasar el mouse
               },
               "&.Mui-focused fieldset": {
-                borderColor: "var(--primary-light)", // Color del borde al enfocar
+                borderColor: selectedTheme.secondary_color, // Color del borde al enfocar
               },
             },
           }}
           slotProps={{
             inputLabel: {
-              style: { color: darkMode ? "white" : "black" }, 
+              style: { color: selectedTheme.text_color }, 
             },input: {
-              style: { color: darkMode ? "white" : "black" },
+              style: { color: selectedTheme.text_color },
             }
           }}
         />

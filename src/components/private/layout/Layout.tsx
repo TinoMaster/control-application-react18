@@ -8,8 +8,10 @@ import { SuperAdminRoutes } from "../../../pages/admin/Admin.routes";
 import { PrivateSidebar } from "../sidebar/Sidebar";
 import { SuperAdminSidebar } from "../../admin/sidebar/Sidebar";
 import { HeaderAdmin } from "../../admin/header/header";
+import { useThemeContext } from "../../../core/context/use/useThemeContext";
 
 export const PrivateLayout = () => {
+  const {selectedTheme} = useThemeContext();
   const { role, materialTheme } = useAppContext();
   const [open, setOpen] = useState(false);
 
@@ -29,9 +31,9 @@ export const PrivateLayout = () => {
     <Box
       sx={{
         display: "flex",
-        backgroundColor: "var(--bg-light)",
+        backgroundColor: selectedTheme.background_color,
         width: "100%",
-        color: "var(--text-color)",
+        color: selectedTheme.text_color,
       }}
     >
       {/* Header */}
@@ -57,13 +59,14 @@ export const PrivateLayout = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          padding: { md: "1rem" },
+          padding: {xs: "0.5rem", md: "1rem" },
           transition: materialTheme.transitions.create("margin", {
             easing: materialTheme.transitions.easing.sharp,
             duration: materialTheme.transitions.duration.leavingScreen,
           }),
           minHeight: "100vh",
           maxWidth: "100vw",
+          mt: "10px",
         }}
       >
         <Toolbar />

@@ -5,11 +5,14 @@ import {
   Card,
   CardContent,
   CardHeader,
+  darken,
+  lighten,
   Typography,
 } from "@mui/material";
 import { BusinessModel } from "../../../../core/models/api";
 import { formatDateToString } from "../../../../core/utilities/helpers/dateFormat";
 import { Link } from "react-router-dom";
+import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 
 interface IBusinessCardProps {
   business: BusinessModel;
@@ -20,6 +23,7 @@ export const BusinessCard = ({
   business,
   currentBusinessId,
 }: IBusinessCardProps) => {
+  const { selectedTheme } = useThemeContext();
   return (
     <Card
       sx={{
@@ -30,10 +34,11 @@ export const BusinessCard = ({
         borderRadius: 2,
         border: "2px solid",
         position: "relative",
+        backgroundColor: darken(selectedTheme.background_color, 0.25),
         borderColor:
           currentBusinessId === business.id
-            ? "var(--secondary-color)"
-            : "white",
+            ? selectedTheme.secondary_color
+            : selectedTheme.background_color,
       }}
     >
       <Typography
@@ -51,7 +56,7 @@ export const BusinessCard = ({
         avatar={
           <Avatar
             sx={{
-              backgroundColor: "var(--secondary-color)",
+              backgroundColor: lighten(selectedTheme.primary_color, 0.1),
               color: "white",
               width: 56,
               height: 56,
@@ -62,14 +67,18 @@ export const BusinessCard = ({
           </Avatar>
         }
         title={
-          <Typography variant="h6" fontSize={"1rem"}>
+          <Typography
+            color={selectedTheme.text_color}
+            variant="h6"
+            fontSize={"1rem"}
+          >
             {business.name}
           </Typography>
         }
         subheader={
           <Typography
             variant="body2"
-            color="text.secondary"
+            color={selectedTheme.text_color}
             fontSize={"0.7rem"}
           >
             {business.address.municipality}
@@ -81,7 +90,7 @@ export const BusinessCard = ({
               variant="contained"
               size="small"
               sx={{
-                backgroundColor: "var(--secondary-color)",
+                backgroundColor: lighten(selectedTheme.primary_color, 0.1),
                 mt: 1,
                 fontSize: "0.7rem",
               }}
@@ -96,7 +105,7 @@ export const BusinessCard = ({
           <Typography
             fontSize={"0.8rem"}
             variant="body2"
-            color="text.secondary"
+            color={selectedTheme.text_color}
           >
             <strong>Creado el:</strong>{" "}
             {formatDateToString(business.createdAt as Date)}
@@ -104,14 +113,14 @@ export const BusinessCard = ({
           <Typography
             fontSize={"0.8rem"}
             variant="body2"
-            color="text.secondary"
+            color={selectedTheme.text_color}
           >
             <strong>Telefono:</strong> {business.phone}
           </Typography>
           <Typography
             fontSize={"0.8rem"}
             variant="body2"
-            color="text.secondary"
+            color={selectedTheme.text_color}
           >
             <strong>Dirección:</strong>{" "}
             {`${business.address.street} ${business.address.number}, ${business.address.city}, ${business.address.municipality}`}
@@ -119,7 +128,7 @@ export const BusinessCard = ({
           <Typography
             fontSize={"0.8rem"}
             variant="body2"
-            color="text.secondary"
+            color={selectedTheme.text_color}
           >
             <strong>Personal en el negocio:</strong>{" "}
             {business.users?.length || 0}
@@ -127,7 +136,7 @@ export const BusinessCard = ({
           <Typography
             fontSize={"0.8rem"}
             variant="body2"
-            color="text.secondary"
+            color={selectedTheme.text_color}
           >
             <strong>Descripción:</strong>{" "}
             {business.description ? business.description : "Sin descripción"}

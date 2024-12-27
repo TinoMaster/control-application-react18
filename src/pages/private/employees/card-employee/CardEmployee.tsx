@@ -5,18 +5,21 @@ import {
   Card,
   CardContent,
   CardHeader,
+  darken,
   Typography,
 } from "@mui/material";
 import { EmployeeModel } from "../../../../core/models/api/employee.model";
 import { formatDateToString } from "../../../../core/utilities/helpers/dateFormat";
 import { translateRole } from "../../../../core/utilities/helpers/translateRole";
 import { Link } from "react-router-dom";
+import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 
 interface CardEmployeeProps {
   employee: EmployeeModel;
 }
 
 export const CardEmployee = ({ employee }: CardEmployeeProps) => {
+  const {selectedTheme} = useThemeContext();
   return (
     <Card
       sx={{
@@ -25,13 +28,15 @@ export const CardEmployee = ({ employee }: CardEmployeeProps) => {
         margin: { xs: "0 auto", sm: "0" },
         boxShadow: 3,
         borderRadius: 2,
+        backgroundColor: darken(selectedTheme.background_color, 0.25),
+        color: selectedTheme.text_color,
       }}
     >
       <CardHeader
         avatar={
           <Avatar
             sx={{
-              backgroundColor: "var(--primary-color)",
+              backgroundColor: selectedTheme.secondary_color,
               color: "white",
               width: 56,
               height: 56,
@@ -49,7 +54,7 @@ export const CardEmployee = ({ employee }: CardEmployeeProps) => {
         subheader={
           <Typography
             variant="body2"
-            color="text.secondary"
+            color={selectedTheme.text_color}
             fontSize={"0.7rem"}
           >
             {translateRole(employee.user.role)}
@@ -61,7 +66,7 @@ export const CardEmployee = ({ employee }: CardEmployeeProps) => {
             component={Link}
             to={`/employees/${employee.id}`}
             sx={{
-              backgroundColor: "var(--primary-color)",
+              backgroundColor: selectedTheme.secondary_color,
               mt: 1,
               fontSize: "0.7rem",
             }}
@@ -75,21 +80,21 @@ export const CardEmployee = ({ employee }: CardEmployeeProps) => {
           <Typography
             fontSize={"0.8rem"}
             variant="body2"
-            color="text.secondary"
+            color={selectedTheme.text_color}
           >
             <strong>Correo Electrónico:</strong> {employee.user.email}
           </Typography>
           <Typography
             fontSize={"0.8rem"}
             variant="body2"
-            color="text.secondary"
+            color={selectedTheme.text_color}
           >
             <strong>Telefono:</strong> {employee.phone}
           </Typography>
           <Typography
             fontSize={"0.8rem"}
             variant="body2"
-            color="text.secondary"
+            color={selectedTheme.text_color}
           >
             <strong>Dirección:</strong>{" "}
             {`${employee.address.street} ${employee.address.number}, ${employee.address.city}, ${employee.address.municipality}`}
@@ -97,14 +102,14 @@ export const CardEmployee = ({ employee }: CardEmployeeProps) => {
           <Typography
             fontSize={"0.8rem"}
             variant="body2"
-            color="text.secondary"
+            color={selectedTheme.text_color}
           >
             <strong>DNI:</strong> {employee.dni}
           </Typography>
           <Typography
             fontSize={"0.8rem"}
             variant="body2"
-            color="text.secondary"
+            color={selectedTheme.text_color}
           >
             <strong>Creado el:</strong>{" "}
             {formatDateToString(employee.user.createdAt as Date)}

@@ -144,7 +144,6 @@ const LoginPage = () => {
                 <CustomInput
                   name="email"
                   control={control}
-                  darkMode
                   label="Correo Electrónico"
                   type="email"
                   placeholder="Ingrese su correo electrónico"
@@ -156,7 +155,6 @@ const LoginPage = () => {
                 <CustomInput
                   name="password"
                   control={control}
-                  darkMode
                   label="Contraseña"
                   type="password"
                   placeholder="Ingrese su contraseña"

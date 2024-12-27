@@ -1,18 +1,15 @@
 import { Box, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { INavLinkItem } from "../../../core/types/global.types";
+import { useThemeContext } from "../../../core/context/use/useThemeContext";
 
 interface IMenuPagesProps {
   title?: string;
   links: INavLinkItem[];
-  variant?: "primary" | "secondary";
 }
 
-export const MenuPages = ({
-  title,
-  links,
-  variant = "primary",
-}: IMenuPagesProps) => {
+export const MenuPages = ({ title, links }: IMenuPagesProps) => {
+  const { selectedTheme } = useThemeContext();
   return (
     <Box
       sx={{
@@ -20,9 +17,13 @@ export const MenuPages = ({
         justifyContent: "space-between",
         alignItems: "center",
         p: 2,
-        bgcolor: "#EFEFEF",
-        color: "text.primary",
+        backgroundImage: `linear-gradient(to right, ${selectedTheme.primary_color}, ${selectedTheme.background_color})`,
+        zIndex: 10,
+        color: selectedTheme.text_color,
+        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
         borderRadius: "8px",
+        position: "sticky",
+        top: "63px",
       }}
     >
       {title && (
@@ -45,11 +46,7 @@ export const MenuPages = ({
             to={link.path}
             style={({ isActive }) => ({
               textDecoration: "none",
-              backgroundColor: isActive
-                ? variant === "primary"
-                  ? "var(--primary-color)"
-                  : "var(--secondary-color)"
-                : "gray",
+              backgroundColor: isActive ? selectedTheme.secondary_color : "transparent",
               color: isActive ? "white" : "#fefefe",
               borderRadius: "4px",
               display: "flex",

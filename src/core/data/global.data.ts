@@ -133,10 +133,3 @@ export const SUPERADMIN_NAV_LINKS: INavLinkItem[] = [
     icon: AssignmentIndIcon,
   },
 ];
-
-export interface ITheme {
-  primaryColor: string;
-  secondaryColor: string;
-  backgroundColor: string;
-  textColor: string;
-}

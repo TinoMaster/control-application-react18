@@ -89,7 +89,6 @@ const RegisterOwner = () => {
               <CustomInput
                 name="name"
                 control={control}
-                darkMode
                 label="Nombre del Usuario"
                 error={!!errors.name}
                 helperText={errors.name?.message}
@@ -99,7 +98,6 @@ const RegisterOwner = () => {
               <CustomInput
                 name="lastName"
                 control={control}
-                darkMode
                 label="Apellido del Usuario"
                 error={!!errors.lastName}
                 helperText={errors.lastName?.message}
@@ -109,7 +107,6 @@ const RegisterOwner = () => {
               <CustomInput
                 name="email"
                 type="email"
-                darkMode
                 control={control}
                 label="Correo Electrónico"
                 error={!!errors.email}
@@ -121,7 +118,6 @@ const RegisterOwner = () => {
                 name="password"
                 type="password"
                 control={control}
-                darkMode
                 label="Contraseña"
                 error={!!errors.password}
                 helperText={errors.password?.message}
@@ -132,7 +128,6 @@ const RegisterOwner = () => {
                 name="confirmPassword"
                 type="password"
                 control={control}
-                darkMode
                 label="Confirmar Contraseña"
                 error={!!errors.confirmPassword}
                 helperText={errors.confirmPassword?.message}
@@ -143,7 +138,6 @@ const RegisterOwner = () => {
               <CustomInput
                 name="businessName"
                 control={control}
-                darkMode
                 label="Nombre del Negocio"
                 error={!!errors.businessName}
                 helperText={errors.businessName?.message}
@@ -153,7 +147,6 @@ const RegisterOwner = () => {
               <CustomInput
                 name="businessPhone"
                 control={control}
-                darkMode
                 label="Teléfono del Negocio"
                 error={!!errors.businessPhone}
                 helperText={errors.businessPhone?.message}
@@ -164,7 +157,6 @@ const RegisterOwner = () => {
                 name="addressMunicipality"
                 type="text"
                 control={control}
-                darkMode
                 label="Municipio del Negocio"
                 error={!!errors.addressMunicipality}
                 helperText={errors.addressMunicipality?.message}
@@ -174,7 +166,6 @@ const RegisterOwner = () => {
               <CustomInput
                 name="businessDescription"
                 control={control}
-                darkMode
                 label="Descripción del Negocio"
                 error={!!errors.businessDescription}
                 helperText={errors.businessDescription?.message}
@@ -185,7 +176,6 @@ const RegisterOwner = () => {
               <CustomInput
                 name="addressStreet"
                 control={control}
-                darkMode
                 label="Dirección"
                 placeholder="Ej: calle 41 e/42 y 36"
                 error={!!errors.addressStreet}
@@ -196,7 +186,6 @@ const RegisterOwner = () => {
               <CustomInput
                 name="addressNumber"
                 control={control}
-                darkMode
                 label="Número"
                 error={!!errors.addressNumber}
                 helperText={errors.addressNumber?.message}
@@ -206,7 +195,6 @@ const RegisterOwner = () => {
               <CustomInput
                 name="addressCity"
                 control={control}
-                darkMode
                 label="Ciudad"
                 error={!!errors.addressCity}
                 helperText={errors.addressCity?.message}
@@ -216,7 +204,6 @@ const RegisterOwner = () => {
               <CustomInput
                 name="addressZipCode"
                 control={control}
-                darkMode
                 label="Código Postal"
                 error={!!errors.addressZipCode}
                 helperText={errors.addressZipCode?.message}

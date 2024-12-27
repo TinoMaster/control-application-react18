@@ -1,10 +1,10 @@
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
-import { PublicLayout } from "./components/public";
 import PrivateContainer from "./pages/private/PrivateContainer";
 import { useAuthContext } from "./core/context/use/useAuthContext";
 import { ERole } from "./core/models/api";
 import SuperAdminContainer from "./pages/admin/SuperAdminContainer";
+import PublicContainer from "./pages/public/PublicContainer";
 
 function App() {
   const { isLoggedIn, role } = useAuthContext();
@@ -20,7 +20,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      {!isLoggedIn() ? <PublicLayout /> : privateContainerToRender()}
+      {!isLoggedIn() ? <PublicContainer /> : privateContainerToRender()}
     </BrowserRouter>
   );
 }

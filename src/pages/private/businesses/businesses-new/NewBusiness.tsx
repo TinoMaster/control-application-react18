@@ -23,8 +23,10 @@ import { zodRegisterBusinessToBusinessMapper } from "../../../../core/mappers/gl
 import { BusinessModel } from "../../../../core/models/api";
 import { businessService } from "../../../../core/services/businessService";
 import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
+import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 
 const NewBusiness = () => {
+  const { selectedTheme } = useThemeContext();
   const { user } = useAuthContext();
   const { addBusinessToBusinessList } = useBusinessContext();
   const [loading, setLoading] = useState(false);
@@ -176,7 +178,7 @@ const NewBusiness = () => {
                 variant="contained"
                 fullWidth
                 disabled={loading}
-                sx={{ backgroundColor: "var(--secondary-dark)", py: 1 }}
+                sx={{ backgroundColor: selectedTheme.secondary_color, py: 1 }}
               >
                 Registrar
               </Button>

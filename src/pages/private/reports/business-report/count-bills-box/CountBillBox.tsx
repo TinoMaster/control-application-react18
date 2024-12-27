@@ -1,17 +1,73 @@
 import {
   Box,
   Button,
+  darken,
   Grid2 as Grid,
   TextField,
   Typography,
 } from "@mui/material";
+import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
+import CustomInput from "../../../../../components/common/ui/CustomInput";
+import { Controller, useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  billCountSchema,
+  defaultBillCount,
+  TBillCount,
+} from "../../../../../core/models/zod/billCount.zodSchema";
+import { useEffect, useState } from "react";
+
+const billKeys: (keyof TBillCount)[] = [
+  "oneThousand",
+  "fiveHundred",
+  "twoHundred",
+  "oneHundred",
+  "fifty",
+  "twenty",
+  "ten",
+  "five",
+  "two",
+  "one",
+];
+
+const billValues = [1000, 500, 200, 100, 50, 20, 10, 5, 2, 1];
 
 export const CountBillBox = () => {
+  const { selectedTheme: theme } = useThemeContext();
+  const [total, setTotal] = useState(0);
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset,
+  } = useForm<TBillCount>({
+    resolver: zodResolver(billCountSchema),
+    defaultValues: defaultBillCount,
+  });
+
+  const watchFields = useWatch({ control });
+
+  useEffect(() => {
+    const calculateTotal = () => {
+      let newTotal = 0;
+      billKeys.forEach((key, index) => {
+        const count = Number(watchFields[key]) || 0;
+        newTotal += count * billValues[index];
+      });
+      setTotal(newTotal);
+    };
+
+    calculateTotal();
+  }, [watchFields]);
+
+  const onSubmit = (data: TBillCount) => console.log(data);
+
   return (
     <Box
       sx={{
         width: "100%",
-        maxWidth: "960px",
+        maxWidth: "660px",
         minHeight: "420px",
         display: "flex",
         flexDirection: "column",
@@ -22,10 +78,9 @@ export const CountBillBox = () => {
     >
       <form
         noValidate
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={handleSubmit(onSubmit)}
         style={{
-          width: "80%",
-          padding: "16px",
+          width: "100%",
           borderRadius: "8px",
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
         }}
@@ -36,7 +91,7 @@ export const CountBillBox = () => {
           align="center"
           sx={{
             padding: "12px",
-            backgroundColor: "violet",
+            backgroundColor: `${theme.primary_color}`,
             color: "white",
             fontWeight: "bold",
             borderRadius: "8px 8px 0 0",
@@ -45,29 +100,24 @@ export const CountBillBox = () => {
           Desglose
         </Typography>
 
-        <Grid container spacing={2} sx={{ paddingBottom: "16px" }}>
-          {[
-            "mil",
-            "quinientos",
-            "doscientos",
-            "cien",
-            "cincuenta",
-            "veinte",
-            "diez",
-            "cinco",
-            "tres",
-            "uno",
-          ].map((bill, index) => (
+        <Grid
+          container
+          spacing={2}
+          rowGap={{ xs: 2, sm: 5 }}
+          sx={{
+            padding: "10px",
+            backgroundColor: darken(theme.background_color, 0.1),
+          }}
+        >
+          {billKeys.map((bill, index) => (
             <Grid size={{ xs: 12, sm: 6 }} key={bill}>
-              <TextField
-                label={`$${[1000, 500, 200, 100, 50, 20, 10, 5, 3, 1][index]}`}
+              <CustomInput
+                label={`$${billValues[index]}`}
                 type="number"
                 name={bill}
-                fullWidth
-                variant="outlined"
-                InputProps={{
-                  inputProps: { min: 0 },
-                }}
+                control={control}
+                error={!!errors[bill]}
+                helperText={errors[bill]?.message}
               />
             </Grid>
           ))}
@@ -79,24 +129,68 @@ export const CountBillBox = () => {
             justifyContent: "space-between",
             alignItems: "center",
             borderTop: "2px solid #ddd",
-            paddingTop: "16px",
+            padding: "10px",
           }}
         >
-          <Button variant="outlined" color="error" sx={{ width: "30%" }}>
+          <Button
+            variant="outlined"
+            type="reset"
+            onClick={() => reset(defaultBillCount)}
+            sx={{
+              width: "30%",
+              color: theme.secondary_color,
+              borderColor: theme.secondary_color,
+            }}
+          >
             Resetear
           </Button>
-          <Button variant="contained" color="primary" sx={{ width: "30%" }}>
+          <Button
+            variant="contained"
+            type="submit"
+            sx={{
+              width: "30%",
+              color: "white",
+              backgroundColor: theme.secondary_color,
+            }}
+          >
             Procesar
           </Button>
-          <TextField
-            label="Resultado"
-            variant="outlined"
-            fullWidth
-            sx={{ width: "30%" }}
-            InputProps={{
-              readOnly: true,
-              style: { textAlign: "center" },
-            }}
+          <Controller
+            name="total"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                value={total}
+                label="Total"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                sx={{
+                  width: "30%",
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: theme.text_color, // Color del borde normal
+                    },
+                    "&:hover fieldset": {
+                      borderColor: theme.text_color, // Color del borde al pasar el mouse
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: theme.text_color, // Color del borde cuando está enfocado
+                    },
+                  },
+                }}
+                slotProps={{
+                  inputLabel: {
+                    style: { color: theme.text_color },
+                  },
+                  input: {
+                    style: { color: theme.text_color },
+                    readOnly: true,
+                  },
+                }}
+              />
+            )}
           />
         </Box>
       </form>
