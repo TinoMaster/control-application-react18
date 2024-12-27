@@ -7,7 +7,7 @@ import {
   CardHeader,
   Typography,
 } from "@mui/material";
-import { EmployeeModel } from "../../../../core/models/api/employee";
+import { EmployeeModel } from "../../../../core/models/api/employee.model";
 import { formatDateToString } from "../../../../core/utilities/helpers/dateFormat";
 import { translateRole } from "../../../../core/utilities/helpers/translateRole";
 import { Link } from "react-router-dom";

@@ -1,5 +1,5 @@
 import { apiConfig } from "../config/api.config";
-import { EmployeeModel } from "../models/api/employee";
+import { EmployeeModel } from "../models/api/employee.model";
 import { IResponse } from "../types/request.types";
 import { handleFetchError } from "../utilities/helpers/errorManager";
 import { requestService } from "./RequestService";

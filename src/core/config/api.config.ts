@@ -1,3 +1,8 @@
+const urlBase = "http://localhost:5000/api/v1";
+
 export const apiConfig = {
-    baseUrl: "http://localhost:5000/api/v1",
+    baseUrl: urlBase,
+    publicUrl: `${urlBase}/public`,
+    privateUrl: `${urlBase}/private`,
+    superadminUrl: `${urlBase}/superadmin`,
 };

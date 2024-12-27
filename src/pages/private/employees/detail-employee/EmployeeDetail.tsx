@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { EmployeeModel } from "../../../../core/models/api/employee";
+import { EmployeeModel } from "../../../../core/models/api/employee.model";
 import { employeeService } from "../../../../core/services/employeeService";
 import {
   Alert,

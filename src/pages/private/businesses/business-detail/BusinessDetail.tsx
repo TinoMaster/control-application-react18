@@ -21,7 +21,7 @@ import {
   Typography,
 } from "@mui/material";
 import { formatDateToString } from "../../../../core/utilities/helpers/dateFormat";
-import { EmployeeModel } from "../../../../core/models/api/employee";
+import { EmployeeModel } from "../../../../core/models/api/employee.model";
 import { businessService } from "../../../../core/services/businessService";
 import { employeeService } from "../../../../core/services/employeeService";
 import { translateRole } from "../../../../core/utilities/helpers/translateRole";

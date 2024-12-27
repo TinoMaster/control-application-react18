@@ -29,7 +29,7 @@ import {
 } from "../../../../core/models/zod/registerEmployee";
 import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { EmployeeModel } from "../../../../core/models/api/employee";
+import { EmployeeModel } from "../../../../core/models/api/employee.model";
 import { zodEmployeeToEmployeeMapper } from "../../../../core/mappers/global.mapper";
 import { employeeService } from "../../../../core/services/employeeService";
 import { useAuthContext } from "../../../../core/context/use/useAuthContext";

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { CardEmployee } from "../card-employee/CardEmployee";
-import { EmployeeModel } from "../../../../core/models/api/employee";
+import { EmployeeModel } from "../../../../core/models/api/employee.model";
 import { employeeService } from "../../../../core/services/employeeService";
 import { Box, Skeleton } from "@mui/material";
 import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";

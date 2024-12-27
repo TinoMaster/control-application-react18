@@ -7,4 +7,6 @@ export interface EmployeeModel {
     address: AddressModel;
     user: UserModel;
     dni: string;
+    percentSalary: number;
+    fixedSalary: number;
 }

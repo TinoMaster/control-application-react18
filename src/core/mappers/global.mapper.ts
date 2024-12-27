@@ -4,7 +4,7 @@ import {
   UserModel,
   UserRegisterModel,
 } from "../models/api";
-import { EmployeeModel } from "../models/api/employee";
+import { EmployeeModel } from "../models/api/employee.model";
 import { TRegisterOwnerDataModel } from "../models/zod";
 import { RegisterBusinessDataModel } from "../models/zod/registerBusiness";
 import { TRegisterEmployeeDataModel } from "../models/zod/registerEmployee";

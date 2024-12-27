@@ -9,7 +9,7 @@ import Groups3Icon from "@mui/icons-material/Groups3";
 import StoreIcon from "@mui/icons-material/Store";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import BusinessIcon from '@mui/icons-material/Business';
+import BusinessIcon from "@mui/icons-material/Business";
 import { ERole } from "../models/api";
 
 export const APP_TITLE = "Control";
@@ -133,3 +133,10 @@ export const SUPERADMIN_NAV_LINKS: INavLinkItem[] = [
     icon: AssignmentIndIcon,
   },
 ];
+
+export interface ITheme {
+  primaryColor: string;
+  secondaryColor: string;
+  backgroundColor: string;
+  textColor: string;
+}

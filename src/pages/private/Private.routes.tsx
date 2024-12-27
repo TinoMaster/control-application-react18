@@ -29,6 +29,11 @@ const BusinessesListPage = lazy(
 const BusinessDetailPage = lazy(
   () => import("./businesses/business-detail/BusinessDetail")
 );
+/* Reports */
+const ReportsLayoutPage = lazy(() => import("./reports/ReportsLayout"));
+const BusinessReportPage = lazy(
+  () => import("./reports/business-report/BusinessReport")
+);
 
 export const PrivateRoutes = () => {
   return (
@@ -62,6 +67,20 @@ export const PrivateRoutes = () => {
         <Route path="list" element={<BusinessesListPage />} />
         <Route path="new" element={<NewBusinessPage />} />
         <Route path=":id" element={<BusinessDetailPage />} />
+      </Route>
+      {/* Reports */}
+      <Route
+        path="reports"
+        element={
+          <PrivateRoute
+            allowedRoles={[ERole.OWNER, ERole.ADMIN, ERole.EMPLOYEE]}
+          >
+            <ReportsLayoutPage />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<Navigate to="business" replace />} />
+        <Route path="business" element={<BusinessReportPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/404" replace />} />
     </RoutesWithNotFound>
