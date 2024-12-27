@@ -22,7 +22,7 @@ export const BannerHome = () => {
       <Typography
         variant="body1"
         sx={{
-          color: "var(--text-color)",
+          color: "#e1f2ef",
           maxWidth: "750px",
           textAlign: "center",
         }}

@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, darken, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { INavLinkItem } from "../../../core/types/global.types";
 import { useThemeContext } from "../../../core/context/use/useThemeContext";
@@ -17,7 +17,7 @@ export const MenuPages = ({ title, links }: IMenuPagesProps) => {
         justifyContent: "space-between",
         alignItems: "center",
         p: 2,
-        backgroundImage: `linear-gradient(to right, ${selectedTheme.primary_color}, ${selectedTheme.background_color})`,
+        backgroundImage: `linear-gradient(to right, ${selectedTheme.secondary_color}, ${selectedTheme.primary_color})`,
         zIndex: 10,
         color: selectedTheme.text_color,
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
@@ -46,8 +46,10 @@ export const MenuPages = ({ title, links }: IMenuPagesProps) => {
             to={link.path}
             style={({ isActive }) => ({
               textDecoration: "none",
-              backgroundColor: isActive ? selectedTheme.secondary_color : "transparent",
-              color: isActive ? "white" : "#fefefe",
+              backgroundColor: isActive
+                ? "white"
+                : "transparent",
+              color: isActive ? darken(selectedTheme.primary_color, 0.8) : "#fefefe",
               borderRadius: "4px",
               display: "flex",
               alignItems: "center",

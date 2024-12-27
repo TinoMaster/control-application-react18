@@ -91,7 +91,7 @@ export const CountBillBox = () => {
           align="center"
           sx={{
             padding: "12px",
-            backgroundColor: `${theme.primary_color}`,
+            backgroundImage: `linear-gradient(to right, ${theme.secondary_color}, ${theme.primary_color})`,
             color: "white",
             fontWeight: "bold",
             borderRadius: "8px 8px 0 0",
@@ -127,7 +127,7 @@ export const CountBillBox = () => {
           sx={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: "baseline",
             borderTop: "2px solid #ddd",
             padding: "10px",
           }}
@@ -150,7 +150,7 @@ export const CountBillBox = () => {
             sx={{
               width: "30%",
               color: "white",
-              backgroundColor: theme.secondary_color,
+              backgroundImage: `linear-gradient(to right, ${theme.secondary_color}, ${theme.primary_color})`,
             }}
           >
             Procesar
@@ -166,6 +166,7 @@ export const CountBillBox = () => {
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                size="small"
                 sx={{
                   width: "30%",
                   "& .MuiOutlinedInput-root": {
@@ -178,7 +179,7 @@ export const CountBillBox = () => {
                     "&.Mui-focused fieldset": {
                       borderColor: theme.text_color, // Color del borde cuando está enfocado
                     },
-                  },
+                  }
                 }}
                 slotProps={{
                   inputLabel: {

@@ -52,7 +52,7 @@ const Header = () => {
         <IconButton
           onClick={toggleDrawer}
           aria-label="Toggle left drawer"
-          color="inherit"
+          sx={{ color: "white" }}
         >
           <MenuOpenRoundedIcon fontSize="large" color="inherit" />
         </IconButton>
@@ -74,7 +74,7 @@ const Header = () => {
               to={link.path}
               key={link.name}
               onClick={toggleDrawer}
-              color="inherit"
+              sx={{ color: "white" }}
             >
               {link.label}
             </MenuItem>

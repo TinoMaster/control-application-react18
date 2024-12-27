@@ -49,6 +49,7 @@ nav {
   font-size: 1.125rem;
   font-weight: bold;
   text-transform: uppercase;
+  color: white;
 }
 
 .nav-links {
@@ -62,7 +63,7 @@ nav {
 }
 
 .nav-links a {
-  color: inherit;
+  color: white;
   transition: color 0.3s ease;
   text-decoration: none;
 }

@@ -2,10 +2,7 @@ import { ReactNode, useCallback, useEffect, useState } from "react";
 import { ThemeContext } from "../use/useThemeContext";
 import { ThemeModel } from "../../models/api/theme.model";
 import { appService } from "../../services/appService";
-import {
-  chooseThemeById,
-  defaultTheme,
-} from "../../utilities/helpers/chooseTheme";
+import { chooseThemeById } from "../../utilities/helpers/chooseTheme";
 
 interface IContextProps {
   children: ReactNode;
@@ -13,15 +10,15 @@ interface IContextProps {
 
 export interface IThemeContext {
   themes: ThemeModel[];
-  selectedTheme: ThemeModel;
+  selectedTheme: ThemeModel | undefined;
   setSelectedTheme: (theme: ThemeModel) => void;
 }
 
 export const AppThemeProvider = ({ children }: IContextProps) => {
   const themeId = localStorage.getItem("themeId");
   const [themes, setThemes] = useState<ThemeModel[]>([]);
-  const [selectedTheme, setSelectedTheme] = useState(
-    themeId ? chooseThemeById(Number(themeId), themes) : defaultTheme
+  const [selectedTheme, setSelectedTheme] = useState<ThemeModel | undefined>(
+    themeId ? chooseThemeById(Number(themeId), themes) : undefined
   );
 
   const getThemes = useCallback(async () => {
