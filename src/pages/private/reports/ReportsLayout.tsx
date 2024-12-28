@@ -22,7 +22,7 @@ const ReportsLayout = () => {
       <MenuPages title="Reportes" links={links} />
       <Box
         sx={{
-          padding: "16px 0",
+          padding: { xs: "16px 10px", md: "16px 20px" },
           display: "flex",
           flexDirection: "column",
           gap: 2,

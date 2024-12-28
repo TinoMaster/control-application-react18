@@ -75,14 +75,12 @@ export const PrivateLayout = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          padding: { xs: "0.5rem", md: "1rem" },
           transition: materialTheme.transitions.create("margin", {
             easing: materialTheme.transitions.easing.sharp,
             duration: materialTheme.transitions.duration.leavingScreen,
           }),
           minHeight: "100vh",
           maxWidth: "100vw",
-          mt: "10px",
         }}
       >
         <Toolbar />

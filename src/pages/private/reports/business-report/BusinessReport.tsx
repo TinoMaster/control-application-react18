@@ -1,11 +1,11 @@
 import { Grid2 as Grid } from "@mui/material";
-import { CountBillBox } from "./count-bills-box/CountBillBox";
+import { SaleReportBox } from "./sale-report-box/SaleReportBox";
 
 const BusinessReport = () => {
   return (
     <Grid container spacing={2}>
-      <CountBillBox />
-      <CountBillBox />
+      {/* <CountBillBox /> */}
+      <SaleReportBox />
     </Grid>
   );
 };
