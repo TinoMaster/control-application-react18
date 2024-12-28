@@ -21,7 +21,7 @@ const CustomInput = ({
   error,
   helperText,
 }: CustomInputProps) => {
-  const {selectedTheme} = useThemeContext();
+  const { selectedTheme } = useThemeContext();
 
   return (
     <Controller
@@ -44,22 +44,23 @@ const CustomInput = ({
             margin: "0",
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
-                borderColor: selectedTheme?.text_color || "white", // Color del borde normal
+                borderColor: selectedTheme.text_color, // Color del borde normal
               },
               "&:hover fieldset": {
-                borderColor: selectedTheme?.secondary_color || "var(--primary-color)", // Color del borde al pasar el mouse
+                borderColor: selectedTheme.secondary_color, // Color del borde al pasar el mouse
               },
               "&.Mui-focused fieldset": {
-                borderColor: selectedTheme?.secondary_color || "var(--primary-color)", // Color del borde al enfocar
+                borderColor: selectedTheme.secondary_color, // Color del borde al enfocar
               },
             },
           }}
           slotProps={{
             inputLabel: {
-              style: { color: selectedTheme?.text_color || "white" }, 
-            },input: {
-              style: { color: selectedTheme?.text_color || "white" },
-            }
+              style: { color: selectedTheme.text_color || "white" },
+            },
+            input: {
+              style: { color: selectedTheme.text_color || "white" },
+            },
           }}
         />
       )}

@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  darken,
   Grid2 as Grid,
   TextField,
   Typography,
@@ -74,6 +73,7 @@ export const CountBillBox = () => {
         justifyContent: "center",
         alignItems: "center",
         margin: "auto",
+        boxShadow: `0 0 70px 10px ${theme.secondary_color}15`,
       }}
     >
       <form
@@ -91,7 +91,7 @@ export const CountBillBox = () => {
           align="center"
           sx={{
             padding: "12px",
-            backgroundImage: `linear-gradient(to right, ${theme.secondary_color}, ${theme.primary_color})`,
+            backgroundColor: theme.secondary_color,
             color: "white",
             fontWeight: "bold",
             borderRadius: "8px 8px 0 0",
@@ -106,7 +106,7 @@ export const CountBillBox = () => {
           rowGap={{ xs: 2, sm: 5 }}
           sx={{
             padding: "10px",
-            backgroundColor: darken(theme.background_color, 0.1),
+            backgroundColor: theme.background_color,
           }}
         >
           {billKeys.map((bill, index) => (
@@ -128,7 +128,9 @@ export const CountBillBox = () => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "baseline",
-            borderTop: "2px solid #ddd",
+            borderTop: "1px solid",
+            borderColor: theme.secondary_color,
+            m: 1,
             padding: "10px",
           }}
         >
@@ -150,7 +152,7 @@ export const CountBillBox = () => {
             sx={{
               width: "30%",
               color: "white",
-              backgroundImage: `linear-gradient(to right, ${theme.secondary_color}, ${theme.primary_color})`,
+              backgroundColor: theme.secondary_color,
             }}
           >
             Procesar
@@ -179,7 +181,7 @@ export const CountBillBox = () => {
                     "&.Mui-focused fieldset": {
                       borderColor: theme.text_color, // Color del borde cuando está enfocado
                     },
-                  }
+                  },
                 }}
                 slotProps={{
                   inputLabel: {

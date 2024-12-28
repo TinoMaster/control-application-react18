@@ -11,7 +11,7 @@ import { HeaderAdmin } from "../../admin/header/header";
 import { useThemeContext } from "../../../core/context/use/useThemeContext";
 
 export const PrivateLayout = () => {
-  const { selectedTheme } = useThemeContext();
+  const { selectedTheme, loadingThemes } = useThemeContext();
   const { role, materialTheme } = useAppContext();
   const [open, setOpen] = useState(false);
 
@@ -27,7 +27,7 @@ export const PrivateLayout = () => {
     }
   };
 
-  if (!selectedTheme) {
+  if (loadingThemes) {
     return (
       <Box
         sx={{

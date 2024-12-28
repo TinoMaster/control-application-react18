@@ -5,7 +5,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  darken,
+  lighten,
   Typography,
 } from "@mui/material";
 import { EmployeeModel } from "../../../../core/models/api/employee.model";
@@ -19,24 +19,24 @@ interface CardEmployeeProps {
 }
 
 export const CardEmployee = ({ employee }: CardEmployeeProps) => {
-  const {selectedTheme} = useThemeContext();
+  const { selectedTheme } = useThemeContext();
   return (
     <Card
       sx={{
         width: "100%",
         maxWidth: 400,
         margin: { xs: "0 auto", sm: "0" },
-        boxShadow: 3,
         borderRadius: 2,
-        backgroundColor: darken(selectedTheme.background_color, 0.25),
+        backgroundColor: lighten(selectedTheme.background_color, 0.1),
         color: selectedTheme.text_color,
+        boxShadow: `0 0 70px 10px ${selectedTheme.primary_color}15 , 0 0 5px 5px #00000015`,
       }}
     >
       <CardHeader
         avatar={
           <Avatar
             sx={{
-              backgroundColor: selectedTheme.secondary_color,
+              backgroundColor: selectedTheme.primary_color,
               color: "white",
               width: 56,
               height: 56,
@@ -66,7 +66,7 @@ export const CardEmployee = ({ employee }: CardEmployeeProps) => {
             component={Link}
             to={`/employees/${employee.id}`}
             sx={{
-              backgroundColor: selectedTheme.secondary_color,
+              backgroundColor: selectedTheme.primary_color,
               mt: 1,
               fontSize: "0.7rem",
             }}

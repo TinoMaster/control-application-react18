@@ -36,6 +36,8 @@ const EmployeesList = () => {
         sx={{
           padding: "16px 0",
           display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
           gap: 2,
           flexDirection: { xs: "column", sm: "row" },
         }}
@@ -60,6 +62,7 @@ const EmployeesList = () => {
           padding: "16px 0",
           display: "flex",
           flexWrap: "wrap",
+          justifyContent: "center",
           flexDirection: { xs: "column", sm: "row" },
           gap: 2,
         }}

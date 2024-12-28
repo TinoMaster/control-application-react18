@@ -27,7 +27,7 @@ export const MenuPages = ({ title, links }: IMenuPagesProps) => {
       }}
     >
       {title && (
-        <Typography variant="h5" fontWeight="bold" sx={{ fontSize: "1.2rem" }}>
+        <Typography variant="h5" fontWeight="bold" sx={{ fontSize: "1.2rem", color: "white" }}>
           {title}
         </Typography>
       )}

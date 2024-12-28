@@ -18,6 +18,7 @@ import { NavLink } from "react-router-dom";
 import { INavLinkItem } from "../../../core/types/global.types";
 import { filterRoutesByRole } from "../../../core/utilities/helpers/filterRoutesByRole";
 import { useThemeContext } from "../../../core/context/use/useThemeContext";
+import { ChooseTheme } from "../../common/choose-theme/ChooseTheme";
 
 interface SidebarProps {
   open: boolean;
@@ -25,7 +26,7 @@ interface SidebarProps {
 }
 
 export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
-  const {selectedTheme} = useThemeContext();
+  const { selectedTheme } = useThemeContext();
   const { materialTheme, role } = useAppContext();
   const routes: INavLinkItem[] = filterRoutesByRole(PRIVATE_NAV_LINKS, role);
 
@@ -66,7 +67,8 @@ export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
             "linear-gradient(to bottom, var(--bg-dark-light), var(--bg-dark), var(--bg-dark-dark))",
           color: "white",
           height: "100%",
-          border: "2px solid var(--primary-color)",
+          border: "2px solid",
+          borderColor: selectedTheme.secondary_color,
           margin: "1px",
         }}
       >
@@ -112,6 +114,9 @@ export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
           </ListItem>
         ))}
       </List>
+
+      <Divider />
+      <ChooseTheme />
     </Drawer>
   );
 };

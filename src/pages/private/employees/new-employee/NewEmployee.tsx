@@ -34,10 +34,12 @@ import { zodEmployeeToEmployeeMapper } from "../../../../core/mappers/global.map
 import { employeeService } from "../../../../core/services/employeeService";
 import { useAuthContext } from "../../../../core/context/use/useAuthContext";
 import { ERole } from "../../../../core/models/api";
+import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 
 const NewEmployee = () => {
   const { businessList, business } = useBusinessContext();
   const { reloadUser } = useAuthContext();
+  const { selectedTheme } = useThemeContext();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -256,6 +258,7 @@ const NewEmployee = () => {
                       labelId="role-label"
                       id="role"
                       value={field.value || ""}
+                      inputProps={{ "aria-label": "Without label" }}
                     >
                       <MenuItem value="" disabled>
                         Seleccionar
@@ -326,7 +329,7 @@ const NewEmployee = () => {
                 variant="contained"
                 fullWidth
                 disabled={loading}
-                sx={{ backgroundColor: "var(--primary-color)", py: 1 }}
+                sx={{ backgroundColor: selectedTheme.primary_color, py: 1 }}
               >
                 Registrar
               </Button>
