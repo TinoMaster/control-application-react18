@@ -24,6 +24,7 @@ import {
 import { formatDateToString } from "../../../../core/utilities/helpers/dateFormat";
 import { translateRole } from "../../../../core/utilities/helpers/translateRole";
 import { ERole } from "../../../../core/models/api";
+import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 
 const modalStyle = {
   display: "flex",
@@ -32,6 +33,7 @@ const modalStyle = {
 };
 
 const EmployeeDetail = () => {
+  const { selectedTheme } = useThemeContext();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -98,11 +100,13 @@ const EmployeeDetail = () => {
       <Card
         sx={{
           margin: "auto",
-          boxShadow: 3,
+          boxShadow: `0 0 70px 10px ${selectedTheme.secondary_color}15 , 0 0 5px 2px #00000015`,
           p: 3,
           bgcolor: "white",
           width: "100%",
           maxWidth: "1200px",
+          backgroundColor: selectedTheme.background_color,
+          color: selectedTheme.text_color,
         }}
       >
         {/* Encabezado */}
@@ -212,7 +216,7 @@ const EmployeeDetail = () => {
         <Typography variant="h6" fontWeight="bold">
           Negocios Asociados
         </Typography>
-        <Paper>
+        <Paper sx={{ mt: 2, borderRadius: "8px", overflow: "hidden" }}>
           <TableContainer>
             <Table>
               <TableHead>
