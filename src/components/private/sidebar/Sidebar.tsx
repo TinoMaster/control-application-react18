@@ -52,7 +52,7 @@ export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "flex-end",
-          height: "69px",
+          height: "75px",
         }}
       >
         <IconButton onClick={handleDrawerToggle}>
@@ -67,9 +67,8 @@ export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
             "linear-gradient(to bottom, var(--bg-dark-light), var(--bg-dark), var(--bg-dark-dark))",
           color: "white",
           height: "100%",
-          border: "2px solid",
+          border: "1px solid",
           borderColor: selectedTheme.secondary_color,
-          margin: "1px",
         }}
       >
         <Typography variant="body1" sx={{ padding: "0 15px" }}>

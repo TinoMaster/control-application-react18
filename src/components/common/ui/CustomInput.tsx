@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { InputAdornment, TextField, Typography } from "@mui/material";
 import { Control, Controller } from "react-hook-form";
 import { useThemeContext } from "../../../core/context/use/useThemeContext";
 
@@ -10,6 +10,8 @@ interface CustomInputProps {
   placeholder?: string;
   error?: boolean;
   helperText?: string;
+  small?: boolean;
+  startAdornment?: string;
 }
 
 const CustomInput = ({
@@ -20,6 +22,8 @@ const CustomInput = ({
   placeholder,
   error,
   helperText,
+  small,
+  startAdornment,
 }: CustomInputProps) => {
   const { selectedTheme } = useThemeContext();
 
@@ -40,6 +44,7 @@ const CustomInput = ({
           placeholder={placeholder}
           error={error}
           helperText={helperText}
+          size={small ? "small" : "medium"}
           sx={{
             margin: "0",
             "& .MuiOutlinedInput-root": {
@@ -60,6 +65,20 @@ const CustomInput = ({
             },
             input: {
               style: { color: selectedTheme.text_color || "white" },
+              startAdornment: startAdornment && (
+                <InputAdornment position="start">
+                  <Typography sx={{ color: selectedTheme.text_color }}>
+                    {startAdornment}
+                  </Typography>
+                </InputAdornment>
+              ),
+            },
+            formHelperText: {
+              style: {
+                color: error ? "red" : selectedTheme.text_color,
+                fontSize: "0.8rem",
+                fontWeight: "lighter",
+              },
             },
           }}
         />

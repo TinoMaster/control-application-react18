@@ -5,7 +5,7 @@ export interface ConsumableModel {
     price: number;
     unit: string;
     stock: number;
-    businessId: number;
+    business: number;
     createdAt: Date;
     updatedAt: Date;
 }

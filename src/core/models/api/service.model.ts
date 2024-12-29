@@ -5,7 +5,7 @@ export interface ServiceModel {
   name: string;
   description: string;
   price: number;
-  businessId: number;
+  business: number;
   costs: CostModel[];
   createdAt: Date;
   updatedAt: Date;

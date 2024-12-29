@@ -259,6 +259,16 @@ const NewEmployee = () => {
                       id="role"
                       value={field.value || ""}
                       inputProps={{ "aria-label": "Without label" }}
+                      error={!!errors.role}
+                      sx={{
+                        color: "white",
+                        borderColor: "white",
+                        "&.MuiSelect-root": {
+                          "&:hover": {
+                            borderColor: "white",
+                          },
+                        },
+                      }}
                     >
                       <MenuItem value="" disabled>
                         Seleccionar
@@ -279,9 +289,19 @@ const NewEmployee = () => {
               display={businessList.length === 1 ? "none" : "block"}
               size={12}
             >
-              <Accordion expanded={expanded} onChange={handleChange}>
+              <Accordion
+                sx={{
+                  backgroundColor: selectedTheme.background_color,
+                  color: selectedTheme.text_color,
+                  border: `1px solid ${selectedTheme.text_color}`,
+                }}
+                expanded={expanded}
+                onChange={handleChange}
+              >
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
+                  expandIcon={
+                    <ExpandMoreIcon sx={{ color: selectedTheme.text_color }} />
+                  }
                   aria-controls="panel1-content"
                   id="panel1-header"
                 >
@@ -311,6 +331,12 @@ const NewEmployee = () => {
                                         (id) => id !== item.id
                                       ) // Remueve el negocio si está desmarcado
                                 );
+                              }}
+                              sx={{
+                                color: selectedTheme.text_color,
+                                "&.Mui-checked": {
+                                  color: selectedTheme.primary_color,
+                                },
                               }}
                             />
                           }

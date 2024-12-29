@@ -32,7 +32,7 @@ export const ChooseTheme = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          height: "69px",
+          height: "50px",
           backgroundImage: `linear-gradient(to right, ${selectedTheme.primary_color}, ${selectedTheme.secondary_color})`,
         }}
       >
