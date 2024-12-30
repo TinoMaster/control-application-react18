@@ -4,7 +4,6 @@ import { BusinessModel } from "../../../../core/models/api";
 import {
   Alert,
   Box,
-  Button,
   Card,
   CardContent,
   CircularProgress,
@@ -26,6 +25,9 @@ import { businessService } from "../../../../core/services/businessService";
 import { employeeService } from "../../../../core/services/employeeService";
 import { translateRole } from "../../../../core/utilities/helpers/translateRole";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
+import { KeyValueItem } from "../../../../components/common/ui/KeyValueItem";
+import { TitleBarAndButtons } from "../../../../components/common/ui/TitleBarAndButtons";
+import { KeyValueAdder } from "../../../../components/common/key-value-adder/KeyValueAdder";
 
 const modalStyle = {
   display: "flex",
@@ -34,7 +36,7 @@ const modalStyle = {
 };
 
 const BusinessDetail = () => {
-  const {selectedTheme} = useThemeContext();
+  const { selectedTheme } = useThemeContext();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -111,41 +113,18 @@ const BusinessDetail = () => {
           p: 3,
           bgcolor: "white",
           width: "100%",
-          maxWidth: "1200px",
+          maxWidth: "1500px",
           backgroundColor: selectedTheme.background_color,
           color: selectedTheme.text_color,
         }}
       >
         {/* Encabezado */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            p: 2,
-            bgcolor: "#EFEFEF",
-            color: "text.primary",
-            borderRadius: "8px",
-          }}
-        >
-          <Typography
-            variant="h5"
-            fontWeight="bold"
-            sx={{ fontSize: "1.2rem" }}
-          >
-            {business?.name}
-          </Typography>
-          <Box>
-            <Button
-              onClick={onDeleteBusiness}
-              variant="contained"
-              color="error"
-              size="small"
-            >
-              Elimina
-            </Button>
-          </Box>
-        </Box>
+        <TitleBarAndButtons
+          title={business?.name || ""}
+          buttons={[
+            { label: "Eliminar", onClick: onDeleteBusiness, color: "error" },
+          ]}
+        />
 
         {/* Contenido de la tarjeta */}
         <CardContent>
@@ -155,59 +134,32 @@ const BusinessDetail = () => {
               size={{ xs: 12, md: 6 }}
               sx={{ display: "flex", flexDirection: "column", gap: 2 }}
             >
-              <Typography
-                variant="body1"
-                sx={{ display: "flex", alignItems: "center", gap: 1 }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <span style={{ fontWeight: "bold" }}>Nombre: </span>
-                </Box>
-                <span>{business?.name}</span>
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ display: "flex", alignItems: "center", gap: 1 }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <span style={{ fontWeight: "bold" }}>Dirección: </span>
-                </Box>
-                <span>{`${business?.address.street} #${business?.address.number}, ${business?.address.city}, ${business?.address.municipality}`}</span>
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ display: "flex", alignItems: "center", gap: 1 }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <span style={{ fontWeight: "bold" }}>Telefono: </span>
-                </Box>
-                <Typography sx={{ fontSize: "0.9rem" }}>
-                  {business?.phone}
-                </Typography>
-              </Typography>
+              <KeyValueItem title="Nombre" value={business?.name || ""} />
+              <KeyValueItem
+                title="Dirección"
+                value={`${business?.address.street} #${business?.address.number}, ${business?.address.city}, ${business?.address.municipality}`}
+              />
+              <KeyValueItem title="Telefono" value={business?.phone || ""} />
+              <KeyValueItem
+                title="Creado"
+                value={formatDateToString(business?.createdAt || new Date())}
+              />
+              <KeyValueItem
+                title="Actualizado"
+                value={formatDateToString(business?.updatedAt || new Date())}
+              />
             </Grid>
             {/* Otros detalles */}
             <Grid
               size={{ xs: 12, md: 6 }}
               sx={{ display: "flex", flexDirection: "column", gap: 2 }}
             >
-              <Typography
-                variant="body1"
-                sx={{ display: "flex", alignItems: "center", gap: 1 }}
-              >
-                <span style={{ fontWeight: "bold" }}>Creado: </span>
-                <span>
-                  {formatDateToString(business?.createdAt || new Date())}
-                </span>
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ display: "flex", alignItems: "center", gap: 1 }}
-              >
-                <span style={{ fontWeight: "bold" }}>Modificado: </span>
-                <span>
-                  {formatDateToString(business?.updatedAt || new Date())}
-                </span>
-              </Typography>
+              <Box sx={{ width: "50%" }}>
+                <Typography variant="body2" fontWeight="bold" sx={{ mb: 2 }}>
+                  Maquinas
+                </Typography>
+                <KeyValueAdder small />
+              </Box>
             </Grid>
           </Grid>
         </CardContent>
