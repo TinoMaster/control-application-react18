@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BusinessModel } from "../../../../core/models/api";
 import {
-  Alert,
   Box,
   Card,
   CardContent,
@@ -10,7 +9,6 @@ import {
   Grid2 as Grid,
   Modal,
   Paper,
-  Snackbar,
   Table,
   TableBody,
   TableCell,
@@ -27,7 +25,8 @@ import { translateRole } from "../../../../core/utilities/helpers/translateRole"
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 import { KeyValueItem } from "../../../../components/common/ui/KeyValueItem";
 import { TitleBarAndButtons } from "../../../../components/common/ui/TitleBarAndButtons";
-import { KeyValueAdder } from "../../../../components/common/key-value-adder/KeyValueAdder";
+import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
+import { MachineSection } from "./machine-section/MachineSection";
 
 const modalStyle = {
   display: "flex",
@@ -91,21 +90,12 @@ const BusinessDetail = () => {
       <Modal sx={modalStyle} open={loading}>
         <>{loading && <CircularProgress color="warning" />}</>
       </Modal>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={success || error}
-        autoHideDuration={4000}
-      >
-        <Alert
-          severity={success ? "success" : "error"}
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {success
-            ? "Negocio eliminado con éxito"
-            : "Error al eliminar el negocio"}
-        </Alert>
-      </Snackbar>
+      <CustomSnackbar
+        success={success}
+        error={error}
+        successMessage="Establecimiento eliminado con éxito"
+        errorMessage="Ocurrió un error al eliminar el establecimiento"
+      />
       <Card
         sx={{
           margin: "auto",
@@ -139,7 +129,7 @@ const BusinessDetail = () => {
                 title="Dirección"
                 value={`${business?.address.street} #${business?.address.number}, ${business?.address.city}, ${business?.address.municipality}`}
               />
-              <KeyValueItem title="Telefono" value={business?.phone || ""} />
+              <KeyValueItem title="Teléfono" value={business?.phone || ""} />
               <KeyValueItem
                 title="Creado"
                 value={formatDateToString(business?.createdAt || new Date())}
@@ -158,7 +148,7 @@ const BusinessDetail = () => {
                 <Typography variant="body2" fontWeight="bold" sx={{ mb: 2 }}>
                   Maquinas
                 </Typography>
-                <KeyValueAdder small />
+                <MachineSection />
               </Box>
             </Grid>
           </Grid>
@@ -179,7 +169,7 @@ const BusinessDetail = () => {
                 >
                   <TableCell>Nombre</TableCell>
                   <TableCell>Dirección</TableCell>
-                  <TableCell>Telefono</TableCell>
+                  <TableCell>Teléfono</TableCell>
                   <TableCell>Correo</TableCell>
                   <TableCell>Cargo</TableCell>
                   <TableCell>Creado</TableCell>
