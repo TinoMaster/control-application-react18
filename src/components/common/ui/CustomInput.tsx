@@ -1,4 +1,4 @@
-import { InputAdornment, TextField, Typography } from "@mui/material";
+import { darken, InputAdornment, TextField, Typography } from "@mui/material";
 import { Control, Controller } from "react-hook-form";
 import { useThemeContext } from "../../../core/context/use/useThemeContext";
 
@@ -75,7 +75,7 @@ const CustomInput = ({
             },
             formHelperText: {
               style: {
-                color: error ? "red" : selectedTheme.text_color,
+                color: error ? "red" : darken(selectedTheme.text_color, 0.3),
                 fontSize: "0.8rem",
                 fontWeight: "lighter",
               },
