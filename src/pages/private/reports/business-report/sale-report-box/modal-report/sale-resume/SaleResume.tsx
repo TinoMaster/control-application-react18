@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
+  Button,
   darken,
   FormControl,
   FormControlLabel,
@@ -15,10 +16,11 @@ import {
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import CustomInput from "../../../../../../components/common/ui/CustomInput";
-import { useThemeContext } from "../../../../../../core/context/use/useThemeContext";
-import { useState } from "react";
-import { useBusinessContext } from "../../../../../../core/context/use/useBusinessContext";
+import CustomInput from "../../../../../../../components/common/ui/CustomInput";
+import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
+import { useEffect, useState } from "react";
+import { useBusinessContext } from "../../../../../../../core/context/use/useBusinessContext";
+import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
 
 enum ERegisterType {
   INDIVIDUAL = "individual",
@@ -26,7 +28,6 @@ enum ERegisterType {
 }
 
 const SaleResumeZodSchema = z.object({
-  name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
   total: z.string().min(1, "El total debe ser mayor a 0"),
   found: z.string().min(1, "El fondo debe ser mayor a 0"),
   machines: z.array(z.number()).min(1, "Selecciona al menos una maquina"),
@@ -34,29 +35,45 @@ const SaleResumeZodSchema = z.object({
 
 type TSaleResume = z.infer<typeof SaleResumeZodSchema>;
 
-const initialValues: TSaleResume = {
-  name: "",
-  total: "",
-  found: "",
-  machines: [],
-};
-
 export const SaleResume = () => {
   const { selectedTheme } = useThemeContext();
   const { business } = useBusinessContext();
   const [registerType, setRegisterType] = useState<ERegisterType>(
     ERegisterType.GENERAL
   );
+  const [loading, setLoading] = useState(false);
+
+  const { setBusinessSale, businessSale, nextSection } =
+    useBusinessReportContext();
   const {
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isValid },
+    setValue,
   } = useForm<TSaleResume>({
     resolver: zodResolver(SaleResumeZodSchema),
-    defaultValues: initialValues,
+    defaultValues: {
+      total: businessSale.total.toString(),
+      found: businessSale.found.toString(),
+      machines: businessSale.machines,
+    },
   });
 
-  const onSubmit = (data: TSaleResume) => console.log(data);
+  const onSubmit = (data: TSaleResume) => {
+    setLoading(true);
+
+    setBusinessSale({
+      ...businessSale,
+      total: Number(data.total),
+      found: Number(data.found),
+      machines: data.machines,
+    });
+
+    setTimeout(() => {
+      setLoading(false);
+      nextSection();
+    }, 1000);
+  };
 
   const handleRegisterTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -64,25 +81,25 @@ export const SaleResume = () => {
     setRegisterType(event.target.value as ERegisterType);
   };
 
+  useEffect(() => {
+    if (registerType === ERegisterType.INDIVIDUAL) {
+      setValue("machines", []);
+    } else {
+      setValue("machines", business.machines?.map((m) => m.id as number) ?? []);
+    }
+  }, [registerType, setValue, business.machines]);
+
   return (
     <Grid
       container
       justifyContent="space-between"
-      sx={{ marginBottom: 2, width: "50%", gap: 2 }}
+      sx={{
+        marginBottom: 2,
+        width: "100%",
+        gap: 2,
+        color: selectedTheme.text_color,
+      }}
     >
-      <Box sx={{ width: "100%" }}>
-        <Typography variant="h5">Información Principal</Typography>
-        <Typography
-          sx={{
-            color: darken(selectedTheme.text_color, 0.3),
-            fontSize: "0.8rem",
-          }}
-          variant="body1"
-        >
-          Ingrese la información principal
-        </Typography>
-      </Box>
-
       {/* Radio Button para seleccionar si el cuadre es general o individual */}
       <FormControl>
         <FormLabel
@@ -101,8 +118,7 @@ export const SaleResume = () => {
           }}
           variant="body1"
         >
-          Elija individual si desea registrar el cuadre de una sola maquina o
-          general si desea registrar el cuadre de todas las maquinas
+          Elija individual si desea registrar el cuadre de una sola maquina
         </Typography>
         <Typography
           sx={{
@@ -197,7 +213,7 @@ export const SaleResume = () => {
               control={control}
               label="Total"
               type="number"
-              helperText={errors.total?.message || "Ingrese el total recaudado"}
+              helperText={errors.total?.message || "Total recaudado"}
               startAdornment="$"
               small
             />
@@ -206,14 +222,25 @@ export const SaleResume = () => {
             <CustomInput
               name="found"
               control={control}
-              label="Fondo"
+              label="Fondo de hoy"
               type="number"
-              helperText={errors.found?.message || "Fondo disponible"}
+              helperText={errors.found?.message || `Ayer ${300}`}
               startAdornment="$"
               small
             />
           </Grid>
         </Grid>
+        <Box sx={{ marginTop: 2, display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            type="submit"
+            size="small"
+            variant="contained"
+            disabled={!isValid || loading}
+            sx={{ backgroundColor: darken(selectedTheme.secondary_color, 0.3) }}
+          >
+            {loading ? "Procesando..." : "Procesar"}
+          </Button>
+        </Box>
       </form>
     </Grid>
   );
