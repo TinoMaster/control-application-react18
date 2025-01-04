@@ -9,23 +9,34 @@ import {
   Button,
   darken,
   Grid2 as Grid,
+  IconButton,
 } from "@mui/material";
 import { useState } from "react";
 import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
 import CustomInput from "../../../../../../../components/common/ui/CustomInput";
 import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
+import { Delete } from "@mui/icons-material";
+import { DebtModel } from "../../../../../../../core/models/api/debt.model";
 
 interface Debt {
-  id: number;
+  id: number | string;
   debtor: string;
   amount: number;
 }
-/* TODO: Add a form to add debts */
+
+const transformDetModelToDebt = (det: DebtModel): Debt => ({
+  id: det.id || crypto.randomUUID(),
+  debtor: det.name,
+  amount: det.total,
+});
+
 export const SaleDebts = () => {
   const { selectedTheme } = useThemeContext();
   const { nextSection, businessSale, setBusinessSale, prevSection } =
     useBusinessReportContext();
-  const [debts, setDebts] = useState<Debt[]>([]);
+  const [debts, setDebts] = useState<Debt[]>(
+    businessSale.debts.map(transformDetModelToDebt)
+  );
   const [newDebtor, setNewDebtor] = useState("");
   const [newAmount, setNewAmount] = useState("");
 
@@ -41,6 +52,24 @@ export const SaleDebts = () => {
       setNewDebtor("");
       setNewAmount("");
     }
+  };
+
+  const handleRemoveDebt = (id: number | string) => {
+    setDebts(debts.filter((debt) => debt.id !== id));
+  };
+
+  const handleSaveDebts = () => {
+    const debtsToSave: DebtModel[] = debts.map((debt) => ({
+      total: debt.amount,
+      name: debt.debtor,
+      paid: 0,
+    }));
+    setBusinessSale({ ...businessSale, debts: debtsToSave });
+  };
+
+  const handleNextSection = () => {
+    handleSaveDebts();
+    nextSection();
   };
 
   const totalDebt = debts.reduce((sum, debt) => sum + debt.amount, 0);
@@ -123,6 +152,9 @@ export const SaleDebts = () => {
               <TableCell align="right" sx={{ color: selectedTheme.text_color }}>
                 Monto
               </TableCell>
+              <TableCell align="right" sx={{ color: selectedTheme.text_color }}>
+                Acciones
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -140,6 +172,23 @@ export const SaleDebts = () => {
                   sx={{ color: darken(selectedTheme.text_color, 0.2) }}
                 >
                   ${debt.amount.toFixed(2)}
+                </TableCell>
+                <TableCell align="right">
+                  <IconButton
+                    onClick={() => handleRemoveDebt(debt.id)}
+                    size="small"
+                    sx={{
+                      color: selectedTheme.text_color,
+                      "&:hover": {
+                        backgroundColor: darken(
+                          selectedTheme.secondary_color,
+                          0.2
+                        ),
+                      },
+                    }}
+                  >
+                    <Delete />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
@@ -184,7 +233,7 @@ export const SaleDebts = () => {
         </Button>
         <Button
           variant="contained"
-          onClick={nextSection}
+          onClick={handleNextSection}
           size="small"
           sx={{
             backgroundColor: darken(selectedTheme.secondary_color, 0.3),

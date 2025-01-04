@@ -1,9 +1,9 @@
 export interface DebtModel {
-    id: number;
+    id?: number;
     name: string;
-    description: string;
+    description?: string;
     total: number;
     paid: number;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

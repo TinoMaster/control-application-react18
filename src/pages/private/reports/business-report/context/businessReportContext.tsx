@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import {
   BusinessReportContext,
+  CardPayment,
   SECTIONS_BUSINESS_REPORT,
 } from "./useBusinessReportContext";
 import { BusinessFinalSaleModel } from "../../../../../core/models/api/businessFinalSale.model";
@@ -17,6 +18,8 @@ export interface IBusinessReportContext {
   businessSale: BusinessFinalSaleModel;
   setBusinessSale: React.Dispatch<React.SetStateAction<BusinessFinalSaleModel>>;
   cancelProcess: () => void;
+  cards: CardPayment[];
+  setCards: React.Dispatch<React.SetStateAction<CardPayment[]>>;
 }
 
 const initialBusinessSale: BusinessFinalSaleModel = {
@@ -37,6 +40,7 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
     SECTIONS_BUSINESS_REPORT.RESUME
   );
   const [businessSale, setBusinessSale] = useState(initialBusinessSale);
+  const [cards, setCards] = useState<CardPayment[]>([]);
 
   const cancelProcess = () => {
     setCurrentSection(SECTIONS_BUSINESS_REPORT.RESUME);
@@ -107,6 +111,8 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
         businessSale,
         setBusinessSale,
         cancelProcess,
+        cards,
+        setCards,
       }}
     >
       {children}
