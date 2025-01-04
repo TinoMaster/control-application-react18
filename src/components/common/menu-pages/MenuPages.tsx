@@ -21,7 +21,7 @@ export const MenuPages = ({ title, links }: IMenuPagesProps) => {
         zIndex: 10,
         color: selectedTheme.text_color,
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-        borderRadius: "0 0 8px 8px",
+        borderRadius: "0 0 2px 2px",
         position: "sticky",
         top: "63px",
       }}

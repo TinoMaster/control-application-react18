@@ -13,7 +13,7 @@ interface CustomInputProps {
   small?: boolean;
   startAdornment?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  value?: string;
+  value?: string | number;
 }
 
 const CustomInput = ({

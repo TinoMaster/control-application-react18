@@ -34,6 +34,30 @@ const ReportsLayoutPage = lazy(() => import("./reports/ReportsLayout"));
 const BusinessReportPage = lazy(
   () => import("./reports/business-report/BusinessReport")
 );
+/* Inventory */
+const InventoryLayoutPage = lazy(() => import("./inventory/InventoryLayout"));
+const BusinessInventoryPage = lazy(
+  () => import("./inventory/business/BusinessInventory")
+);
+const StoreInventoryPage = lazy(
+  () => import("./inventory/store/StoreInventory")
+);
+/* consumables */
+const ConsumablesLayoutPage = lazy(
+  () => import("./consumables/ConsumableLayout")
+);
+const BusinessConsumablesPage = lazy(
+  () => import("./consumables/business/BusinessConsumables")
+);
+const StoreConsumablesPage = lazy(
+  () => import("./consumables/store/StoreConsumables")
+);
+/* Services */
+const ServicesLayoutPage = lazy(() => import("./services/ServiceLayout"));
+const BusinessServicesPage = lazy(
+  () => import("./services/business/BusinessServices")
+);
+const StoreServicesPage = lazy(() => import("./services/store/StoreServices"));
 
 export const PrivateRoutes = () => {
   return (
@@ -81,6 +105,45 @@ export const PrivateRoutes = () => {
       >
         <Route index element={<Navigate to="business" replace />} />
         <Route path="business" element={<BusinessReportPage />} />
+      </Route>
+      {/* Inventory */}
+      <Route
+        path="inventory"
+        element={
+          <PrivateRoute allowedRoles={[ERole.OWNER, ERole.ADMIN]}>
+            <InventoryLayoutPage />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<Navigate to="business" replace />} />
+        <Route path="business" element={<BusinessInventoryPage />} />
+        <Route path="store" element={<StoreInventoryPage />} />
+      </Route>
+      {/* Consumables */}
+      <Route
+        path="consumables"
+        element={
+          <PrivateRoute allowedRoles={[ERole.OWNER, ERole.ADMIN]}>
+            <ConsumablesLayoutPage />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<Navigate to="business" replace />} />
+        <Route path="business" element={<BusinessConsumablesPage />} />
+        <Route path="store" element={<StoreConsumablesPage />} />
+      </Route>
+      {/* Services */}
+      <Route
+        path="services"
+        element={
+          <PrivateRoute allowedRoles={[ERole.OWNER, ERole.ADMIN]}>
+            <ServicesLayoutPage />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<Navigate to="business" replace />} />
+        <Route path="business" element={<BusinessServicesPage />} />
+        <Route path="store" element={<StoreServicesPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/404" replace />} />
     </RoutesWithNotFound>

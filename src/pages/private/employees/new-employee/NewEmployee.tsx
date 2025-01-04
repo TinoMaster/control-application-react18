@@ -252,7 +252,27 @@ const NewEmployee = () => {
                 name="role"
                 control={control}
                 render={({ field }) => (
-                  <FormControl fullWidth error={!!errors.role}>
+                  <FormControl
+                    fullWidth
+                    error={!!errors.role}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        color: selectedTheme.text_color,
+                        "& fieldset": {
+                          borderColor: selectedTheme.text_color,
+                        },
+                        "&:hover fieldset": {
+                          borderColor: selectedTheme.text_color,
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: selectedTheme.text_color,
+                        },
+                      },
+                      "& .MuiSelect-icon": {
+                        color: selectedTheme.text_color,
+                      },
+                    }}
+                  >
                     <Select
                       {...field}
                       labelId="role-label"
@@ -260,15 +280,6 @@ const NewEmployee = () => {
                       value={field.value || ""}
                       inputProps={{ "aria-label": "Without label" }}
                       error={!!errors.role}
-                      sx={{
-                        color: "white",
-                        borderColor: "white",
-                        "&.MuiSelect-root": {
-                          "&:hover": {
-                            borderColor: "white",
-                          },
-                        },
-                      }}
                     >
                       <MenuItem value="" disabled>
                         Seleccionar

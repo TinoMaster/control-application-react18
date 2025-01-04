@@ -170,7 +170,27 @@ export const SaleResume = () => {
               name="machines"
               control={control}
               render={({ field }) => (
-                <FormControl fullWidth error={!!errors.machines}>
+                <FormControl
+                  fullWidth
+                  error={!!errors.machines}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      color: selectedTheme.text_color,
+                      "& fieldset": {
+                        borderColor: selectedTheme.text_color,
+                      },
+                      "&:hover fieldset": {
+                        borderColor: selectedTheme.text_color,
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: selectedTheme.text_color,
+                      },
+                    },
+                    "& .MuiSelect-icon": {
+                      color: selectedTheme.text_color,
+                    },
+                  }}
+                >
                   <Select
                     {...field}
                     labelId="machines-label"
@@ -180,16 +200,6 @@ export const SaleResume = () => {
                     value={field.value || []}
                     inputProps={{ "aria-label": "Without label" }}
                     error={!!errors.machines}
-                    sx={{
-                      color: "white",
-                      borderColor: "white",
-                      "&.Mui-disabled": {
-                        color: "white",
-                        "&:hover": {
-                          borderColor: "white",
-                        },
-                      },
-                    }}
                   >
                     <MenuItem value="" disabled>
                       Seleccionar
