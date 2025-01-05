@@ -27,6 +27,7 @@ import {
   EUnit,
   TRANSLATE_UNIT,
 } from "../../../../../core/models/api/unit.model";
+import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 
 interface ModalAddConsumableProps {
   open: boolean;
@@ -44,6 +45,7 @@ export const ModalAddConsumable = ({
   isEditing = false,
 }: ModalAddConsumableProps) => {
   const { selectedTheme } = useThemeContext();
+  const { business } = useBusinessContext();
 
   const {
     control,
@@ -72,10 +74,12 @@ export const ModalAddConsumable = ({
   const handleFormSubmit: SubmitHandler<TConsumableModel> = (data) => {
     onSubmit({
       ...data,
-      business: 0,
-      price: Number(data.price),
+      business: business?.id as number,
+      price: parseFloat(data.price),
       stock: Number(data.stock),
+      id: isEditing ? consumable?.id : undefined,
     });
+    reset(consumableDefaultValues);
     onClose();
   };
 
@@ -159,7 +163,9 @@ export const ModalAddConsumable = ({
                     label="Precio Total"
                     type="number"
                     error={!!errors.price}
-                    helperText={errors.price?.message}
+                    helperText={
+                      errors.price?.message || "Precio de todo el stock inicial"
+                    }
                     startAdornment="$"
                     placeholder="0.00"
                     small
@@ -210,9 +216,11 @@ export const ModalAddConsumable = ({
                         </MenuItem>
                       ))}
                     </Select>
-                    {errors.unit && (
-                      <FormHelperText>{errors.unit.message}</FormHelperText>
-                    )}
+                    <FormHelperText
+                      sx={{ color: darken(selectedTheme.text_color, 0.3) }}
+                    >
+                      {errors.unit?.message || "Unidad de Medida"}
+                    </FormHelperText>
                   </FormControl>
                 )}
               />
@@ -224,7 +232,10 @@ export const ModalAddConsumable = ({
                 control={control}
                 type="number"
                 error={!!errors.stock}
-                helperText={errors.stock?.message}
+                helperText={
+                  errors.stock?.message ||
+                  "Cantidad comprada por el precio total"
+                }
                 startAdornment="#"
                 placeholder="0"
                 small
