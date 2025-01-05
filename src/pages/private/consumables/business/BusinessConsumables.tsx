@@ -39,7 +39,7 @@ const BusinessConsumables = () => {
   const isMobile = useMediaQuery(materialTheme.breakpoints.down("sm"));
   // Estado para la paginación
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   // Estado para el modal (lo implementaremos después)
   const [open, setOpen] = useState(false);
   // Datos de ejemplo (después los traeremos de una API)
@@ -65,7 +65,7 @@ const BusinessConsumables = () => {
   };
 
   const getConsumables = useCallback(async () => {
-    if (!business) {
+    if (!business || !business.id) {
       return;
     }
     const response = await consumableService.getConsumablesByBusinessId(
@@ -148,7 +148,12 @@ const BusinessConsumables = () => {
         .map((consumable) => (
           <Card
             key={consumable.id}
-            sx={{ mb: 2, backgroundColor: selectedTheme.background_color }}
+            sx={{
+              mb: 2,
+              backgroundColor: selectedTheme.background_color,
+              boxShadow: `0 0 70px 10px ${selectedTheme.primary_color}15 , 0 0 5px 2px #00000015`,
+              borderRadius: "8px",
+            }}
           >
             <CardContent>
               <Typography
@@ -319,8 +324,9 @@ const BusinessConsumables = () => {
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[5, 10, 25, 50]}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage="Filas por página"
+          labelRowsPerPage="Filtrar"
           labelDisplayedRows={({ from, to, count }) =>
             `${from}-${to} de ${count}`
           }
