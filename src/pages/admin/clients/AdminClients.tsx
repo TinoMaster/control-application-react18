@@ -50,8 +50,6 @@ const AdminClients = () => {
   /* const [openSnackbar, setOpenSnackbar] = useState(false); */
   const [clients, setClients] = useState<UserModel[]>([]);
 
-  console.log(clients);
-
   const getClients = async () => {
     setLoading(true);
     const response = await clientsService.getClients();
@@ -114,7 +112,9 @@ const AdminClients = () => {
                     {formatDateToString(client.createdAt || new Date())}
                   </TableCell>
                   <TableCell sx={tableCellsStyle}>
-                    {client.active ? formatDateToString(client.updatedAt || new Date()) : "-"}
+                    {client.active
+                      ? formatDateToString(client.updatedAt || new Date())
+                      : "-"}
                   </TableCell>
                   <TableCell sx={tableCellsStyle}>
                     {client.active ? (
@@ -124,15 +124,17 @@ const AdminClients = () => {
                     )}
                   </TableCell>
                   <TableCell sx={tableCellsStyle}>
-                    {client.role === ERole.OWNER? client.businessesOwned.length : client.businesses.length}
+                    {client.role === ERole.OWNER
+                      ? client.businessesOwned.length
+                      : client.businesses.length}
                   </TableCell>
                   <TableCell sx={tableCellsStyle}>{client.role}</TableCell>
 
                   <TableCell sx={tableCellsStyle}>
                     <Link to={`/clients/${client.id}`}>
-                    <IconButton color="success" size="small">
-                      <InfoIcon />
-                    </IconButton>
+                      <IconButton color="success" size="small">
+                        <InfoIcon />
+                      </IconButton>
                     </Link>
                   </TableCell>
                 </TableRow>

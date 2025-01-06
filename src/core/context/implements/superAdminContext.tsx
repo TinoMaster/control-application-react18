@@ -20,7 +20,6 @@ export const SuperAdminProvider = ({ children }: IContextProps) => {
 
   const getRequests = async () => {
     const res = await authRequestsService.getRequests();
-    console.log(res);
 
     if (res.status === 200) {
       const requests = UserModelListToAuthRequestListMapper(res.data || []);

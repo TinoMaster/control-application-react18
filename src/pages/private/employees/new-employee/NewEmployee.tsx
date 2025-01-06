@@ -99,7 +99,6 @@ const NewEmployee = () => {
     });
   }, [business, reset]);
 
-  console.log(errors);
   return (
     <>
       <Snackbar

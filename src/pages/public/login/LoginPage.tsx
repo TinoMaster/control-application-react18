@@ -76,8 +76,6 @@ const LoginPage = () => {
     setError("");
     const response = await authService.login(data);
 
-    console.log(response);
-
     if (response.status === 200 && response.data) {
       setSuccess(true);
 
@@ -131,7 +129,9 @@ const LoginPage = () => {
         <Box sx={boxLoginStyle}>
           <Box sx={boxImageTitleStyle}>
             <Paper sx={imageStyle} />
-            <Typography color="var(--primary-color)" variant="h6">Entra con tus credenciales</Typography>
+            <Typography color="var(--primary-color)" variant="h6">
+              Entra con tus credenciales
+            </Typography>
           </Box>
           <FormControl
             onSubmit={handleSubmit(onSubmit)}
@@ -164,7 +164,13 @@ const LoginPage = () => {
               </Grid2>
             </Grid2>
 
-            <Box sx={{ display: "flex", justifyContent: "space-between", color: "white" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                color: "white",
+              }}
+            >
               <FormControlLabel
                 control={
                   <Checkbox
@@ -172,7 +178,6 @@ const LoginPage = () => {
                     sx={{
                       color: "white",
                       "&.Mui-checked": { color: "var(--primary-color)" },
-                      
                     }}
                   />
                 }

@@ -1,5 +1,6 @@
 import { DebtModel } from "./debt.model";
 import { EmployeeModel } from "./employee.model";
+import { ServiceSaleModel } from "./sellServices.model";
 
 export interface BusinessFinalSaleModel {
   id?: number;
@@ -11,6 +12,7 @@ export interface BusinessFinalSaleModel {
   note: string;
   workers: EmployeeModel[];
   machines: number[];
+  servicesSales: ServiceSaleModel[];
   doneBy: number;
   found: number;
   createdAt?: Date;
