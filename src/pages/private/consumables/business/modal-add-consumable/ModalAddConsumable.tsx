@@ -22,7 +22,7 @@ import {
   TConsumableModel,
   consumableDefaultValues,
   consumableSchema,
-} from "../../../../../core/models/zod/consumable";
+} from "../../../../../core/models/zod/consumableSchema";
 import {
   EUnit,
   TRANSLATE_UNIT,

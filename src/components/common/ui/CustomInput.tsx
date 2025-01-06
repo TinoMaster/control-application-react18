@@ -14,6 +14,8 @@ interface CustomInputProps {
   startAdornment?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string | number;
+  required?: boolean;
+  inputRef?: React.Ref<any>;
 }
 
 const CustomInput = ({
@@ -28,6 +30,8 @@ const CustomInput = ({
   startAdornment,
   onChange,
   value,
+  required = true,
+  inputRef,
 }: CustomInputProps) => {
   const { selectedTheme } = useThemeContext();
 
@@ -38,7 +42,7 @@ const CustomInput = ({
         variant="outlined"
         fullWidth
         margin="normal"
-        required
+        required={required}
         onChange={onChange}
         value={value}
         type={type}
@@ -63,6 +67,7 @@ const CustomInput = ({
         slotProps={{
           inputLabel: {
             style: { color: selectedTheme.text_color || "white" },
+            required: required,
           },
           input: {
             style: { color: selectedTheme.text_color || "white" },
@@ -82,6 +87,7 @@ const CustomInput = ({
             },
           },
         }}
+        inputRef={inputRef}
       />
     );
   }
@@ -91,14 +97,14 @@ const CustomInput = ({
       name={name}
       control={control}
       defaultValue=""
-      render={({ field }) => (
+      render={({ field: { ref, ...field } }) => (
         <TextField
           {...field}
           label={label}
           variant="outlined"
           fullWidth
           margin="normal"
-          required
+          required={required}
           type={type}
           placeholder={placeholder}
           error={error}
@@ -140,6 +146,7 @@ const CustomInput = ({
               },
             },
           }}
+          inputRef={ref}
         />
       )}
     />

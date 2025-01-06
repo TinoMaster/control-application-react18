@@ -1,7 +1,7 @@
 import { ConsumableModel } from "./consumables.model";
 
 export interface CostModel {
-  id: number;
+  id?: number;
   consumable: ConsumableModel;
   quantity: number;
 }

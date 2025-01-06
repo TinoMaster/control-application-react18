@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   Box,
   Button,
@@ -6,11 +6,14 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField,
   IconButton,
   Typography,
   Grid2 as Grid,
-  Autocomplete,
+  FormControl,
+  Select,
+  MenuItem,
+  FormHelperText,
+  darken,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -19,6 +22,24 @@ import { ServiceModel } from "../../../../../core/models/api/service.model";
 import { CostModel } from "../../../../../core/models/api/cost.model";
 import { ConsumableModel } from "../../../../../core/models/api/consumables.model";
 import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
+import { useForm, Controller, useFieldArray, Control } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  serviceSchema,
+  ServiceSchema,
+  serviceDefaultValues,
+} from "../../../../../core/models/zod/serviceSchema";
+import CustomInput from "../../../../../components/common/ui/CustomInput";
+import { EUnit } from "../../../../../core/models/api/unit.model";
+
+interface CostItemProps {
+  index: number;
+  control: Control<ServiceSchema>;
+  consumables: ConsumableModel[];
+  onRemove: () => void;
+  errors: any;
+  selectedTheme: any;
+}
 
 interface ModalAddServiceProps {
   open: boolean;
@@ -40,70 +61,219 @@ export const ModalAddService = ({
   const { selectedTheme } = useThemeContext();
   const { business } = useBusinessContext();
 
-  const [formData, setFormData] = useState<ServiceModel>({
-    id: 0,
-    name: "",
-    description: "",
-    price: 0,
-    business: business?.id as number,
-    costs: [],
-    createdAt: new Date(),
-    updatedAt: new Date(),
+  const {
+    control,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<ServiceSchema>({
+    resolver: zodResolver(serviceSchema),
+    defaultValues: {
+      name: service?.name || "",
+      description: service?.description || "",
+      price: service?.price.toString() || "",
+      costs: service?.costs.map((cost) => ({
+        consumable: {
+          id: cost.consumable.id,
+          name: cost.consumable.name,
+        },
+        quantity: cost.quantity.toString(),
+      })),
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "costs",
   });
 
   useEffect(() => {
     if (service && isEditing) {
-      setFormData(service);
+      reset({
+        name: service.name,
+        description: service.description || "",
+        price: service.price.toString(),
+        costs: service.costs.map((cost) => ({
+          consumable: {
+            id: cost.consumable.id,
+            name: cost.consumable.name,
+          },
+          quantity: cost.quantity.toString(),
+        })),
+      });
     }
-  }, [service, isEditing]);
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === "price" ? parseFloat(value) || 0 : value,
-    }));
-  };
+  }, [service, isEditing, reset]);
 
   const handleAddCost = () => {
-    setFormData((prev) => ({
-      ...prev,
-      costs: [
-        ...prev.costs,
-        {
-          id: 0,
-          consumable: {} as ConsumableModel,
-          quantity: 0,
+    append({
+      consumable: { id: 0, name: "" },
+      quantity: "",
+    });
+  };
+
+  const onFormSubmit = (data: ServiceSchema) => {
+    const costs: CostModel[] = data.costs.map((cost) => ({
+      consumable: consumables.find(
+        (consumable) => consumable.id === cost.consumable.id
+      ) as ConsumableModel,
+      quantity: parseFloat(cost.quantity),
+    }));
+
+    const serviceData: ServiceModel = {
+      id: service?.id || undefined,
+      name: data.name,
+      description: data.description || "",
+      price: parseFloat(data.price),
+      business: business?.id as number,
+      costs: costs,
+    };
+    onSubmit(serviceData);
+  };
+
+  const handleClose = () => {
+    reset(serviceDefaultValues);
+    onClose();
+  };
+
+  const CostItem = ({
+    index,
+    control,
+    consumables,
+    onRemove,
+    errors,
+    selectedTheme,
+  }: CostItemProps) => {
+    const selectedConsumableId = watch(`costs.${index}.consumable.id`);
+    const selectedConsumable = consumables.find(
+      (c) => c.id === selectedConsumableId
+    );
+
+    const selectStyles = {
+      "& .MuiOutlinedInput-root": {
+        color: selectedTheme.text_color,
+        "& fieldset": {
+          borderColor: selectedTheme.text_color,
         },
-      ],
-    }));
-  };
+        "&:hover fieldset": {
+          borderColor: selectedTheme.text_color,
+        },
+        "&.Mui-focused fieldset": {
+          borderColor: selectedTheme.text_color,
+        },
+      },
+      "& .MuiSelect-icon": {
+        color: selectedTheme.text_color,
+      },
+    };
 
-  const handleRemoveCost = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      costs: prev.costs.filter((_, i) => i !== index),
-    }));
-  };
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+          mb: 2,
+          alignItems: "center",
+        }}
+      >
+        <Controller
+          name={`costs.${index}.consumable`}
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <FormControl
+              fullWidth
+              error={!!errors.costs?.[index]?.consumable}
+              size="small"
+              sx={selectStyles}
+            >
+              <Select
+                value={value.id || ""}
+                sx={{
+                  width: "100%",
+                  color: selectedTheme.text_color,
+                }}
+                onChange={(e) => {
+                  const selectedConsumable = consumables.find(
+                    (c) => c.id === e.target.value
+                  );
+                  onChange({
+                    id: selectedConsumable?.id || 0,
+                    name: selectedConsumable?.name || "",
+                  });
+                }}
+              >
+                <MenuItem value="" disabled>
+                  Seleccionar Insumo
+                </MenuItem>
+                {consumables.map((consumable) => (
+                  <MenuItem key={consumable.id} value={consumable.id}>
+                    {consumable.name}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText
+                sx={{ color: darken(selectedTheme.text_color, 0.3) }}
+              >
+                {errors.costs?.[index]?.consumable?.message ||
+                  (selectedConsumable
+                    ? `Insumo: ${selectedConsumable.name}`
+                    : "Seleccione un insumo")}
+              </FormHelperText>
+            </FormControl>
+          )}
+        />
+        <Controller
+          name={`costs.${index}.quantity`}
+          control={control}
+          render={({ field: { ref, ...field } }) => {
+            const selectedConsumable = consumables.find(
+              (c) => c.id === watch(`costs.${index}.consumable.id`)
+            );
 
-  const handleCostChange = (
-    index: number,
-    field: keyof CostModel,
-    value: any
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      costs: prev.costs.map((cost, i) =>
-        i === index ? { ...cost, [field]: value } : cost
-      ),
-    }));
-  };
+            const getHelperText = () => {
+              if (errors.costs?.[index]?.quantity?.message) {
+                return errors.costs[index].quantity.message;
+              }
+              if (!selectedConsumable) {
+                return "Primero seleccione un insumo";
+              }
+              return selectedConsumable.unit === EUnit.PIECE
+                ? "Cantidad en unidades que se agotan en este servicio"
+                : "Cantidad en porcentaje que se agotan en este servicio";
+            };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(formData);
+            return (
+              <CustomInput
+                {...field}
+                inputRef={ref}
+                type="number"
+                label="Cantidad"
+                placeholder={
+                  selectedConsumable?.unit === EUnit.PIECE
+                    ? "ej: 1"
+                    : selectedConsumable?.unit === EUnit.PERCENT
+                    ? "ej: 0.01"
+                    : ""
+                }
+                startAdornment={
+                  selectedConsumable?.unit === EUnit.PIECE
+                    ? "u/"
+                    : selectedConsumable?.unit === EUnit.PERCENT
+                    ? "%"
+                    : ""
+                }
+                error={!!errors.costs?.[index]?.quantity}
+                helperText={getHelperText()}
+                small
+              />
+            );
+          }}
+        />
+        <IconButton onClick={onRemove} sx={{ color: selectedTheme.text_color }}>
+          <DeleteIcon />
+        </IconButton>
+      </Box>
+    );
   };
 
   return (
@@ -123,87 +293,36 @@ export const ModalAddService = ({
           {isEditing ? "Editar Servicio" : "Agregar Nuevo Servicio"}
         </Typography>
       </DialogTitle>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onFormSubmit)}>
         <DialogContent>
           <Grid container spacing={2}>
             <Grid size={12}>
-              <TextField
-                fullWidth
-                label="Nombre"
+              <CustomInput
                 name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: selectedTheme.text_color,
-                    },
-                    "&:hover fieldset": {
-                      borderColor: selectedTheme.primary_color,
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: selectedTheme.text_color,
-                  },
-                  "& .MuiOutlinedInput-input": {
-                    color: selectedTheme.text_color,
-                  },
-                }}
+                control={control}
+                label="Nombre"
+                error={!!errors.name}
+                helperText={errors.name?.message}
               />
             </Grid>
             <Grid size={12}>
-              <TextField
-                fullWidth
-                label="Descripción"
+              <CustomInput
                 name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                multiline
-                rows={3}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: selectedTheme.text_color,
-                    },
-                    "&:hover fieldset": {
-                      borderColor: selectedTheme.primary_color,
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: selectedTheme.text_color,
-                  },
-                  "& .MuiOutlinedInput-input": {
-                    color: selectedTheme.text_color,
-                  },
-                }}
+                control={control}
+                label="Descripción"
+                required={false}
+                error={!!errors.description}
+                helperText={errors.description?.message}
               />
             </Grid>
             <Grid size={12}>
-              <TextField
-                fullWidth
-                label="Precio"
+              <CustomInput
                 name="price"
                 type="number"
-                value={formData.price}
-                onChange={handleInputChange}
-                required
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: selectedTheme.text_color,
-                    },
-                    "&:hover fieldset": {
-                      borderColor: selectedTheme.primary_color,
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: selectedTheme.text_color,
-                  },
-                  "& .MuiOutlinedInput-input": {
-                    color: selectedTheme.text_color,
-                  },
-                }}
+                control={control}
+                label="Precio"
+                error={!!errors.price}
+                helperText={errors.price?.message}
               />
             </Grid>
 
@@ -235,92 +354,23 @@ export const ModalAddService = ({
                   Agregar Costo
                 </Button>
               </Box>
-              {formData.costs.map((cost, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    display: "flex",
-                    gap: 2,
-                    mb: 2,
-                    alignItems: "center",
-                  }}
-                >
-                  <Autocomplete
-                    options={consumables}
-                    getOptionLabel={(option) => option.name}
-                    value={cost.consumable}
-                    onChange={(_, newValue) =>
-                      handleCostChange(index, "consumable", newValue || {})
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Insumo"
-                        required
-                        sx={{
-                          flex: 2,
-                          "& .MuiOutlinedInput-root": {
-                            "& fieldset": {
-                              borderColor: selectedTheme.text_color,
-                            },
-                            "&:hover fieldset": {
-                              borderColor: selectedTheme.primary_color,
-                            },
-                          },
-                          "& .MuiInputLabel-root": {
-                            color: selectedTheme.text_color,
-                          },
-                          "& .MuiOutlinedInput-input": {
-                            color: selectedTheme.text_color,
-                          },
-                        }}
-                      />
-                    )}
-                  />
-                  <TextField
-                    label="Cantidad"
-                    type="number"
-                    value={cost.quantity}
-                    onChange={(e) =>
-                      handleCostChange(
-                        index,
-                        "quantity",
-                        parseFloat(e.target.value) || 0
-                      )
-                    }
-                    required
-                    sx={{
-                      flex: 1,
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": {
-                          borderColor: selectedTheme.text_color,
-                        },
-                        "&:hover fieldset": {
-                          borderColor: selectedTheme.primary_color,
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        color: selectedTheme.text_color,
-                      },
-                      "& .MuiOutlinedInput-input": {
-                        color: selectedTheme.text_color,
-                      },
-                    }}
-                  />
-                  <IconButton
-                    onClick={() => handleRemoveCost(index)}
-                    sx={{ color: selectedTheme.text_color }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
+              {fields.map((field, index) => (
+                <CostItem
+                  key={field.id}
+                  index={index}
+                  control={control}
+                  consumables={consumables}
+                  onRemove={() => remove(index)}
+                  errors={errors}
+                  selectedTheme={selectedTheme}
+                />
               ))}
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
           <Button
-            onClick={onClose}
+            onClick={handleClose}
             sx={{
               color: selectedTheme.text_color,
               "&:hover": {

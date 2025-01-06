@@ -29,6 +29,8 @@ import { useAppContext } from "../../../../core/context/use/useAppContext";
 import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
 import { LoadingCircularProgress } from "../../../../components/common/ui/LoadingCircularProgress";
 import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
+import { consumableService } from "../../../../core/services/consumableService";
+import { serviceService } from "../../../../core/services/serviceService";
 
 const BusinessServices = () => {
   const { selectedTheme } = useThemeContext();
@@ -41,15 +43,15 @@ const BusinessServices = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [open, setOpen] = useState(false);
-  const [services] = useState<ServiceModel[]>([]);
-  const [consumables] = useState<ConsumableModel[]>([]);
+  const [services, setServices] = useState<ServiceModel[]>([]);
+  const [consumables, setConsumables] = useState<ConsumableModel[]>([]);
   const [serviceToEdit, setServiceToEdit] = useState<ServiceModel>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
 
   // Funciones de manejo de datos
-  /* const addServiceToServices = (service: ServiceModel) => {
+  const addServiceToServices = (service: ServiceModel) => {
     setServices([...services, service]);
   };
 
@@ -59,18 +61,19 @@ const BusinessServices = () => {
 
   const deleteServiceFromServices = (id: number) => {
     setServices(services.filter((s) => s.id !== id));
-  }; */
+  };
 
   const getServices = useCallback(async () => {
     if (!business?.id) return;
 
     setLoading(true);
     try {
-      // TODO: Implementar el servicio real
-      // const response = await serviceService.getServicesByBusinessId(business.id);
-      // if (response.status === 200) {
-      //   setServices(response.data || []);
-      // }
+      const response = await serviceService.getServicesByBusinessId(
+        business.id
+      );
+      if (response.status === 200) {
+        setServices(response.data || []);
+      }
       setLoading(false);
     } catch (error) {
       console.error("Error fetching services:", error);
@@ -81,14 +84,12 @@ const BusinessServices = () => {
   const getConsumables = useCallback(async () => {
     if (!business?.id) return;
 
-    try {
-      // TODO: Implementar el servicio real
-      // const response = await consumableService.getConsumablesByBusinessId(business.id);
-      // if (response.status === 200) {
-      //   setConsumables(response.data || []);
-      // }
-    } catch (error) {
-      console.error("Error fetching consumables:", error);
+    const response = await consumableService.getConsumablesByBusinessId(
+      business.id
+    );
+
+    if (response.status === 200) {
+      setConsumables(response.data || []);
     }
   }, [business?.id]);
 
@@ -126,14 +127,13 @@ const BusinessServices = () => {
     setSuccess(false);
 
     try {
-      // TODO: Implementar el servicio real
-      // const response = await serviceService.deleteService(id);
-      // if (response.status === 200) {
-      //   setSuccess(true);
-      //   deleteServiceFromServices(id);
-      // } else {
-      //   setError(true);
-      // }
+      const response = await serviceService.deleteService(id);
+      if (response.status === 200) {
+        setSuccess(true);
+        deleteServiceFromServices(id);
+      } else {
+        setError(true);
+      }
     } catch (error) {
       setError(true);
       console.error("Error deleting service:", error);
@@ -142,25 +142,23 @@ const BusinessServices = () => {
   };
 
   const handleSubmit = async (service: ServiceModel) => {
-    console.log(service);
     setLoading(true);
     setError(false);
     setSuccess(false);
 
     try {
-      // TODO: Implementar el servicio real
-      // const response = await serviceService.saveService(service);
-      // if (response.status === 200) {
-      //   setSuccess(true);
-      //   setOpen(false);
-      //   if (serviceToEdit) {
-      //     editServiceFromServices(response.data);
-      //   } else {
-      //     addServiceToServices(response.data);
-      //   }
-      // } else {
-      //   setError(true);
-      // }
+      const response = await serviceService.saveService(service);
+      if (response.status === 200) {
+        setSuccess(true);
+        setOpen(false);
+        if (serviceToEdit) {
+          editServiceFromServices(response.data as ServiceModel);
+        } else {
+          addServiceToServices(response.data as ServiceModel);
+        }
+      } else {
+        setError(true);
+      }
     } catch (error) {
       setError(true);
       console.error("Error saving service:", error);
@@ -210,7 +208,7 @@ const BusinessServices = () => {
                 </IconButton>
                 <IconButton
                   size="small"
-                  onClick={() => handleDeleteService(service.id)}
+                  onClick={() => handleDeleteService(service.id as number)}
                   sx={{ color: selectedTheme.text_color }}
                 >
                   <DeleteIcon />
@@ -265,7 +263,7 @@ const BusinessServices = () => {
                   </IconButton>
                   <IconButton
                     size="small"
-                    onClick={() => handleDeleteService(service.id)}
+                    onClick={() => handleDeleteService(service.id as number)}
                     sx={{ color: selectedTheme.text_color }}
                   >
                     <DeleteIcon />
