@@ -5,14 +5,15 @@ import { handleFetchError } from "../utilities/helpers/errorManager";
 import { requestService } from "./RequestService";
 
 class ServiceService {
-  urlAdmin = apiConfig.adminUrl;
+  private urlAdmin = apiConfig.adminUrl;
+  private urlPrivate = apiConfig.privateUrl;
 
   async getServicesByBusinessId(
     id: number
   ): Promise<IResponse<ServiceModel[]>> {
     try {
       return await requestService.fetch<ServiceModel[]>(
-        `${this.urlAdmin}/service/list/${id}`
+        `${this.urlPrivate}/service/list/${id}`
       );
     } catch (error: any) {
       console.log(error);

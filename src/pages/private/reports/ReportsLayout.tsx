@@ -5,6 +5,11 @@ import { Outlet } from "react-router-dom";
 
 const links: INavLinkItem[] = [
   {
+    path: "/reports/service",
+    label: "Servicios",
+    name: "service-reports",
+  },
+  {
     path: "/reports/business",
     label: "Copias e impresiones",
     name: "business-reports",

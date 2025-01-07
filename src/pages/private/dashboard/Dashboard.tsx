@@ -31,7 +31,7 @@ import { useBusinessContext } from "../../../core/context/use/useBusinessContext
 import { BusinessFinalSaleModel } from "../../../core/models/api/businessFinalSale.model";
 import { EmployeeModel } from "../../../core/models/api/employee.model";
 import { ClientModel } from "../../../core/models/api/client.model";
-import { ProductModel } from "../../../core/models/api/product.model";
+import { ProductModel } from "../../../core/models/api/shop/product.model";
 
 const Dashboard = () => {
   const { selectedTheme } = useThemeContext();

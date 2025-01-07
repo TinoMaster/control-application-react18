@@ -34,6 +34,9 @@ const ReportsLayoutPage = lazy(() => import("./reports/ReportsLayout"));
 const BusinessReportPage = lazy(
   () => import("./reports/business-report/BusinessReport")
 );
+const ServiceReportPage = lazy(
+  () => import("./reports/service-report/ServiceReport")
+);
 /* Inventory */
 const InventoryLayoutPage = lazy(() => import("./inventory/InventoryLayout"));
 const BusinessInventoryPage = lazy(
@@ -103,7 +106,8 @@ export const PrivateRoutes = () => {
           </PrivateRoute>
         }
       >
-        <Route index element={<Navigate to="business" replace />} />
+        <Route index element={<Navigate to="service" replace />} />
+        <Route path="service" element={<ServiceReportPage />} />
         <Route path="business" element={<BusinessReportPage />} />
       </Route>
       {/* Inventory */}

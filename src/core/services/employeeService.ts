@@ -18,6 +18,17 @@ class EmployeeService {
     }
   }
 
+  async getEmployeeByUserId(id: number): Promise<IResponse<EmployeeModel>> {
+    try {
+      return await requestService.fetch<EmployeeModel>(
+        `${this.urlBase}/private/employees/byUserId/${id}`
+      );
+    } catch (error: any) {
+      console.log(error);
+      return handleFetchError(error);
+    }
+  }
+
   async getEmployeeById(id: string): Promise<IResponse<EmployeeModel>> {
     try {
       return await requestService.fetch<EmployeeModel>(
@@ -30,7 +41,7 @@ class EmployeeService {
   }
 
   async getEmployeesByBusinessId(
-    id: string
+    id: number
   ): Promise<IResponse<EmployeeModel[]>> {
     try {
       return await requestService.fetch<EmployeeModel[]>(

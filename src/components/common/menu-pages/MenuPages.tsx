@@ -14,6 +14,7 @@ export const MenuPages = ({ title, links }: IMenuPagesProps) => {
     <Box
       sx={{
         display: "flex",
+        flexWrap: "wrap",
         justifyContent: "space-between",
         alignItems: "center",
         p: 2,
@@ -27,7 +28,11 @@ export const MenuPages = ({ title, links }: IMenuPagesProps) => {
       }}
     >
       {title && (
-        <Typography variant="h5" fontWeight="bold" sx={{ fontSize: "1.2rem", color: "white" }}>
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          sx={{ fontSize: "1.2rem", color: "white" }}
+        >
           {title}
         </Typography>
       )}
@@ -36,7 +41,7 @@ export const MenuPages = ({ title, links }: IMenuPagesProps) => {
         sx={{
           display: "flex",
           gap: "8px",
-          width: "100%",
+          marginLeft: "auto",
           justifyContent: "flex-end",
         }}
       >
@@ -46,10 +51,10 @@ export const MenuPages = ({ title, links }: IMenuPagesProps) => {
             to={link.path}
             style={({ isActive }) => ({
               textDecoration: "none",
-              backgroundColor: isActive
-                ? "white"
-                : "transparent",
-              color: isActive ? darken(selectedTheme.primary_color, 0.8) : "#fefefe",
+              backgroundColor: isActive ? "white" : "transparent",
+              color: isActive
+                ? darken(selectedTheme.primary_color, 0.8)
+                : "#fefefe",
               borderRadius: "4px",
               display: "flex",
               alignItems: "center",

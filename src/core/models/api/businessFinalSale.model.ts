@@ -1,6 +1,6 @@
 import { DebtModel } from "./debt.model";
 import { EmployeeModel } from "./employee.model";
-import { ServiceSaleModel } from "./sellServices.model";
+import { ServiceSaleModel } from "./serviceSale.model";
 
 export interface BusinessFinalSaleModel {
   id?: number;
