@@ -90,6 +90,7 @@ export const ModalAddServiceSale = ({
 
   const handleFormSubmit = (data: ServiceSaleSchema) => {
     const serviceSaleData: ServiceSaleModel = {
+      id: serviceSale?.id || undefined,
       quantity: data.quantity,
       service: services.find((s) => s.id === data.serviceId)!,
       employee: employee!,

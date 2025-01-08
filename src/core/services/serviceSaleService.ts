@@ -42,6 +42,23 @@ class ServiceSaleService {
     }
   }
 
+  async updateServiceSale(
+    serviceSale: ServiceSaleModel
+  ): Promise<IResponse<ServiceSaleModel>> {
+    try {
+      return await requestService.fetch<ServiceSaleModel>(
+        `${this.privateUrl}/serviceSale`,
+        {
+          method: "PUT",
+          body: JSON.stringify(serviceSale),
+        }
+      );
+    } catch (error: any) {
+      console.log(error);
+      return handleFetchError(error);
+    }
+  }
+
   async deleteServiceSale(id: number): Promise<IResponse<null>> {
     try {
       return await requestService.fetch<null>(

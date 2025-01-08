@@ -35,13 +35,28 @@ import { serviceService } from "../../../../core/services/serviceService";
 import { serviceSaleService } from "../../../../core/services/serviceSaleService";
 import { ByBusinessAndDateRequestModel } from "../../../../core/models/api/requests/byBusinessAndDateRequest.model";
 import { ERole } from "../../../../core/models/api";
+import { formatDateToHourString } from "../../../../core/utilities/helpers/dateFormat";
+import { allowedRole } from "../../../../core/utilities/helpers/allowedRole.util";
+import { useAuthContext } from "../../../../core/context/use/useAuthContext";
 
 const ServiceReport = () => {
   const { selectedTheme } = useThemeContext();
   const { materialTheme, role } = useAppContext();
   const { business } = useBusinessContext();
+  const { user } = useAuthContext();
 
   const isMobile = useMediaQuery(materialTheme.breakpoints.down("sm"));
+  const allowedToDelete = allowedRole(role, [ERole.ADMIN, ERole.OWNER]);
+
+  const allowedToEdit = (userId: number) => {
+    const allowedByRole = allowedRole(role, [
+      ERole.ADMIN,
+      ERole.OWNER,
+      ERole.EMPLOYEE,
+    ]);
+    const allowedByUser = userId === user?.id;
+    return allowedByRole && allowedByUser;
+  };
 
   // Estados
   const [page, setPage] = useState(0);
@@ -130,6 +145,9 @@ const ServiceReport = () => {
   };
 
   const handleSubmit = async (serviceSale: ServiceSaleModel) => {
+    setLoading(true);
+    setError(false);
+    setSuccess(false);
     try {
       if (!business?.id) return;
 
@@ -140,19 +158,26 @@ const ServiceReport = () => {
 
       let response;
       if (serviceSaleToEdit) {
-        response = await serviceSaleService.saveServiceSale(serviceData);
+        response = await serviceSaleService.updateServiceSale(serviceData);
         if (response.status === 200) {
           editServiceSaleFromServiceSales(response.data as ServiceSaleModel);
           setSuccess(true);
+        } else {
+          setError(true);
         }
       } else {
         response = await serviceSaleService.saveServiceSale(serviceData);
         if (response.status === 200) {
           addServiceSaleToServiceSales(response.data as ServiceSaleModel);
           setSuccess(true);
+        } else {
+          setError(true);
         }
       }
 
+      setLoading(false);
+      setSuccess(false);
+      setError(false);
       setOpen(false);
       setServiceSaleToEdit(undefined);
     } catch (error) {
@@ -200,35 +225,49 @@ const ServiceReport = () => {
           >
             <TableCell
               sx={{
-                color: selectedTheme.text_color,
+                color: "white",
               }}
             >
               Servicio
             </TableCell>
             <TableCell
               sx={{
-                color: selectedTheme.text_color,
+                color: "white",
               }}
             >
               Cantidad
             </TableCell>
             <TableCell
               sx={{
-                color: selectedTheme.text_color,
+                color: "white",
               }}
             >
               Realizado por
             </TableCell>
             <TableCell
               sx={{
-                color: selectedTheme.text_color,
+                color: "white",
               }}
             >
               Precio Final
             </TableCell>
             <TableCell
               sx={{
-                color: selectedTheme.text_color,
+                color: "white",
+              }}
+            >
+              Creado
+            </TableCell>
+            <TableCell
+              sx={{
+                color: "white",
+              }}
+            >
+              Actualizado
+            </TableCell>
+            <TableCell
+              sx={{
+                color: "white",
               }}
             >
               Acciones
@@ -240,12 +279,33 @@ const ServiceReport = () => {
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((serviceSale) => (
               <TableRow key={serviceSale.id}>
-                <TableCell>{serviceSale.service.name}</TableCell>
-                <TableCell>{serviceSale.quantity}</TableCell>
-                <TableCell>{serviceSale.employee.user.name}</TableCell>
-                <TableCell>${serviceSale.businessFinalSale}</TableCell>
+                <TableCell sx={{ color: selectedTheme.text_color }}>
+                  {serviceSale.service.name}
+                </TableCell>
+                <TableCell sx={{ color: selectedTheme.text_color }}>
+                  {serviceSale.quantity}
+                </TableCell>
+                <TableCell sx={{ color: selectedTheme.text_color }}>
+                  {serviceSale.employee.user.name}
+                </TableCell>
+                <TableCell sx={{ color: selectedTheme.text_color }}>
+                  $ {serviceSale.quantity * serviceSale.service.price}
+                </TableCell>
+                <TableCell sx={{ color: selectedTheme.text_color }}>
+                  {serviceSale.createdAt
+                    ? formatDateToHourString(serviceSale.createdAt)
+                    : "N/A"}
+                </TableCell>
+                <TableCell sx={{ color: selectedTheme.text_color }}>
+                  {serviceSale.updatedAt
+                    ? formatDateToHourString(serviceSale.updatedAt)
+                    : "N/A"}
+                </TableCell>
                 <TableCell>
                   <IconButton
+                    disabled={
+                      !allowedToEdit(serviceSale.employee.user.id as number)
+                    }
                     onClick={() => handleEditServiceSale(serviceSale)}
                     sx={{
                       color: selectedTheme.text_color,
@@ -254,6 +314,7 @@ const ServiceReport = () => {
                     <EditIcon />
                   </IconButton>
                   <IconButton
+                    disabled={!allowedToDelete}
                     onClick={() => handleDeleteServiceSale(serviceSale.id!)}
                     sx={{
                       color: selectedTheme.text_color,
@@ -292,6 +353,8 @@ const ServiceReport = () => {
             sx={{
               mb: 2,
               backgroundColor: selectedTheme.background_color,
+              boxShadow: `0 0 70px 10px ${selectedTheme.primary_color}15 , 0 0 5px 2px #00000015`,
+              borderRadius: "8px",
             }}
           >
             <CardContent>
@@ -321,7 +384,7 @@ const ServiceReport = () => {
                       color: selectedTheme.text_color,
                     }}
                   >
-                    Realizado por: {serviceSale.employee.user.name}
+                    Trabajador: {serviceSale.employee.user.name}
                   </Typography>
                 </Grid>
                 <Grid size={6}>
@@ -330,7 +393,32 @@ const ServiceReport = () => {
                       color: selectedTheme.text_color,
                     }}
                   >
-                    Precio Final: ${serviceSale.businessFinalSale}
+                    Precio Final: $
+                    {serviceSale.quantity * serviceSale.service.price}
+                  </Typography>
+                </Grid>
+                <Grid size={6}>
+                  <Typography
+                    sx={{
+                      color: selectedTheme.text_color,
+                    }}
+                  >
+                    Creado:{" "}
+                    {serviceSale.createdAt
+                      ? formatDateToHourString(serviceSale.createdAt)
+                      : "N/A"}
+                  </Typography>
+                </Grid>
+                <Grid size={6}>
+                  <Typography
+                    sx={{
+                      color: selectedTheme.text_color,
+                    }}
+                  >
+                    Actualizado:{" "}
+                    {serviceSale.updatedAt
+                      ? formatDateToHourString(serviceSale.updatedAt)
+                      : "N/A"}
                   </Typography>
                 </Grid>
                 <Grid size={12}>
@@ -342,6 +430,9 @@ const ServiceReport = () => {
                     }}
                   >
                     <IconButton
+                      disabled={
+                        !allowedToEdit(serviceSale.employee.user.id as number)
+                      }
                       onClick={() => handleEditServiceSale(serviceSale)}
                       sx={{
                         color: selectedTheme.text_color,
@@ -350,6 +441,7 @@ const ServiceReport = () => {
                       <EditIcon />
                     </IconButton>
                     <IconButton
+                      disabled={!allowedToDelete}
                       onClick={() => handleDeleteServiceSale(serviceSale.id!)}
                       sx={{
                         color: selectedTheme.text_color,
@@ -411,10 +503,10 @@ const ServiceReport = () => {
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
-                disabled={role !== ERole.EMPLOYEE && role !== ERole.ADMIN}
+                disabled={!allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN])}
                 sx={{
                   backgroundColor: selectedTheme.primary_color,
-                  color: selectedTheme.text_color,
+                  color: "white",
                   "&:hover": {
                     backgroundColor: darken(selectedTheme.primary_color, 0.1),
                   },
@@ -458,14 +550,14 @@ const ServiceReport = () => {
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
-                disabled={role !== ERole.EMPLOYEE && role !== ERole.ADMIN}
+                disabled={!allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN])}
                 onClick={() => {
                   setServiceSaleToEdit(undefined);
                   setOpen(true);
                 }}
                 sx={{
                   backgroundColor: selectedTheme.primary_color,
-                  color: selectedTheme.text_color,
+                  color: "white",
                   "&:hover": {
                     backgroundColor: darken(selectedTheme.primary_color, 0.1),
                   },
