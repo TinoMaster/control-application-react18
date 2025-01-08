@@ -121,7 +121,10 @@ export const ModalAddServiceSale = ({
       <DialogTitle
         sx={{
           color: selectedTheme.text_color,
-          borderBottom: `1px solid ${darken(selectedTheme.primary_color, 0.1)}`,
+          borderBottom: `1px solid ${darken(
+            selectedTheme.background_color,
+            0.1
+          )}`,
         }}
       >
         {isEditing ? "Editar Servicio Vendido" : "Agregar Servicio Vendido"}
@@ -132,7 +135,27 @@ export const ModalAddServiceSale = ({
           <Box sx={{ mt: 2 }}>
             <Grid container spacing={2}>
               <Grid size={12}>
-                <FormControl fullWidth error={!!errors.serviceId}>
+                <FormControl
+                  fullWidth
+                  error={!!errors.serviceId}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      color: selectedTheme.text_color,
+                      "& fieldset": {
+                        borderColor: selectedTheme.text_color,
+                      },
+                      "&:hover fieldset": {
+                        borderColor: selectedTheme.text_color,
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: selectedTheme.text_color,
+                      },
+                    },
+                    "& .MuiSelect-icon": {
+                      color: selectedTheme.text_color,
+                    },
+                  }}
+                >
                   <Controller
                     name="serviceId"
                     control={control}
@@ -177,7 +200,10 @@ export const ModalAddServiceSale = ({
 
         <DialogActions
           sx={{
-            borderTop: `1px solid ${darken(selectedTheme.primary_color, 0.1)}`,
+            borderTop: `1px solid ${darken(
+              selectedTheme.background_color,
+              0.1
+            )}`,
             p: 2,
           }}
         >
@@ -186,7 +212,8 @@ export const ModalAddServiceSale = ({
             sx={{
               color: selectedTheme.text_color,
               "&:hover": {
-                backgroundColor: darken(selectedTheme.primary_color, 0.1),
+                backgroundColor: "var(--error-color)",
+                color: "white",
               },
             }}
           >
@@ -197,7 +224,7 @@ export const ModalAddServiceSale = ({
             variant="contained"
             sx={{
               backgroundColor: selectedTheme.primary_color,
-              color: selectedTheme.text_color,
+              color: "white",
               "&:hover": {
                 backgroundColor: darken(selectedTheme.primary_color, 0.1),
               },

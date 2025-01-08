@@ -17,8 +17,6 @@ import {
   CardContent,
   Grid2 as Grid,
   darken,
-  Tooltip,
-  Popover,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -38,6 +36,8 @@ import { ERole } from "../../../../core/models/api";
 import { formatDateToHourString } from "../../../../core/utilities/helpers/dateFormat";
 import { allowedRole } from "../../../../core/utilities/helpers/allowedRole.util";
 import { useAuthContext } from "../../../../core/context/use/useAuthContext";
+import { CustomPopover } from "../../../../components/common/ui/CustomPopover";
+import { CustomTooltip } from "../../../../components/common/ui/CustomTooltip";
 
 const ServiceReport = () => {
   const { selectedTheme } = useThemeContext();
@@ -54,7 +54,7 @@ const ServiceReport = () => {
       ERole.OWNER,
       ERole.EMPLOYEE,
     ]);
-    const allowedByUser = userId === user?.id;
+    const allowedByUser = role === ERole.EMPLOYEE ? userId === user?.id : true;
     return allowedByRole && allowedByUser;
   };
 
@@ -302,26 +302,39 @@ const ServiceReport = () => {
                     : "N/A"}
                 </TableCell>
                 <TableCell>
-                  <IconButton
-                    disabled={
-                      !allowedToEdit(serviceSale.employee.user.id as number)
+                  <CustomTooltip
+                    message={
+                      allowedToEdit(serviceSale.employee.user.id as number)
+                        ? "Editar"
+                        : "Sin permiso"
                     }
-                    onClick={() => handleEditServiceSale(serviceSale)}
-                    sx={{
-                      color: selectedTheme.text_color,
-                    }}
                   >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    disabled={!allowedToDelete}
-                    onClick={() => handleDeleteServiceSale(serviceSale.id!)}
-                    sx={{
-                      color: selectedTheme.text_color,
-                    }}
+                    <IconButton
+                      disabled={
+                        !allowedToEdit(serviceSale.employee.user.id as number)
+                      }
+                      onClick={() => handleEditServiceSale(serviceSale)}
+                      sx={{
+                        color: selectedTheme.text_color,
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </CustomTooltip>
+
+                  <CustomTooltip
+                    message={allowedToDelete ? "Eliminar" : "Sin permiso"}
                   >
-                    <DeleteIcon />
-                  </IconButton>
+                    <IconButton
+                      disabled={!allowedToDelete}
+                      onClick={() => handleDeleteServiceSale(serviceSale.id!)}
+                      sx={{
+                        color: selectedTheme.text_color,
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </CustomTooltip>
                 </TableCell>
               </TableRow>
             ))}
@@ -492,7 +505,10 @@ const ServiceReport = () => {
           <>
             <div
               onClick={(event) => {
-                if (role !== ERole.EMPLOYEE && role !== ERole.ADMIN) {
+                if (
+                  !allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN]) &&
+                  business?.id
+                ) {
                   setAnchorEl(event.currentTarget);
                 } else {
                   setServiceSaleToEdit(undefined);
@@ -516,57 +532,39 @@ const ServiceReport = () => {
               </Button>
             </div>
 
-            <Popover
-              open={Boolean(anchorEl)}
+            <CustomPopover
               anchorEl={anchorEl}
-              onClose={() => setAnchorEl(null)}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "center",
-              }}
-            >
-              <Box
-                sx={{ p: 2, backgroundColor: selectedTheme.background_color }}
-              >
-                <Typography sx={{ color: selectedTheme.text_color }}>
-                  Solo los empleados pueden agregar servicios vendidos
-                </Typography>
-              </Box>
-            </Popover>
+              setAnchorEl={setAnchorEl}
+              message="Solo los empleados pueden agregar servicios vendidos"
+            />
           </>
         ) : (
-          <Tooltip
-            title={
-              role !== ERole.EMPLOYEE && role !== ERole.ADMIN
+          <CustomTooltip
+            message={
+              !allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN])
                 ? "Solo los empleados pueden agregar servicios vendidos"
-                : ""
+                : "Agregar un Nuevo Servicio Vendido"
             }
           >
-            <div style={{ display: "inline-block" }}>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                disabled={!allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN])}
-                onClick={() => {
-                  setServiceSaleToEdit(undefined);
-                  setOpen(true);
-                }}
-                sx={{
-                  backgroundColor: selectedTheme.primary_color,
-                  color: "white",
-                  "&:hover": {
-                    backgroundColor: darken(selectedTheme.primary_color, 0.1),
-                  },
-                }}
-              >
-                Agregar Servicio Vendido
-              </Button>
-            </div>
-          </Tooltip>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              disabled={!allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN])}
+              onClick={() => {
+                setServiceSaleToEdit(undefined);
+                setOpen(true);
+              }}
+              sx={{
+                backgroundColor: selectedTheme.primary_color,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: darken(selectedTheme.primary_color, 0.1),
+                },
+              }}
+            >
+              Agregar Servicio Vendido
+            </Button>
+          </CustomTooltip>
         )}
       </Box>
 
