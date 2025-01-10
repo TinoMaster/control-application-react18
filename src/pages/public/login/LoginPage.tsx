@@ -149,6 +149,7 @@ const LoginPage = () => {
                   placeholder="Ingrese su correo electrónico"
                   error={!!errors.email}
                   helperText={errors.email?.message}
+                  isDarkModeStatic={true}
                 />
               </Grid2>
               <Grid2 size={12}>
@@ -160,6 +161,7 @@ const LoginPage = () => {
                   placeholder="Ingrese su contraseña"
                   error={!!errors.password}
                   helperText={errors.password?.message}
+                  isDarkModeStatic
                 />
               </Grid2>
             </Grid2>

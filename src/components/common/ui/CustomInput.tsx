@@ -16,6 +16,7 @@ interface CustomInputProps {
   value?: string | number;
   required?: boolean;
   inputRef?: React.Ref<any>;
+  isDarkModeStatic?: boolean;
 }
 
 const CustomInput = ({
@@ -32,6 +33,7 @@ const CustomInput = ({
   value,
   required = true,
   inputRef,
+  isDarkModeStatic,
 }: CustomInputProps) => {
   const { selectedTheme } = useThemeContext();
 
@@ -54,7 +56,9 @@ const CustomInput = ({
           margin: "0",
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
-              borderColor: selectedTheme.text_color, // Color del borde normal
+              borderColor: isDarkModeStatic
+                ? "#fff"
+                : selectedTheme.text_color, // Color del borde normal
             },
             "&:hover fieldset": {
               borderColor: selectedTheme.secondary_color, // Color del borde al pasar el mouse
@@ -66,14 +70,20 @@ const CustomInput = ({
         }}
         slotProps={{
           inputLabel: {
-            style: { color: selectedTheme.text_color || "white" },
+            style: {
+              color: isDarkModeStatic ? "#fff" : selectedTheme.text_color,
+            },
             required: required,
           },
           input: {
-            style: { color: selectedTheme.text_color || "white" },
+            style: {
+              color: isDarkModeStatic ? "#fff" : selectedTheme.text_color,
+            },
             startAdornment: startAdornment && (
               <InputAdornment position="start">
-                <Typography sx={{ color: selectedTheme.text_color }}>
+                <Typography
+                  sx={{ color: isDarkModeStatic ? "#fff" : selectedTheme.text_color }}
+                >
                   {startAdornment}
                 </Typography>
               </InputAdornment>
@@ -114,7 +124,7 @@ const CustomInput = ({
             margin: "0",
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
-                borderColor: selectedTheme.text_color, // Color del borde normal
+                borderColor: isDarkModeStatic ? "#fff" : selectedTheme.text_color, // Color del borde normal
               },
               "&:hover fieldset": {
                 borderColor: selectedTheme.secondary_color, // Color del borde al pasar el mouse
@@ -126,13 +136,13 @@ const CustomInput = ({
           }}
           slotProps={{
             inputLabel: {
-              style: { color: selectedTheme.text_color || "white" },
+              style: { color: isDarkModeStatic ? "#fff" : selectedTheme.text_color },
             },
             input: {
-              style: { color: selectedTheme.text_color || "white" },
+              style: { color: isDarkModeStatic ? "#fff" : selectedTheme.text_color },
               startAdornment: startAdornment && (
                 <InputAdornment position="start">
-                  <Typography sx={{ color: selectedTheme.text_color }}>
+                  <Typography sx={{ color: isDarkModeStatic ? "#fff" : selectedTheme.text_color }}>
                     {startAdornment}
                   </Typography>
                 </InputAdornment>

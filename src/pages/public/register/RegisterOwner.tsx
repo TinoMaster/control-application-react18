@@ -90,6 +90,7 @@ const RegisterOwner = () => {
                 name="name"
                 control={control}
                 label="Nombre del Usuario"
+                isDarkModeStatic
                 error={!!errors.name}
                 helperText={errors.name?.message}
               />
@@ -99,6 +100,7 @@ const RegisterOwner = () => {
                 name="lastName"
                 control={control}
                 label="Apellido del Usuario"
+                isDarkModeStatic
                 error={!!errors.lastName}
                 helperText={errors.lastName?.message}
               />
@@ -109,6 +111,7 @@ const RegisterOwner = () => {
                 type="email"
                 control={control}
                 label="Correo Electrónico"
+                isDarkModeStatic
                 error={!!errors.email}
                 helperText={errors.email?.message}
               />
@@ -119,6 +122,7 @@ const RegisterOwner = () => {
                 type="password"
                 control={control}
                 label="Contraseña"
+                isDarkModeStatic
                 error={!!errors.password}
                 helperText={errors.password?.message}
               />
@@ -129,6 +133,7 @@ const RegisterOwner = () => {
                 type="password"
                 control={control}
                 label="Confirmar Contraseña"
+                isDarkModeStatic
                 error={!!errors.confirmPassword}
                 helperText={errors.confirmPassword?.message}
               />
@@ -139,6 +144,7 @@ const RegisterOwner = () => {
                 name="businessName"
                 control={control}
                 label="Nombre del Negocio"
+                isDarkModeStatic
                 error={!!errors.businessName}
                 helperText={errors.businessName?.message}
               />
@@ -148,6 +154,7 @@ const RegisterOwner = () => {
                 name="businessPhone"
                 control={control}
                 label="Teléfono del Negocio"
+                isDarkModeStatic
                 error={!!errors.businessPhone}
                 helperText={errors.businessPhone?.message}
               />
@@ -158,6 +165,7 @@ const RegisterOwner = () => {
                 type="text"
                 control={control}
                 label="Municipio del Negocio"
+                isDarkModeStatic
                 error={!!errors.addressMunicipality}
                 helperText={errors.addressMunicipality?.message}
               />
@@ -167,6 +175,7 @@ const RegisterOwner = () => {
                 name="businessDescription"
                 control={control}
                 label="Descripción del Negocio"
+                isDarkModeStatic
                 error={!!errors.businessDescription}
                 helperText={errors.businessDescription?.message}
               />
@@ -177,6 +186,7 @@ const RegisterOwner = () => {
                 name="addressStreet"
                 control={control}
                 label="Dirección"
+                isDarkModeStatic
                 placeholder="Ej: calle 41 e/42 y 36"
                 error={!!errors.addressStreet}
                 helperText={errors.addressStreet?.message}
@@ -187,6 +197,7 @@ const RegisterOwner = () => {
                 name="addressNumber"
                 control={control}
                 label="Número"
+                isDarkModeStatic
                 error={!!errors.addressNumber}
                 helperText={errors.addressNumber?.message}
               />
@@ -196,6 +207,7 @@ const RegisterOwner = () => {
                 name="addressCity"
                 control={control}
                 label="Ciudad"
+                isDarkModeStatic
                 error={!!errors.addressCity}
                 helperText={errors.addressCity?.message}
               />
@@ -205,6 +217,7 @@ const RegisterOwner = () => {
                 name="addressZipCode"
                 control={control}
                 label="Código Postal"
+                isDarkModeStatic
                 error={!!errors.addressZipCode}
                 helperText={errors.addressZipCode?.message}
               />

@@ -17,7 +17,7 @@ const EmployeesList = () => {
     }
     setLoading(true);
     const response = await employeeService.getEmployeesByBusinessId(
-      business.id?.toString() || ""
+      business.id
     );
     if (response.status === 200) {
       setEmployees(response.data || []);

@@ -1,8 +1,10 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { AuthContext } from "../use/useAuthContext";
-import { TRole, UserModel } from "../../models/api";
+import { ERole, TRole, UserModel } from "../../models/api";
 import { decodeJWT } from "../../utilities/helpers/jwtDecode";
 import { appService } from "../../services/appService";
+import { EmployeeModel } from "../../models/api/employee.model";
+import { employeeService } from "../../services/employeeService";
 
 interface IContextProps {
   children: ReactNode;
@@ -12,6 +14,7 @@ export interface IAuthContext {
   isLoggedIn: () => boolean;
   role: TRole;
   user: UserModel | undefined;
+  employee: EmployeeModel | undefined;
   loadingUser: boolean;
   reloadUser: () => void;
 }
@@ -19,6 +22,9 @@ export interface IAuthContext {
 export const AuthProvider = ({ children }: IContextProps) => {
   const [loadingUser, setLoadingUser] = useState(false);
   const [user, setUser] = useState<UserModel | undefined>(undefined);
+  const [employee, setEmployee] = useState<EmployeeModel | undefined>(
+    undefined
+  );
   const role: TRole = localStorage.getItem("role") as TRole;
   const token = localStorage.getItem("token");
   const userEmail = token ? decodeJWT(token).sub : null;
@@ -27,20 +33,31 @@ export const AuthProvider = ({ children }: IContextProps) => {
 
   const reloadUser = () => setReload(!reload);
 
-  const getUser = async (email: string) => {
-    setLoadingUser(true);
-    const response = await appService.getUser(email);
-    if (response.status === 200) {
-      setUser(response.data);
-    }
-    setLoadingUser(false);
-  };
+  const getUser = useCallback(
+    async (email: string) => {
+      setLoadingUser(true);
+      const response = await appService.getUser(email);
+      if (response.status === 200) {
+        setUser(response.data);
+        if (role !== ERole.SUPERADMIN && role !== ERole.ADMIN) {
+          const employeeResponse = await employeeService.getEmployeeByUserId(
+            response.data?.id || 0
+          );
+          if (employeeResponse.status === 200) {
+            setEmployee(employeeResponse.data);
+          }
+        }
+      }
+      setLoadingUser(false);
+    },
+    [role]
+  );
 
   useEffect(() => {
     if (userEmail) {
       getUser(userEmail);
     }
-  }, [userEmail, reload]);
+  }, [userEmail, reload, getUser]);
 
   const isLoggedIn = (): boolean => {
     return token !== null && token !== "" && role !== null;
@@ -48,7 +65,7 @@ export const AuthProvider = ({ children }: IContextProps) => {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, role, user, loadingUser, reloadUser }}
+      value={{ isLoggedIn, role, user, loadingUser, reloadUser, employee }}
       children={children}
     />
   );

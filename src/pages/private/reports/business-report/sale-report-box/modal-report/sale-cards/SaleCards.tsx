@@ -116,12 +116,21 @@ export const SaleCards = () => {
         </Grid>
       </Grid>
 
-      <TableContainer>
+      <TableContainer
+        sx={{
+          backgroundColor: selectedTheme.background_color,
+          boxShadow: `0 0 5px 2px #00000030`,
+          borderRadius: "8px",
+          "& .MuiTableCell-root": {
+            borderBottom: "none",
+          },
+        }}
+      >
         <Table>
           <TableHead>
             <TableRow
               sx={{
-                backgroundColor: darken(selectedTheme.primary_color, 0.3),
+                backgroundColor: darken(selectedTheme.secondary_color, 0.3),
               }}
             >
               <TableCell sx={{ color: "#fff" }}>Número de Tarjeta</TableCell>
