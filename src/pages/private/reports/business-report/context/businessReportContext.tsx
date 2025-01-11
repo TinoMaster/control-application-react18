@@ -30,6 +30,7 @@ const initialBusinessSale: BusinessFinalSaleModel = {
   debts: [],
   note: "",
   workers: [],
+  servicesSales: [],
   machines: [],
   doneBy: 0,
   found: 0,
@@ -99,7 +100,8 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
   useEffect(() => {
     console.log("current section", currentSection);
     console.log("business sale", businessSale);
-  }, [currentSection, businessSale]);
+    console.log("cards", cards);
+  }, [currentSection, businessSale, cards]);
 
   return (
     <BusinessReportContext.Provider

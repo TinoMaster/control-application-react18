@@ -30,7 +30,7 @@ export const SECTIONS_TRANSLATIONS = {
     title: "TARJETAS",
     subtitle: "Ah recibido alguna tarjeta hoy? Agréguelas aquí",
   },
-  [SECTIONS_BUSINESS_REPORT.SERVICES]: { title: "SERVICIOS", subtitle: "" },
+  [SECTIONS_BUSINESS_REPORT.SERVICES]: { title: "SERVICIOS", subtitle: "Agregue los servicios que pertenezcan a este registro de ventas" },
   [SECTIONS_BUSINESS_REPORT.MIRON]: { title: "MIRON", subtitle: "" },
   [SECTIONS_BUSINESS_REPORT.REPORT]: { title: "REPORTE", subtitle: "" },
   [SECTIONS_BUSINESS_REPORT.END]: { title: "FINALIZADO", subtitle: "" },

@@ -6,29 +6,38 @@ import {
   Button,
   Checkbox,
   Chip,
+  darken,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Modal,
   Paper,
   Typography,
 } from "@mui/material";
 import { ByBusinessAndDateRequestModel } from "../../../../../../../core/models/api/requests/byBusinessAndDateRequest.model";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useAuthContext } from "../../../../../../../core/context/use/useAuthContext";
 import { useBusinessContext } from "../../../../../../../core/context/use/useBusinessContext";
 import { formatDateToHourString } from "../../../../../../../core/utilities/helpers/dateFormat";
 import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
+import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import BlockIcon from "@mui/icons-material/Block";
+import { ERole } from "../../../../../../../core/models/api";
 
 export const SaleServices = () => {
+  const { businessSale, setBusinessSale, nextSection, prevSection } =
+    useBusinessReportContext();
   const [serviceSales, setServiceSales] = useState<ServiceSaleModel[]>([]);
   const [selectedServices, setSelectedServices] = useState<ServiceSaleModel[]>(
     []
   );
-  const { employee } = useAuthContext();
+  const [modalConfirmMessage, setModalConfirmMessage] = useState<string>("");
+  const { employee, role } = useAuthContext();
   const { business } = useBusinessContext();
-  const {selectedTheme} = useThemeContext();
+  const { selectedTheme } = useThemeContext();
 
   const loadServiceSales = useCallback(async () => {
     if (!business.id) {
@@ -42,9 +51,15 @@ export const SaleServices = () => {
     const response =
       await serviceSaleService.getServiceSalesByBusinessIdAndDate(request);
     if (response.status === 200) {
-      setServiceSales(response.data || []);
+      if (role === ERole.EMPLOYEE) {
+        setServiceSales(
+          response.data?.filter((s) => s.employee.id === employee?.id) || []
+        );
+      } else {
+        setServiceSales(response.data || []);
+      }
     }
-  }, [business.id]);
+  }, [business.id, role, employee]);
 
   useEffect(() => {
     loadServiceSales();
@@ -60,36 +75,142 @@ export const SaleServices = () => {
     });
   };
 
+  const handleOmitStep = () => {
+    nextSection();
+  };
+
+  const handleGoBack = () => {
+    prevSection();
+  };
+
+  const handleSaveServices = () => {
+    setBusinessSale({
+      ...businessSale,
+      servicesSales: selectedServices,
+    });
+    nextSection();
+  };
+
+  const verifySelectedServices = (): boolean => {
+    const areAllMyServicesSelected =
+      selectedServices.filter((s) => s.employee.id === employee?.id).length ===
+      serviceSales.filter((s) => s.employee.id === employee?.id).length;
+
+    if (!areAllMyServicesSelected && role !== ERole.EMPLOYEE) {
+      setModalConfirmMessage(
+        "Hay servicios sin marcar, esto puede provocar la eliminación de estos, solo un administrador o propietario podrían salvarlos antes de acabar el dia ¿desea continuar?"
+      );
+      return false;
+    } else if (selectedServices.length !== serviceSales.length) {
+      setModalConfirmMessage(
+        "Hay servicios sin marcar, esto puede provocar la eliminación de estos, ¿desea continuar?"
+      );
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmitStep = () => {
+    if (verifySelectedServices()) {
+      handleSaveServices();
+    }
+  };
+
   const myServices = serviceSales.filter((s) => s.employee.id === employee?.id);
   const otherServices = serviceSales.filter(
     (s) => s.employee.id !== employee?.id
   );
 
+  if (serviceSales.length === 0) {
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: 800,
+          mx: "auto",
+          p: 2,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="body1" gutterBottom>
+          No hay servicios vendidos
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={handleOmitStep}
+          sx={{ bgcolor: selectedTheme.primary_color, color: "white" }}
+        >
+          Siguiente
+        </Button>
+      </Box>
+    );
+  }
+
+  const confirmModalOpen = () => {
+    return (
+      <Modal
+        open={Boolean(modalConfirmMessage)}
+        onClose={() => setModalConfirmMessage("")}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Box
+          sx={{
+            bgcolor: selectedTheme.background_color,
+            p: 4,
+            borderRadius: "8px",
+            width: "400px",
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            ¿Desea continuar?
+          </Typography>
+          <Typography
+            id="modal-modal-description"
+            sx={{
+              color: darken(selectedTheme.text_color, 0.3),
+              fontSize: "0.8rem",
+            }}
+            variant="body1"
+          >
+            {modalConfirmMessage}
+          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+            <Button onClick={() => setModalConfirmMessage("")}>Cancelar</Button>
+            <Button onClick={handleOmitStep}>Aceptar</Button>
+          </Box>
+        </Box>
+      </Modal>
+    );
+  };
+
   return (
     <Box sx={{ width: "100%", maxWidth: 800, mx: "auto", p: 2 }}>
-      <Typography variant="h6" gutterBottom>
-        Servicios Vendidos del Día
-      </Typography>
-
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Typography variant="subtitle1">
           Servicios seleccionados: {selectedServices.length}
         </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddCircleOutlineIcon />}
-          disabled={selectedServices.length === 0}
-          sx={{ bgcolor: selectedTheme.primary_color, color: "white" }}
-          onClick={() => console.log("Agregar Servicios")}
-        >
-          Agregar Servicios
-        </Button>
       </Box>
+
+      {confirmModalOpen()}
 
       <Paper elevation={3} sx={{ mb: 3, overflow: "hidden" }}>
         <Typography
           variant="subtitle1"
-          sx={{ p: 2, bgcolor: selectedTheme.primary_color, color: "white" }}
+          sx={{
+            p: 1,
+            bgcolor: selectedTheme.primary_color,
+            color: "white",
+            fontSize: "0.9rem",
+          }}
         >
           Mis Servicios
         </Typography>
@@ -99,10 +220,17 @@ export const SaleServices = () => {
               <ListItemButton onClick={() => handleToggleService(service)}>
                 <ListItemIcon>
                   <Checkbox
+                    size="small"
                     edge="start"
                     checked={selectedServices.some((s) => s.id === service.id)}
                     tabIndex={-1}
                     disableRipple
+                    sx={{
+                      color: selectedTheme.primary_color,
+                      "&.Mui-checked": {
+                        color: selectedTheme.primary_color,
+                      },
+                    }}
                   />
                 </ListItemIcon>
                 <ListItemText
@@ -112,8 +240,11 @@ export const SaleServices = () => {
                       <Chip
                         label={`Cantidad: ${service.quantity}`}
                         size="small"
-                        color="primary"
                         variant="outlined"
+                        sx={{
+                          bgcolor: selectedTheme.primary_color,
+                          color: "white",
+                        }}
                       />
                       <Typography variant="body2" color="text.secondary">
                         {formatDateToHourString(
@@ -130,12 +261,17 @@ export const SaleServices = () => {
       </Paper>
 
       {otherServices.length > 0 && (
-        <Paper elevation={3}>
+        <Paper elevation={3} sx={{ mb: 3, overflow: "hidden" }}>
           <Typography
             variant="subtitle1"
-            sx={{ p: 2, bgcolor: "var(--bg-dark-light)", color: "white" }}
+            sx={{
+              p: 1,
+              bgcolor: "var(--bg-dark-light)",
+              color: "white",
+              fontSize: "0.9rem",
+            }}
           >
-            Otros Servicios
+            Servicios de otros empleados
           </Typography>
           <List>
             {otherServices.map((service) => (
@@ -143,12 +279,19 @@ export const SaleServices = () => {
                 <ListItemButton onClick={() => handleToggleService(service)}>
                   <ListItemIcon>
                     <Checkbox
+                      size="small"
                       edge="start"
                       checked={selectedServices.some(
                         (s) => s.id === service.id
                       )}
                       tabIndex={-1}
                       disableRipple
+                      sx={{
+                        color: "var(--bg-dark-light)",
+                        "&.Mui-checked": {
+                          color: "var(--bg-dark-light)",
+                        },
+                      }}
                     />
                   </ListItemIcon>
                   <ListItemText
@@ -182,6 +325,33 @@ export const SaleServices = () => {
           </List>
         </Paper>
       )}
+
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Button
+          variant="contained"
+          size="small"
+          startIcon={<KeyboardArrowLeftIcon />}
+          onClick={handleGoBack}
+          sx={{ bgcolor: selectedTheme.primary_color, color: "white" }}
+        >
+          Atrás
+        </Button>
+        <Button
+          variant="contained"
+          endIcon={
+            selectedServices.length === 0 ? (
+              <BlockIcon />
+            ) : (
+              <KeyboardArrowRightIcon />
+            )
+          }
+          size="small"
+          onClick={handleSubmitStep}
+          sx={{ bgcolor: selectedTheme.primary_color, color: "white" }}
+        >
+          {selectedServices.length === 0 ? "Omitir" : "Siguiente"}
+        </Button>
+      </Box>
     </Box>
   );
 };

@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: IContextProps) => {
       const response = await appService.getUser(email);
       if (response.status === 200) {
         setUser(response.data);
-        if (role !== ERole.SUPERADMIN && role !== ERole.ADMIN) {
+        if (role !== ERole.SUPERADMIN && role !== ERole.OWNER) {
           const employeeResponse = await employeeService.getEmployeeByUserId(
             response.data?.id || 0
           );
