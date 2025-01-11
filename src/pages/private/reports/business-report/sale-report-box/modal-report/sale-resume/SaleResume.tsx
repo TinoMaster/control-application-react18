@@ -21,6 +21,9 @@ import { useThemeContext } from "../../../../../../../core/context/use/useThemeC
 import { useEffect, useState } from "react";
 import { useBusinessContext } from "../../../../../../../core/context/use/useBusinessContext";
 import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
+import { allowedRole } from "../../../../../../../core/utilities/helpers/allowedRole.util";
+import { useAuthContext } from "../../../../../../../core/context/use/useAuthContext";
+import { ERole } from "../../../../../../../core/models/api";
 
 enum ERegisterType {
   INDIVIDUAL = "individual",
@@ -37,9 +40,10 @@ type TSaleResume = z.infer<typeof SaleResumeZodSchema>;
 
 export const SaleResume = () => {
   const { selectedTheme } = useThemeContext();
+  const { role } = useAuthContext();
   const { business } = useBusinessContext();
   const [registerType, setRegisterType] = useState<ERegisterType>(
-    ERegisterType.GENERAL
+    ERegisterType.INDIVIDUAL
   );
   const [loading, setLoading] = useState(false);
 
@@ -58,6 +62,8 @@ export const SaleResume = () => {
       machines: businessSale.machines,
     },
   });
+
+  console.log(isValid);
 
   const onSubmit = (data: TSaleResume) => {
     setLoading(true);
@@ -101,16 +107,69 @@ export const SaleResume = () => {
       }}
     >
       {/* Radio Button para seleccionar si el cuadre es general o individual */}
-      <FormControl>
-        <FormLabel
-          id="demo-row-radio-buttons-group-label"
-          sx={{
-            color: selectedTheme.text_color,
-            "&.Mui-focused": { color: selectedTheme.secondary_color },
-          }}
-        >
-          Tipo de cuadre
-        </FormLabel>
+      {allowedRole(role, [ERole.ADMIN, ERole.OWNER]) ? (
+        <FormControl>
+          <FormLabel
+            id="demo-row-radio-buttons-group-label"
+            sx={{
+              color: selectedTheme.text_color,
+              "&.Mui-focused": { color: selectedTheme.secondary_color },
+            }}
+          >
+            Tipo de cuadre
+          </FormLabel>
+          <Typography
+            sx={{
+              color: darken(selectedTheme.text_color, 0.3),
+              fontSize: "0.8rem",
+            }}
+            variant="body1"
+          >
+            Elija individual si desea registrar el cuadre de una sola maquina
+          </Typography>
+          <Typography
+            sx={{
+              color: darken(selectedTheme.text_color, 0.3),
+              fontSize: "0.8rem",
+            }}
+            variant="body1"
+          >
+            Nota: puede hacer selecciones multiples
+          </Typography>
+          <RadioGroup
+            aria-labelledby="demo-row-radio-buttons-group-label"
+            defaultValue={registerType}
+            onChange={handleRegisterTypeChange}
+            name="row-radio-buttons-group"
+            row
+          >
+            <FormControlLabel
+              value={ERegisterType.GENERAL}
+              control={
+                <Radio
+                  sx={{
+                    color: selectedTheme.text_color,
+                    "&.Mui-checked": { color: selectedTheme.secondary_color },
+                  }}
+                />
+              }
+              label="General"
+            />
+            <FormControlLabel
+              value={ERegisterType.INDIVIDUAL}
+              control={
+                <Radio
+                  sx={{
+                    color: selectedTheme.text_color,
+                    "&.Mui-checked": { color: selectedTheme.secondary_color },
+                  }}
+                />
+              }
+              label="Individual"
+            />
+          </RadioGroup>
+        </FormControl>
+      ) : (
         <Typography
           sx={{
             color: darken(selectedTheme.text_color, 0.3),
@@ -118,50 +177,9 @@ export const SaleResume = () => {
           }}
           variant="body1"
         >
-          Elija individual si desea registrar el cuadre de una sola maquina
+          Elija la maquina de trabajo
         </Typography>
-        <Typography
-          sx={{
-            color: darken(selectedTheme.text_color, 0.3),
-            fontSize: "0.8rem",
-          }}
-          variant="body1"
-        >
-          Nota: puede hacer selecciones multiples
-        </Typography>
-        <RadioGroup
-          aria-labelledby="demo-row-radio-buttons-group-label"
-          defaultValue={ERegisterType.GENERAL}
-          onChange={handleRegisterTypeChange}
-          name="row-radio-buttons-group"
-          row
-        >
-          <FormControlLabel
-            value={ERegisterType.GENERAL}
-            control={
-              <Radio
-                sx={{
-                  color: selectedTheme.text_color,
-                  "&.Mui-checked": { color: selectedTheme.secondary_color },
-                }}
-              />
-            }
-            label="General"
-          />
-          <FormControlLabel
-            value={ERegisterType.INDIVIDUAL}
-            control={
-              <Radio
-                sx={{
-                  color: selectedTheme.text_color,
-                  "&.Mui-checked": { color: selectedTheme.secondary_color },
-                }}
-              />
-            }
-            label="Individual"
-          />
-        </RadioGroup>
-      </FormControl>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={2}>
@@ -195,11 +213,21 @@ export const SaleResume = () => {
                     {...field}
                     labelId="machines-label"
                     id="machines"
-                    multiple
+                    multiple={allowedRole(role, [ERole.ADMIN, ERole.OWNER])}
                     disabled={registerType === ERegisterType.GENERAL}
                     value={field.value || []}
                     inputProps={{ "aria-label": "Without label" }}
                     error={!!errors.machines}
+                    onChange={(e) => {
+                      const selectedValue = e.target.value;
+                      if (allowedRole(role, [ERole.ADMIN, ERole.OWNER])) {
+                        // Modo múltiple - mantener el array como está
+                        field.onChange(selectedValue);
+                      } else {
+                        // Modo único - convertir a array de un elemento
+                        field.onChange([selectedValue]);
+                      }
+                    }}
                   >
                     <MenuItem value="" disabled>
                       Seleccionar

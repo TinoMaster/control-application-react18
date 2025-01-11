@@ -328,7 +328,7 @@ export const SaleServices = () => {
 
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Button
-          variant="contained"
+          variant="outlined"
           size="small"
           startIcon={<KeyboardArrowLeftIcon />}
           onClick={handleGoBack}

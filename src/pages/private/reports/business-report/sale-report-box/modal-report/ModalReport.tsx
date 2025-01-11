@@ -56,9 +56,10 @@ export const ModalReport = ({ openModal, closeModal }: Props) => {
     >
       <Box
         sx={{
-          width: "100%",
-          maxWidth: "500px",
-          minHeight: "500px",
+          width: "auto",
+          maxWidth: "1000px",
+          height: "100%",
+          maxHeight: "600px",
           margin: "0 auto",
           gap: 2,
           padding: "0 1rem",
@@ -68,6 +69,8 @@ export const ModalReport = ({ openModal, closeModal }: Props) => {
           borderRadius: "8px",
           boxShadow: `0 0 70px 10px ${selectedTheme.secondary_color}15 , 0 0 5px 2px #00000015`,
           position: "relative",
+          overflow: "auto",
+          paddingBottom: "50px",
         }}
       >
         {/* Titulo de cada sección */}
