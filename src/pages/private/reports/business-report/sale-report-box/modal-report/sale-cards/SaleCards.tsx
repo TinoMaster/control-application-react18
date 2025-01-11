@@ -19,6 +19,9 @@ import {
   useBusinessReportContext,
 } from "../../../context/useBusinessReportContext";
 import { Delete } from "@mui/icons-material";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import BlockIcon from "@mui/icons-material/Block";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
 export const SaleCards = () => {
   const { selectedTheme } = useThemeContext();
@@ -63,10 +66,16 @@ export const SaleCards = () => {
 
   return (
     <Box
-      sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 2 }}
+      sx={{
+        width: "100%",
+        maxWidth: "500px",
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+      }}
     >
       <Grid container spacing={2}>
-        <Grid size={{ xs: 6, md: 4, lg: 3 }}>
+        <Grid size={{ xs: 6, md: 4 }}>
           <CustomInput
             name="cardNumber"
             label="Número de Tarjeta"
@@ -80,7 +89,7 @@ export const SaleCards = () => {
           />
         </Grid>
 
-        <Grid size={{ xs: 6, md: 4, lg: 3 }}>
+        <Grid size={{ xs: 6, md: 4 }}>
           <CustomInput
             name="amount"
             label="Monto"
@@ -95,7 +104,7 @@ export const SaleCards = () => {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 4, lg: 3 }}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Button
             variant="contained"
             onClick={handleAddCardPayment}
@@ -105,7 +114,7 @@ export const SaleCards = () => {
               width: "100%",
               padding: "8px 16px",
               backgroundColor: darken(selectedTheme.secondary_color, 0.3),
-              color: selectedTheme.text_color,
+              color: "white",
               "&:hover": {
                 backgroundColor: darken(selectedTheme.secondary_color, 0.2),
               },
@@ -178,7 +187,7 @@ export const SaleCards = () => {
                 },
               }}
             >
-              <TableCell colSpan={2}>Total</TableCell>
+              <TableCell>Total</TableCell>
               <TableCell>${totalCardPayments.toFixed(2)}</TableCell>
             </TableRow>
           </TableBody>
@@ -196,10 +205,11 @@ export const SaleCards = () => {
         <Button
           variant="contained"
           onClick={prevSection}
+          startIcon={<KeyboardArrowLeftIcon />}
           size="small"
           sx={{
             backgroundColor: darken(selectedTheme.secondary_color, 0.3),
-            color: selectedTheme.text_color,
+            color: "white",
             "&:hover": {
               backgroundColor: darken(selectedTheme.secondary_color, 0.2),
             },
@@ -210,10 +220,17 @@ export const SaleCards = () => {
         <Button
           variant="contained"
           onClick={handleNextSection}
+          endIcon={
+            cardPayments.length === 0 ? (
+              <BlockIcon />
+            ) : (
+              <KeyboardArrowRightIcon />
+            )
+          }
           size="small"
           sx={{
             backgroundColor: darken(selectedTheme.secondary_color, 0.3),
-            color: selectedTheme.text_color,
+            color: "white",
             "&:hover": {
               backgroundColor: darken(selectedTheme.secondary_color, 0.2),
             },

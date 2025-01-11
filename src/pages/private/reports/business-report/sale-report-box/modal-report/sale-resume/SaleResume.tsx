@@ -1,13 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  Avatar,
   Box,
   Button,
+  Checkbox,
   darken,
   FormControl,
   FormControlLabel,
   FormHelperText,
   FormLabel,
   Grid2 as Grid,
+  lighten,
   MenuItem,
   Radio,
   RadioGroup,
@@ -18,23 +21,32 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import CustomInput from "../../../../../../../components/common/ui/CustomInput";
 import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useBusinessContext } from "../../../../../../../core/context/use/useBusinessContext";
 import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
 import { allowedRole } from "../../../../../../../core/utilities/helpers/allowedRole.util";
 import { useAuthContext } from "../../../../../../../core/context/use/useAuthContext";
 import { ERole } from "../../../../../../../core/models/api";
+import { EmployeeModel } from "../../../../../../../core/models/api/employee.model";
+import { employeeService } from "../../../../../../../core/services/employeeService";
 
 enum ERegisterType {
   INDIVIDUAL = "individual",
   GENERAL = "general",
 }
 
-const SaleResumeZodSchema = z.object({
-  total: z.string().min(1, "El total debe ser mayor a 0"),
-  found: z.string().min(1, "El fondo debe ser mayor a 0"),
-  machines: z.array(z.number()).min(1, "Selecciona al menos una maquina"),
-});
+const SaleResumeZodSchema = z
+  .object({
+    total: z.string(),
+    found: z.string().optional(),
+    machines: z.array(z.number()).min(1, "Selecciona al menos una maquina"),
+    workers: z.array(z.any()).min(1, "Selecciona al menos un trabajador"),
+    registerType: z.nativeEnum(ERegisterType),
+  })
+  .refine((data) => parseInt(data.total) > 0, {
+    message: "El total debe ser mayor a 0",
+    path: ["total"],
+  });
 
 type TSaleResume = z.infer<typeof SaleResumeZodSchema>;
 
@@ -42,38 +54,72 @@ export const SaleResume = () => {
   const { selectedTheme } = useThemeContext();
   const { role } = useAuthContext();
   const { business } = useBusinessContext();
-  const [registerType, setRegisterType] = useState<ERegisterType>(
-    ERegisterType.INDIVIDUAL
-  );
   const [loading, setLoading] = useState(false);
-
+  const [employees, setEmployees] = useState<EmployeeModel[]>([]);
   const { setBusinessSale, businessSale, nextSection } =
     useBusinessReportContext();
+
+  const defaultRegisterType =
+    businessSale.machines?.length === business.machines?.length
+      ? ERegisterType.GENERAL
+      : ERegisterType.INDIVIDUAL;
+
   const {
     handleSubmit,
     control,
     formState: { errors, isValid },
     setValue,
+    watch,
+    reset,
+    trigger,
   } = useForm<TSaleResume>({
     resolver: zodResolver(SaleResumeZodSchema),
+    mode: "all",
     defaultValues: {
       total: businessSale.total.toString(),
-      found: businessSale.found.toString(),
-      machines: businessSale.machines,
+      found: businessSale.found?.toString(),
+      machines: businessSale.machines || [],
+      workers: businessSale.workers || [],
+      registerType: defaultRegisterType,
     },
   });
 
-  console.log(isValid);
+  const registerTypeWatch = watch("registerType");
+  const totalWatch = watch("total");
+  const debtsWatch = watch("found");
+
+  const handleSelectEmployee = (employeeId: string) => {
+    const employee = employees.find((e) => e.id === employeeId);
+    if (employee) {
+      const currentWorkers = [...(control._formValues.workers || [])];
+      const workerIndex = currentWorkers.findIndex((w) => w.id === employee.id);
+
+      if (workerIndex >= 0) {
+        currentWorkers.splice(workerIndex, 1);
+      } else {
+        currentWorkers.push(employee);
+      }
+
+      setValue("workers", currentWorkers, { shouldValidate: true });
+      setBusinessSale((prev) => ({
+        ...prev,
+        workers: currentWorkers,
+        total: Number(totalWatch),
+        found: Number(debtsWatch),
+      }));
+    }
+  };
 
   const onSubmit = (data: TSaleResume) => {
     setLoading(true);
 
-    setBusinessSale({
-      ...businessSale,
+    setBusinessSale((prev) => ({
+      ...prev,
       total: Number(data.total),
       found: Number(data.found),
       machines: data.machines,
-    });
+      workers: data.workers,
+    }));
 
     setTimeout(() => {
       setLoading(false);
@@ -81,27 +127,52 @@ export const SaleResume = () => {
     }, 1000);
   };
 
-  const handleRegisterTypeChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRegisterType(event.target.value as ERegisterType);
-  };
+  const getEmployeesByBusiness = useCallback(async () => {
+    const response = await employeeService.getEmployeesByBusinessId(
+      business.id!
+    );
+    if (response.status === 200) {
+      setEmployees(response.data || []);
+    }
+  }, [business.id]);
 
   useEffect(() => {
-    if (registerType === ERegisterType.INDIVIDUAL) {
+    getEmployeesByBusiness();
+  }, [getEmployeesByBusiness]);
+
+  useEffect(() => {
+    if (registerTypeWatch === ERegisterType.INDIVIDUAL) {
       setValue("machines", []);
     } else {
       setValue("machines", business.machines?.map((m) => m.id as number) ?? []);
     }
-  }, [registerType, setValue, business.machines]);
+  }, [registerTypeWatch, setValue, business.machines]);
+
+  useEffect(() => {
+    reset({
+      total: businessSale.total.toString(),
+      found: businessSale.found?.toString(),
+      machines: businessSale.machines || [],
+      workers: businessSale.workers || [],
+      registerType: defaultRegisterType,
+    });
+
+    // Trigger validation after reset
+    trigger();
+  }, [
+    businessSale,
+    reset,
+    business.machines?.length,
+    defaultRegisterType,
+    trigger,
+  ]);
 
   return (
-    <Grid
-      container
-      justifyContent="space-between"
+    <Box
       sx={{
         marginBottom: 2,
         width: "100%",
+        maxWidth: 500,
         gap: 2,
         color: selectedTheme.text_color,
       }}
@@ -136,38 +207,48 @@ export const SaleResume = () => {
           >
             Nota: puede hacer selecciones multiples
           </Typography>
-          <RadioGroup
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            defaultValue={registerType}
-            onChange={handleRegisterTypeChange}
-            name="row-radio-buttons-group"
-            row
-          >
-            <FormControlLabel
-              value={ERegisterType.GENERAL}
-              control={
-                <Radio
-                  sx={{
-                    color: selectedTheme.text_color,
-                    "&.Mui-checked": { color: selectedTheme.secondary_color },
-                  }}
+          <Controller
+            name="registerType"
+            control={control}
+            render={({ field }) => (
+              <RadioGroup
+                aria-labelledby="demo-row-radio-buttons-group-label"
+                value={field.value}
+                onChange={field.onChange}
+                name="row-radio-buttons-group"
+                row
+              >
+                <FormControlLabel
+                  value={ERegisterType.GENERAL}
+                  control={
+                    <Radio
+                      sx={{
+                        color: selectedTheme.text_color,
+                        "&.Mui-checked": {
+                          color: selectedTheme.secondary_color,
+                        },
+                      }}
+                    />
+                  }
+                  label="General"
                 />
-              }
-              label="General"
-            />
-            <FormControlLabel
-              value={ERegisterType.INDIVIDUAL}
-              control={
-                <Radio
-                  sx={{
-                    color: selectedTheme.text_color,
-                    "&.Mui-checked": { color: selectedTheme.secondary_color },
-                  }}
+                <FormControlLabel
+                  value={ERegisterType.INDIVIDUAL}
+                  control={
+                    <Radio
+                      sx={{
+                        color: selectedTheme.text_color,
+                        "&.Mui-checked": {
+                          color: selectedTheme.secondary_color,
+                        },
+                      }}
+                    />
+                  }
+                  label="Individual"
                 />
-              }
-              label="Individual"
-            />
-          </RadioGroup>
+              </RadioGroup>
+            )}
+          />
         </FormControl>
       ) : (
         <Typography
@@ -214,18 +295,25 @@ export const SaleResume = () => {
                     labelId="machines-label"
                     id="machines"
                     multiple={allowedRole(role, [ERole.ADMIN, ERole.OWNER])}
-                    disabled={registerType === ERegisterType.GENERAL}
+                    disabled={registerTypeWatch === ERegisterType.GENERAL}
                     value={field.value || []}
                     inputProps={{ "aria-label": "Without label" }}
                     error={!!errors.machines}
                     onChange={(e) => {
                       const selectedValue = e.target.value;
                       if (allowedRole(role, [ERole.ADMIN, ERole.OWNER])) {
-                        // Modo múltiple - mantener el array como está
                         field.onChange(selectedValue);
+                        setBusinessSale((prev) => ({
+                          ...prev,
+                          machines: selectedValue as number[],
+                        }));
                       } else {
-                        // Modo único - convertir a array de un elemento
-                        field.onChange([selectedValue]);
+                        const newValue = [selectedValue].flat();
+                        field.onChange(newValue);
+                        setBusinessSale((prev) => ({
+                          ...prev,
+                          machines: newValue as number[],
+                        }));
                       }
                     }}
                   >
@@ -268,6 +356,71 @@ export const SaleResume = () => {
             />
           </Grid>
         </Grid>
+
+        <Box
+          sx={{
+            marginTop: 2,
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+          }}
+        >
+          <Typography variant="h6" sx={{ color: selectedTheme.text_color }}>
+            Trabajadores
+          </Typography>
+          <FormControl error={!!errors.workers} fullWidth>
+            <Grid container spacing={2}>
+              {employees.map((employee) => (
+                <Grid
+                  key={employee.id}
+                  size={{ xs: 12, sm: 6 }}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1,
+                    padding: 1,
+                    borderRadius: 1,
+                    backgroundColor: lighten(
+                      selectedTheme.background_color,
+                      0.1
+                    ),
+                    color: selectedTheme.text_color,
+                    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                    cursor: "pointer",
+                  }}
+                >
+                  <Avatar
+                    sx={{
+                      width: 30,
+                      height: 30,
+                      backgroundColor: selectedTheme.secondary_color,
+                    }}
+                    alt={employee.user.name}
+                  >
+                    {employee.user.name.charAt(0)}
+                  </Avatar>
+                  <Typography variant="body2">{employee.user.name}</Typography>
+                  <Checkbox
+                    checked={businessSale.workers.some(
+                      (w) => w.id === employee.id
+                    )}
+                    onChange={() => handleSelectEmployee(employee.id)}
+                    sx={{
+                      padding: 0,
+                      color: selectedTheme.text_color,
+                      "&.Mui-checked": { color: selectedTheme.secondary_color },
+                    }}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+            {errors.workers && (
+              <FormHelperText>{errors.workers.message}</FormHelperText>
+            )}
+          </FormControl>
+        </Box>
+
         <Box sx={{ marginTop: 2, display: "flex", justifyContent: "flex-end" }}>
           <Button
             type="submit"
@@ -280,6 +433,6 @@ export const SaleResume = () => {
           </Button>
         </Box>
       </form>
-    </Grid>
+    </Box>
   );
 };

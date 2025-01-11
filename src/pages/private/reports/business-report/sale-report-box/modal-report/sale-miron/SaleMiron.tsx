@@ -18,6 +18,8 @@ export const SaleMiron = () => {
       sx={{
         marginBottom: 2,
         width: "100%",
+        maxWidth: 500,
+        minWidth: { xs: "100%", sm: "400px" },
         color: selectedTheme.text_color,
       }}
     >

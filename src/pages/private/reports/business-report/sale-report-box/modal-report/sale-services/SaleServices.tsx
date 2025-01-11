@@ -127,7 +127,7 @@ export const SaleServices = () => {
       <Box
         sx={{
           width: "100%",
-          maxWidth: 800,
+          maxWidth: 500,
           mx: "auto",
           p: 2,
           display: "flex",
@@ -170,7 +170,12 @@ export const SaleServices = () => {
             width: "400px",
           }}
         >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            sx={{ color: selectedTheme.text_color }}
+          >
             ¿Desea continuar?
           </Typography>
           <Typography
@@ -184,8 +189,18 @@ export const SaleServices = () => {
             {modalConfirmMessage}
           </Typography>
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-            <Button onClick={() => setModalConfirmMessage("")}>Cancelar</Button>
-            <Button onClick={handleOmitStep}>Aceptar</Button>
+            <Button
+              onClick={() => setModalConfirmMessage("")}
+              sx={{ color: selectedTheme.text_color }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleOmitStep}
+              sx={{ color: selectedTheme.text_color }}
+            >
+              Aceptar
+            </Button>
           </Box>
         </Box>
       </Modal>
@@ -193,21 +208,31 @@ export const SaleServices = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", maxWidth: 800, mx: "auto", p: 2 }}>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: 500,
+        minWidth: { xs: "100%", sm: "400px" },
+        mx: "auto",
+      }}
+    >
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Typography variant="subtitle1">
+        <Typography
+          variant="subtitle1"
+          sx={{ color: selectedTheme.text_color }}
+        >
           Servicios seleccionados: {selectedServices.length}
         </Typography>
       </Box>
 
       {confirmModalOpen()}
 
-      <Paper elevation={3} sx={{ mb: 3, overflow: "hidden" }}>
+      <Paper elevation={1} sx={{ mb: 3, overflow: "hidden" }}>
         <Typography
           variant="subtitle1"
           sx={{
             p: 1,
-            bgcolor: selectedTheme.primary_color,
+            bgcolor: darken(selectedTheme.secondary_color, 0.2),
             color: "white",
             fontSize: "0.9rem",
           }}
@@ -226,9 +251,9 @@ export const SaleServices = () => {
                     tabIndex={-1}
                     disableRipple
                     sx={{
-                      color: selectedTheme.primary_color,
+                      color: selectedTheme.secondary_color,
                       "&.Mui-checked": {
-                        color: selectedTheme.primary_color,
+                        color: selectedTheme.secondary_color,
                       },
                     }}
                   />
@@ -240,9 +265,9 @@ export const SaleServices = () => {
                       <Chip
                         label={`Cantidad: ${service.quantity}`}
                         size="small"
-                        variant="outlined"
+                        variant="filled"
                         sx={{
-                          bgcolor: selectedTheme.primary_color,
+                          bgcolor: darken(selectedTheme.secondary_color, 0.2),
                           color: "white",
                         }}
                       />
@@ -261,12 +286,12 @@ export const SaleServices = () => {
       </Paper>
 
       {otherServices.length > 0 && (
-        <Paper elevation={3} sx={{ mb: 3, overflow: "hidden" }}>
+        <Paper elevation={1} sx={{ mb: 3, overflow: "hidden" }}>
           <Typography
             variant="subtitle1"
             sx={{
               p: 1,
-              bgcolor: "var(--bg-dark-light)",
+              bgcolor: "#636363",
               color: "white",
               fontSize: "0.9rem",
             }}
@@ -287,9 +312,9 @@ export const SaleServices = () => {
                       tabIndex={-1}
                       disableRipple
                       sx={{
-                        color: "var(--bg-dark-light)",
+                        color: "#636363",
                         "&.Mui-checked": {
-                          color: "var(--bg-dark-light)",
+                          color: darken("#636363", 0.2),
                         },
                       }}
                     />
@@ -303,7 +328,10 @@ export const SaleServices = () => {
                         <Chip
                           label={`Cantidad: ${service.quantity}`}
                           size="small"
-                          color="secondary"
+                          sx={{
+                            bgcolor: "#636363",
+                            color: "white",
+                          }}
                           variant="outlined"
                         />
                         <Chip
@@ -328,11 +356,14 @@ export const SaleServices = () => {
 
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Button
-          variant="outlined"
+          variant="contained"
           size="small"
           startIcon={<KeyboardArrowLeftIcon />}
           onClick={handleGoBack}
-          sx={{ bgcolor: selectedTheme.primary_color, color: "white" }}
+          sx={{
+            bgcolor: darken(selectedTheme.secondary_color, 0.2),
+            color: "white",
+          }}
         >
           Atrás
         </Button>
@@ -347,7 +378,10 @@ export const SaleServices = () => {
           }
           size="small"
           onClick={handleSubmitStep}
-          sx={{ bgcolor: selectedTheme.primary_color, color: "white" }}
+          sx={{
+            bgcolor: darken(selectedTheme.secondary_color, 0.2),
+            color: "white",
+          }}
         >
           {selectedServices.length === 0 ? "Omitir" : "Siguiente"}
         </Button>

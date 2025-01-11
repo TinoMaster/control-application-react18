@@ -70,7 +70,8 @@ export const ModalReport = ({ openModal, closeModal }: Props) => {
           boxShadow: `0 0 70px 10px ${selectedTheme.secondary_color}15 , 0 0 5px 2px #00000015`,
           position: "relative",
           overflow: "auto",
-          paddingBottom: "50px",
+          paddingBottom: "20px",
+          minWidth: { xs: "100%", sm: "400px" },
         }}
       >
         {/* Titulo de cada sección */}

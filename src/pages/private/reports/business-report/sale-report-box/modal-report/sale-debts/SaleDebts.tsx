@@ -17,6 +17,9 @@ import CustomInput from "../../../../../../../components/common/ui/CustomInput";
 import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
 import { Delete } from "@mui/icons-material";
 import { DebtModel } from "../../../../../../../core/models/api/debt.model";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import BlockIcon from "@mui/icons-material/Block";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
 interface Debt {
   id: number | string;
@@ -76,10 +79,16 @@ export const SaleDebts = () => {
 
   return (
     <Box
-      sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 2 }}
+      sx={{
+        width: "100%",
+        maxWidth: "500px",
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+      }}
     >
-      <Grid container spacing={2}>
-        <Grid size={{ xs: 6, md: 4, lg: 3 }}>
+      <Grid container spacing={3}>
+        <Grid size={{ xs: 6, md: 4 }}>
           <CustomInput
             name="debtor"
             label="Deudor"
@@ -93,7 +102,7 @@ export const SaleDebts = () => {
           />
         </Grid>
 
-        <Grid size={{ xs: 6, md: 4, lg: 3 }}>
+        <Grid size={{ xs: 6, md: 4 }}>
           <CustomInput
             name="amount"
             label="Monto"
@@ -108,7 +117,7 @@ export const SaleDebts = () => {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 4, lg: 3 }}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Button
             variant="contained"
             onClick={handleAddDebt}
@@ -118,7 +127,7 @@ export const SaleDebts = () => {
               width: "100%",
               padding: "8px 16px",
               backgroundColor: darken(selectedTheme.secondary_color, 0.3),
-              color: selectedTheme.text_color,
+              color: "white",
               "&:hover": {
                 backgroundColor: darken(selectedTheme.secondary_color, 0.2),
               },
@@ -146,13 +155,13 @@ export const SaleDebts = () => {
                 backgroundColor: darken(selectedTheme.secondary_color, 0.4),
               }}
             >
-              <TableCell sx={{ color: selectedTheme.text_color }}>
+              <TableCell sx={{ color: "white" }}>
                 Deudor
               </TableCell>
-              <TableCell align="right" sx={{ color: selectedTheme.text_color }}>
+              <TableCell align="right" sx={{ color: "white" }}>
                 Monto
               </TableCell>
-              <TableCell align="right" sx={{ color: selectedTheme.text_color }}>
+              <TableCell align="right" sx={{ color: "white" }}>
                 Acciones
               </TableCell>
             </TableRow>
@@ -220,24 +229,26 @@ export const SaleDebts = () => {
         <Button
           variant="contained"
           onClick={prevSection}
+          startIcon={<KeyboardArrowLeftIcon />}
           size="small"
           sx={{
             backgroundColor: darken(selectedTheme.secondary_color, 0.3),
-            color: selectedTheme.text_color,
+            color: "white",
             "&:hover": {
               backgroundColor: darken(selectedTheme.secondary_color, 0.2),
             },
           }}
         >
-          Anterior
+          Anterior  
         </Button>
         <Button
           variant="contained"
           onClick={handleNextSection}
+          endIcon={debts.length === 0 ? <BlockIcon /> : <KeyboardArrowRightIcon />}
           size="small"
           sx={{
             backgroundColor: darken(selectedTheme.secondary_color, 0.3),
-            color: selectedTheme.text_color,
+            color: "white",
             "&:hover": {
               backgroundColor: darken(selectedTheme.secondary_color, 0.2),
             },
