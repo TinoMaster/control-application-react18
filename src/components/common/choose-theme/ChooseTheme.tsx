@@ -33,7 +33,7 @@ export const ChooseTheme = () => {
           alignItems: "center",
           justifyContent: "center",
           height: "50px",
-          backgroundImage: `linear-gradient(to right, ${selectedTheme.primary_color}, ${selectedTheme.secondary_color})`,
+          backgroundColor: selectedTheme.background_color,
         }}
       >
         <Typography variant="body1" sx={{ padding: "0 15px" }}>

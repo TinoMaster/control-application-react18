@@ -11,7 +11,7 @@ interface Props {
 export const EmployeeDetailDescriptionSection = ({ employee }: Props) => {
   return (
     <CardContent>
-      <Grid container spacing={2} sx={{ py: { xs: 0, md: 2 } }}>
+      <Grid container spacing={2} sx={{ py: { xs: 0, md: 1 } }}>
         {/* Información básica */}
         <Grid
           size={{ xs: 12, md: 6 }}

@@ -1,6 +1,8 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Box,
   Card,
+  darken,
   IconButton,
   Paper,
   Stack,
@@ -14,10 +16,9 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { formatDateToString } from "../../../../../core/utilities/helpers/dateFormat";
-import { EmployeeModel } from "../../../../../core/models/api/employee.model";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
+import { EmployeeModel } from "../../../../../core/models/api/employee.model";
+import { formatDateToString } from "../../../../../core/utilities/helpers/dateFormat";
 
 interface Props {
   employee: EmployeeModel;
@@ -49,14 +50,14 @@ export const EmployeeDetailAssociatedBusinesses = ({
   );
 
   const MobileView = () => (
-    <Stack spacing={2}>
+    <Stack spacing={2} sx={{ mt: 2 }}>
       {employee?.user.businesses.map((business, index) => (
         <Card
           key={index}
+          elevation={2}
           sx={{
             p: 2,
-            backgroundColor: selectedTheme.background_color,
-            boxShadow: `0 0 15px 2px ${selectedTheme.secondary_color}15 , 0 0 5px 2px #00000015`,
+            backgroundColor: darken(selectedTheme.background_color, 0.1),
             color: selectedTheme.text_color,
           }}
         >
@@ -77,7 +78,10 @@ export const EmployeeDetailAssociatedBusinesses = ({
           </Box>
 
           <Box>
-            <Typography variant="caption" color="text.secondary">
+            <Typography
+              variant="caption"
+              color={darken(selectedTheme.text_color, 0.5)}
+            >
               Dirección
             </Typography>
             <Typography variant="body2">
@@ -90,13 +94,20 @@ export const EmployeeDetailAssociatedBusinesses = ({
   );
 
   const DesktopView = () => (
-    <Paper sx={{ mt: 2, borderRadius: "8px", overflow: "hidden" }}>
+    <Paper
+      elevation={2}
+      sx={{ mt: 2, borderRadius: "8px" }}
+    >
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow
               sx={{
-                "& > *": { backgroundColor: "#efefef", fontSize: "12px" },
+                "& > *": {
+                  backgroundColor: darken(selectedTheme.background_color, 0.1),
+                  fontSize: "12px",
+                  color: selectedTheme.text_color,
+                },
               }}
             >
               <TableCell>Nombre</TableCell>
@@ -108,15 +119,23 @@ export const EmployeeDetailAssociatedBusinesses = ({
           </TableHead>
           <TableBody>
             {employee?.user.businesses.map((business, index) => (
-              <TableRow key={index}>
-                <TableCell sx={{ fontSize: "12px" }}>{business.name}</TableCell>
-                <TableCell sx={{ fontSize: "12px" }}>
+              <TableRow
+                key={index}
+                sx={{
+                  "& > *": {
+                    fontSize: "12px",
+                    backgroundColor: selectedTheme.background_color,
+                    color: selectedTheme.text_color,
+                    border: "none",
+                  },
+                }}
+              >
+                <TableCell>{business.name}</TableCell>
+                <TableCell>
                   {`${business.address.street}, #${business.address.number}, ${business.address.municipality}, ${business.address.city}`}
                 </TableCell>
-                <TableCell sx={{ fontSize: "12px" }}>
-                  {business.phone}
-                </TableCell>
-                <TableCell sx={{ fontSize: "12px" }}>
+                <TableCell>{business.phone}</TableCell>
+                <TableCell>
                   {formatDateToString(business.createdAt || new Date())}
                 </TableCell>
                 <TableCell>

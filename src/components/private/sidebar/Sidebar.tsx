@@ -1,3 +1,4 @@
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import {
   Badge,
   Box,
@@ -8,16 +9,14 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  Typography,
-  useMediaQuery,
+  useMediaQuery
 } from "@mui/material";
-import { useAppContext } from "../../../core/context/use/useAppContext";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { PRIVATE_NAV_LINKS } from "../../../core/data/global.data";
 import { NavLink } from "react-router-dom";
+import { useAppContext } from "../../../core/context/use/useAppContext";
+import { useThemeContext } from "../../../core/context/use/useThemeContext";
+import { PRIVATE_NAV_LINKS } from "../../../core/data/global.data";
 import { INavLinkItem } from "../../../core/types/global.types";
 import { filterRoutesByRole } from "../../../core/utilities/helpers/filterRoutesByRole";
-import { useThemeContext } from "../../../core/context/use/useThemeContext";
 import { ChooseTheme } from "../../common/choose-theme/ChooseTheme";
 
 interface SidebarProps {
@@ -64,28 +63,13 @@ export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
         dense
         sx={{
           backgroundImage:
-            "linear-gradient(to bottom, var(--bg-dark-light), var(--bg-dark), var(--bg-dark-dark))",
+            "linear-gradient(to bottom, var(--bg-dark-light), var(--bg-dark))",
           color: "white",
           height: "100%",
           border: "1px solid",
           borderColor: selectedTheme.secondary_color,
         }}
       >
-        <Typography variant="body1" sx={{ padding: "0 15px" }}>
-          <span
-            style={{
-              font: "bold",
-              backgroundImage: `linear-gradient(to right, ${selectedTheme.primary_color}, ${selectedTheme.secondary_color})`,
-              color: "white",
-              padding: "2px 8px",
-              borderRadius: "4px",
-              fontSize: "12px",
-              textTransform: "uppercase",
-            }}
-          >
-            Paginas
-          </span>
-        </Typography>
         {routes.map((item, index) => (
           <ListItem key={index}>
             <ListItemButton sx={{ padding: 0, borderRadius: "4px" }}>

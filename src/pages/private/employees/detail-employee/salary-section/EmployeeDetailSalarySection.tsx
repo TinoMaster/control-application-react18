@@ -1,13 +1,11 @@
 import {
   Box,
-  Typography,
-  Grid2 as Grid,
   Card,
-  IconButton,
+  Grid2 as Grid,
+  Typography,
+  darken
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
-import { Link } from "react-router-dom";
 import { EmployeeModel } from "../../../../../core/models/api/employee.model";
 
 interface Props {
@@ -25,11 +23,11 @@ export const EmployeeDetailSalarySection = ({ employee }: Props) => {
         {/* Fixed Salary Card */}
         <Grid size={{ xs: 12, md: 6 }}>
           <Card
+            elevation={2}
             sx={{
               p: 2,
               height: "100%",
-              backgroundColor: selectedTheme.background_color,
-              boxShadow: `0 0 15px 2px ${selectedTheme.secondary_color}15`,
+              backgroundColor: darken(selectedTheme.background_color, 0.1),
               transition: "transform 0.2s",
               "&:hover": {
                 transform: "translateY(-2px)",
@@ -51,16 +49,6 @@ export const EmployeeDetailSalarySection = ({ employee }: Props) => {
               >
                 Salario Fijo
               </Typography>
-              <IconButton
-                component={Link}
-                to={`/employees/${employee?.id}/edit-salary/fixed`}
-                sx={{
-                  color: selectedTheme.text_color,
-                  "&:hover": { color: selectedTheme.primary_color },
-                }}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
             </Box>
             <Typography
               variant="h4"
@@ -88,11 +76,11 @@ export const EmployeeDetailSalarySection = ({ employee }: Props) => {
         {/* Percentage Salary Card */}
         <Grid size={{ xs: 12, md: 6 }}>
           <Card
+            elevation={2}
             sx={{
               p: 2,
               height: "100%",
-              backgroundColor: selectedTheme.background_color,
-              boxShadow: `0 0 15px 2px ${selectedTheme.secondary_color}15`,
+              backgroundColor: darken(selectedTheme.background_color, 0.1),
               transition: "transform 0.2s",
               "&:hover": {
                 transform: "translateY(-2px)",
@@ -114,16 +102,6 @@ export const EmployeeDetailSalarySection = ({ employee }: Props) => {
               >
                 Salario Porcentual
               </Typography>
-              <IconButton
-                component={Link}
-                to={`/employees/${employee?.id}/edit-salary/percent`}
-                sx={{
-                  color: selectedTheme.text_color,
-                  "&:hover": { color: selectedTheme.primary_color },
-                }}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
             </Box>
             <Typography
               variant="h4"
@@ -136,7 +114,8 @@ export const EmployeeDetailSalarySection = ({ employee }: Props) => {
             >
               {employee?.percentSalary
                 ? (employee?.percentSalary * 100).toFixed()
-                : 0}%
+                : 0}
+              %
             </Typography>
             <Typography
               variant="body2"
