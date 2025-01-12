@@ -17,6 +17,7 @@ export interface IAuthContext {
   employee: EmployeeModel | undefined;
   loadingUser: boolean;
   reloadUser: () => void;
+  logout: () => void;
 }
 
 export const AuthProvider = ({ children }: IContextProps) => {
@@ -47,6 +48,8 @@ export const AuthProvider = ({ children }: IContextProps) => {
             setEmployee(employeeResponse.data);
           }
         }
+      } else {
+        logout();
       }
       setLoadingUser(false);
     },
@@ -63,9 +66,24 @@ export const AuthProvider = ({ children }: IContextProps) => {
     return token !== null && token !== "" && role !== null;
   };
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("refreshToken");
+    window.location.href = "/login";
+  };
+
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, role, user, loadingUser, reloadUser, employee }}
+      value={{
+        isLoggedIn,
+        role,
+        user,
+        loadingUser,
+        reloadUser,
+        employee,
+        logout,
+      }}
       children={children}
     />
   );

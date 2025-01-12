@@ -1,10 +1,12 @@
 import { AccountCircle } from "@mui/icons-material";
 import { Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { useState } from "react";
+import { useAuthContext } from "../../../core/context/use/useAuthContext";
 
 const UserOptions = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const { logout } = useAuthContext();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -15,10 +17,7 @@ const UserOptions = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("refreshToken");
-    window.location.href = "/login";
+    logout();
   };
 
   return (

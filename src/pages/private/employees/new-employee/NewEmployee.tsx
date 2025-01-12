@@ -135,6 +135,7 @@ const NewEmployee = () => {
               <CustomInput
                 name="name"
                 control={control}
+                small
                 label="Nombre"
                 error={!!errors.name}
                 helperText={errors.name?.message}
@@ -143,16 +144,18 @@ const NewEmployee = () => {
             <Grid size={{ xs: 12, sm: 6 }}>
               <CustomInput
                 name="lastName"
+                small
                 control={control}
                 label="Apellido"
                 error={!!errors.lastName}
                 helperText={errors.lastName?.message}
               />
             </Grid>
-            <Grid size={12}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <CustomInput
                 name="email"
                 type="email"
+                small
                 control={control}
                 label="Correo Electrónico"
                 error={!!errors.email}
@@ -161,8 +164,19 @@ const NewEmployee = () => {
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <CustomInput
+                name="dni"
+                small
+                control={control}
+                label="Numero de identidad"
+                error={!!errors.dni}
+                helperText={errors.dni?.message}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <CustomInput
                 name="password"
                 type="password"
+                small
                 control={control}
                 label="Contraseña"
                 error={!!errors.password}
@@ -173,27 +187,20 @@ const NewEmployee = () => {
               <CustomInput
                 name="confirmPassword"
                 type="password"
+                small
                 control={control}
                 label="Confirmar Contraseña"
                 error={!!errors.confirmPassword}
                 helperText={errors.confirmPassword?.message}
               />
             </Grid>
-            {/* Campos del negocio */}
-            <Grid size={12}>
-              <CustomInput
-                name="dni"
-                control={control}
-                label="Numero de identidad"
-                error={!!errors.dni}
-                helperText={errors.dni?.message}
-              />
-            </Grid>
+
             <Grid size={{ xs: 12, sm: 6 }}>
               <CustomInput
                 name="phone"
                 control={control}
                 label="Teléfono"
+                small
                 error={!!errors.phone}
                 helperText={errors.phone?.message}
               />
@@ -203,6 +210,7 @@ const NewEmployee = () => {
                 name="addressMunicipality"
                 type="text"
                 control={control}
+                small
                 label="Municipio"
                 error={!!errors.addressMunicipality}
                 helperText={errors.addressMunicipality?.message}
@@ -214,6 +222,7 @@ const NewEmployee = () => {
                 name="addressStreet"
                 control={control}
                 label="Dirección"
+                small
                 placeholder="Ej: calle 41 e/42 y 36"
                 error={!!errors.addressStreet}
                 helperText={errors.addressStreet?.message}
@@ -224,6 +233,7 @@ const NewEmployee = () => {
                 name="addressNumber"
                 control={control}
                 label="Número"
+                small
                 error={!!errors.addressNumber}
                 helperText={errors.addressNumber?.message}
               />
@@ -233,6 +243,7 @@ const NewEmployee = () => {
                 name="addressCity"
                 control={control}
                 label="Ciudad"
+                small
                 error={!!errors.addressCity}
                 helperText={errors.addressCity?.message}
               />
@@ -242,6 +253,7 @@ const NewEmployee = () => {
                 name="addressZipCode"
                 control={control}
                 label="Código Postal"
+                small
                 error={!!errors.addressZipCode}
                 helperText={errors.addressZipCode?.message}
               />
@@ -277,8 +289,13 @@ const NewEmployee = () => {
                       labelId="role-label"
                       id="role"
                       value={field.value || ""}
-                      inputProps={{ "aria-label": "Without label" }}
+                      
                       error={!!errors.role}
+                      size="small"
+                      label="Rol"
+                      sx={{
+                        color: selectedTheme.text_color,
+                      }}
                     >
                       <MenuItem value="" disabled>
                         Seleccionar
@@ -288,7 +305,9 @@ const NewEmployee = () => {
                       <MenuItem value={ERole.EMPLOYEE}>Empleado</MenuItem>
                     </Select>
                     {errors.role && (
-                      <FormHelperText>{errors.role.message}</FormHelperText>
+                      <FormHelperText>
+                        {errors.role?.message || "Seleccione un rol"}
+                      </FormHelperText>
                     )}
                   </FormControl>
                 )}
