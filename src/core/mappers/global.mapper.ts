@@ -83,6 +83,8 @@ export const zodEmployeeToEmployeeMapper = (
       businessesOwned: [],
     },
     dni: data.dni,
+    fixedSalary: Number(data.fixedSalary),
+    percentSalary: Number(data.percentSalary) / 100,
   };
 };
 

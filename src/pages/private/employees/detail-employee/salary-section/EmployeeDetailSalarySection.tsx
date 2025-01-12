@@ -134,7 +134,9 @@ export const EmployeeDetailSalarySection = ({ employee }: Props) => {
                 my: 2,
               }}
             >
-              {employee?.percentSalary || 0}%
+              {employee?.percentSalary
+                ? (employee?.percentSalary * 100).toFixed()
+                : 0}%
             </Typography>
             <Typography
               variant="body2"

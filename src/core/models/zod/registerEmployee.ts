@@ -23,6 +23,8 @@ export const registerEmployeeSchema = z
     addressCity: z.string().min(3),
     addressZipCode: z.string().min(5),
     businesses: z.array(z.number()).min(1, "Selecciona al menos un negocio"),
+    fixedSalary: z.string().optional(),
+    percentSalary: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Las contraseñas no coinciden",
@@ -46,4 +48,6 @@ export const zEmployeeDefaultValues: TRegisterEmployeeDataModel = {
   addressZipCode: "",
   role: ERole.EMPLOYEE,
   businesses: [],
+  fixedSalary: "",
+  percentSalary: "",
 };

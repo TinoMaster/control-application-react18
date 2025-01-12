@@ -233,6 +233,7 @@ const NewEmployee = () => {
                 name="addressNumber"
                 control={control}
                 label="Número"
+                startAdornment={"#"}
                 small
                 error={!!errors.addressNumber}
                 helperText={errors.addressNumber?.message}
@@ -250,9 +251,42 @@ const NewEmployee = () => {
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <CustomInput
+                name="fixedSalary"
+                control={control}
+                label="Salario Fijo"
+                startAdornment={"$"}
+                type="number"
+                required={false}
+                small
+                error={!!errors.fixedSalary}
+                helperText={
+                  errors.fixedSalary?.message ||
+                  "Salario fijo sobre ventas (opcional)"
+                }
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <CustomInput
+                name="percentSalary"
+                control={control}
+                label="Salario en Porcentaje"
+                startAdornment={"%"}
+                type="number"
+                required={false}
+                small
+                error={!!errors.percentSalary}
+                helperText={
+                  errors.percentSalary?.message ||
+                  "Salario en porcentaje (opcional)"
+                }
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <CustomInput
                 name="addressZipCode"
                 control={control}
                 label="Código Postal"
+                startAdornment={"C.P."}
                 small
                 error={!!errors.addressZipCode}
                 helperText={errors.addressZipCode?.message}
@@ -289,7 +323,7 @@ const NewEmployee = () => {
                       labelId="role-label"
                       id="role"
                       value={field.value || ""}
-                      
+                      // onChange={(event) => field.onChange(event.target.value as ERole)}
                       error={!!errors.role}
                       size="small"
                       label="Rol"
