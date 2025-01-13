@@ -94,10 +94,7 @@ export const EmployeeDetailAssociatedBusinesses = ({
   );
 
   const DesktopView = () => (
-    <Paper
-      elevation={2}
-      sx={{ mt: 2, borderRadius: "8px" }}
-    >
+    <Paper elevation={2} sx={{ mt: 2, borderRadius: "8px" }}>
       <TableContainer>
         <Table>
           <TableHead>
@@ -110,7 +107,9 @@ export const EmployeeDetailAssociatedBusinesses = ({
                 },
               }}
             >
-              <TableCell>Nombre</TableCell>
+              <TableCell sx={{ color: selectedTheme.text_color }}>
+                Nombre
+              </TableCell>
               <TableCell>Dirección</TableCell>
               <TableCell>Teléfono</TableCell>
               <TableCell>Creado</TableCell>
@@ -125,20 +124,23 @@ export const EmployeeDetailAssociatedBusinesses = ({
                   "& > *": {
                     fontSize: "12px",
                     backgroundColor: selectedTheme.background_color,
-                    color: selectedTheme.text_color,
                     border: "none",
                   },
                 }}
               >
-                <TableCell>{business.name}</TableCell>
-                <TableCell>
+                <TableCell sx={{ color: selectedTheme.text_color }}>
+                  {business.name}
+                </TableCell>
+                <TableCell sx={{ color: selectedTheme.text_color }}>
                   {`${business.address.street}, #${business.address.number}, ${business.address.municipality}, ${business.address.city}`}
                 </TableCell>
-                <TableCell>{business.phone}</TableCell>
-                <TableCell>
+                <TableCell sx={{ color: selectedTheme.text_color }}>
+                  {business.phone}
+                </TableCell>
+                <TableCell sx={{ color: selectedTheme.text_color }}>
                   {formatDateToString(business.createdAt || new Date())}
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ color: selectedTheme.text_color }}>
                   <DeleteButton businessId={business.id?.toString() || ""} />
                 </TableCell>
               </TableRow>

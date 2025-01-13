@@ -26,6 +26,10 @@ const EmployeeDetail = () => {
     undefined
   );
 
+  const updateEmployee = (employee: EmployeeModel) => {
+    setEmployee(employee);
+  };
+
   const getEmployee = useCallback(async () => {
     if (!id) {
       return;
@@ -93,7 +97,11 @@ const EmployeeDetail = () => {
         }}
       >
         {/* Encabezado */}
-        <EmployeeDetailHeaderSection onDeleteEmployee={onDeleteEmployee} />
+        <EmployeeDetailHeaderSection
+          onDeleteEmployee={onDeleteEmployee}
+          employee={employee as EmployeeModel}
+          updateEmployee={updateEmployee}
+        />
 
         {/* Contenido de la tarjeta */}
         <EmployeeDetailDescriptionSection

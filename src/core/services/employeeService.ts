@@ -70,6 +70,23 @@ class EmployeeService {
     }
   }
 
+  async updateEmployee(
+    employeeToUpdate: EmployeeModel
+  ): Promise<IResponse<EmployeeModel>> {
+    try {
+      return await requestService.fetch<EmployeeModel>(
+        `${this.urlBase}/admin/employees`,
+        {
+          method: "PUT",
+          body: JSON.stringify(employeeToUpdate),
+        }
+      );
+    } catch (error: any) {
+      console.log(error);
+      return handleFetchError(error);
+    }
+  }
+
   async deleteEmployee(id: string): Promise<IResponse<null>> {
     try {
       return await requestService.fetch<null>(

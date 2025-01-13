@@ -19,6 +19,7 @@ export const EmployeeDetailDescriptionSection = ({ employee }: Props) => {
         >
           <Typography
             variant="body1"
+            component="span"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -33,6 +34,7 @@ export const EmployeeDetailDescriptionSection = ({ employee }: Props) => {
           </Typography>
           <Typography
             variant="body1"
+            component="span"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -54,6 +56,7 @@ export const EmployeeDetailDescriptionSection = ({ employee }: Props) => {
           </Typography>
           <Typography
             variant="body1"
+            component="span"
             sx={{
               display: "flex",
               alignItems: "center",

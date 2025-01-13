@@ -7,7 +7,7 @@ class BusinessFinalSaleService {
   private adminUrl = apiConfig.adminUrl;
 
   async existEmployeeInAnyBusinessFinalSale(
-    employeeId: number
+    employeeId: string
   ): Promise<IResponse<boolean>> {
     try {
       return await requestService.fetch<boolean>(
