@@ -70,10 +70,10 @@ export const SaleReport = () => {
     >
       {/* Encabezado del Reporte */}
       <Box sx={{ mb: 4, textAlign: "center" }}>
-        <Typography variant="h4" gutterBottom>
+        {/* <Typography variant="h4" gutterBottom>
           Reporte de Ventas
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary">
+        </Typography> */}
+        <Typography variant="h6" sx={{ color: selectedTheme.text_color }}>
           {formatDateToString(new Date())}
         </Typography>
         <Divider sx={{ my: 2 }} />
@@ -88,7 +88,10 @@ export const SaleReport = () => {
                 <AttachMoneyIcon sx={{ mr: 1 }} />
                 <Typography variant="h6">Total General</Typography>
               </Box>
-              <Typography variant="h4" sx={{ color: selectedTheme.secondary_color }}>
+              <Typography
+                variant="h4"
+                sx={{ color: selectedTheme.secondary_color }}
+              >
                 ${businessSale.total.toLocaleString()}
               </Typography>
               <Box sx={{ mt: 2 }}>
@@ -96,7 +99,8 @@ export const SaleReport = () => {
                   Fondo: ${businessSale.found.toLocaleString()}
                 </Typography>
                 <Typography variant="body2">
-                  Ganancia Neta: ${(businessSale.total - businessSale.found).toLocaleString()}
+                  Ganancia Neta: $
+                  {(businessSale.total - businessSale.found).toLocaleString()}
                 </Typography>
               </Box>
             </CardContent>
@@ -113,7 +117,11 @@ export const SaleReport = () => {
               </Box>
               <Box sx={{ mt: 2 }}>
                 <Typography variant="body2" gutterBottom>
-                  Servicios Vendidos: {businessSale.servicesSales.reduce((acc, sale) => acc + sale.quantity, 0)}
+                  Servicios Vendidos:{" "}
+                  {businessSale.servicesSales.reduce(
+                    (acc, sale) => acc + sale.quantity,
+                    0
+                  )}
                 </Typography>
                 <Typography variant="body2" gutterBottom>
                   Deudas Pendientes: {businessSale.debts.length}
@@ -144,13 +152,19 @@ export const SaleReport = () => {
                   value={(businessSale.paid / businessSale.total) * 100}
                   sx={{
                     mb: 1,
-                    backgroundColor: darken(selectedTheme.background_color, 0.2),
+                    backgroundColor: darken(
+                      selectedTheme.background_color,
+                      0.2
+                    ),
                     "& .MuiLinearProgress-bar": {
                       backgroundColor: selectedTheme.secondary_color,
                     },
                   }}
                 />
-                <Typography variant="h6" sx={{ color: selectedTheme.secondary_color }}>
+                <Typography
+                  variant="h6"
+                  sx={{ color: selectedTheme.secondary_color }}
+                >
                   ${businessSale.paid.toLocaleString()}
                 </Typography>
 
@@ -163,13 +177,19 @@ export const SaleReport = () => {
                   value={(getTotalCards() / businessSale.total) * 100}
                   sx={{
                     mb: 1,
-                    backgroundColor: darken(selectedTheme.background_color, 0.2),
+                    backgroundColor: darken(
+                      selectedTheme.background_color,
+                      0.2
+                    ),
                     "& .MuiLinearProgress-bar": {
                       backgroundColor: selectedTheme.secondary_color,
                     },
                   }}
                 />
-                <Typography variant="h6" sx={{ color: selectedTheme.secondary_color }}>
+                <Typography
+                  variant="h6"
+                  sx={{ color: selectedTheme.secondary_color }}
+                >
                   ${getTotalCards().toLocaleString()}
                 </Typography>
               </Box>
@@ -185,7 +205,10 @@ export const SaleReport = () => {
                 <PointOfSaleIcon sx={{ mr: 1 }} />
                 <Typography variant="h6">Servicios</Typography>
               </Box>
-              <Typography variant="h4" sx={{ color: selectedTheme.secondary_color }}>
+              <Typography
+                variant="h4"
+                sx={{ color: selectedTheme.secondary_color }}
+              >
                 ${getTotalServices().toLocaleString()}
               </Typography>
               <Box sx={{ mt: 2 }}>
@@ -194,7 +217,10 @@ export const SaleReport = () => {
                     <Typography variant="body2">
                       {sale.service.name} x{sale.quantity}
                     </Typography>
-                    <Typography variant="body2" sx={{ color: selectedTheme.secondary_color }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: selectedTheme.secondary_color }}
+                    >
                       ${(sale.quantity * sale.service.price).toLocaleString()}
                     </Typography>
                   </Box>
@@ -220,14 +246,23 @@ export const SaleReport = () => {
                       mb: 2,
                       p: 1,
                       borderRadius: 1,
-                      backgroundColor: darken(selectedTheme.background_color, 0.15),
+                      backgroundColor: darken(
+                        selectedTheme.background_color,
+                        0.15
+                      ),
                     }}
                   >
                     <Typography variant="subtitle1">{debt.name}</Typography>
                     <Typography variant="body2" color="text.secondary">
                       {debt.description}
                     </Typography>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        mt: 1,
+                      }}
+                    >
                       <Typography variant="body2">
                         Total: ${debt.total.toLocaleString()}
                       </Typography>
@@ -243,7 +278,10 @@ export const SaleReport = () => {
                       value={(debt.paid / debt.total) * 100}
                       sx={{
                         mt: 1,
-                        backgroundColor: darken(selectedTheme.background_color, 0.2),
+                        backgroundColor: darken(
+                          selectedTheme.background_color,
+                          0.2
+                        ),
                         "& .MuiLinearProgress-bar": {
                           backgroundColor: selectedTheme.secondary_color,
                         },
@@ -270,9 +308,15 @@ export const SaleReport = () => {
                 </Typography>
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                   {business.machines
-                    ?.filter((machine) => businessSale.machines.includes(machine.id!))
+                    ?.filter((machine) =>
+                      businessSale.machines.includes(machine.id!)
+                    )
                     .map((machine) => (
-                      <Chip key={machine.id} label={machine.name} sx={chipStyle} />
+                      <Chip
+                        key={machine.id}
+                        label={machine.name}
+                        sx={chipStyle}
+                      />
                     ))}
                 </Box>
               </Box>
@@ -324,7 +368,10 @@ export const SaleReport = () => {
                   sx={{
                     p: 2,
                     borderRadius: 1,
-                    backgroundColor: darken(selectedTheme.background_color, 0.15),
+                    backgroundColor: darken(
+                      selectedTheme.background_color,
+                      0.15
+                    ),
                   }}
                 >
                   {businessSale.note}

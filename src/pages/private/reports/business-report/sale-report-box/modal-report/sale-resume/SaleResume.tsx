@@ -71,7 +71,6 @@ export const SaleResume = () => {
     setValue,
     watch,
     reset,
-    trigger,
   } = useForm<TSaleResume>({
     resolver: zodResolver(SaleResumeZodSchema),
     mode: "all",
@@ -156,16 +155,7 @@ export const SaleResume = () => {
       workers: businessSale.workers || [],
       registerType: defaultRegisterType,
     });
-
-    // Trigger validation after reset
-    trigger();
-  }, [
-    businessSale,
-    reset,
-    business.machines?.length,
-    defaultRegisterType,
-    trigger,
-  ]);
+  }, [businessSale, reset, business.machines?.length, defaultRegisterType]);
 
   return (
     <Box
@@ -367,6 +357,15 @@ export const SaleResume = () => {
         >
           <Typography variant="h6" sx={{ color: selectedTheme.text_color }}>
             Trabajadores
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              color: darken(selectedTheme.text_color, 0.3),
+              fontSize: "0.8rem",
+            }}
+          >
+            Seleccione el o los trabajadores que serán parte de este reporte
           </Typography>
           <FormControl error={!!errors.workers} fullWidth>
             <Grid container spacing={2}>
