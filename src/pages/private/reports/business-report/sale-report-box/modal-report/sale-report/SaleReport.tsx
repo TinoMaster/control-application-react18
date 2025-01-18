@@ -1,25 +1,25 @@
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import GroupIcon from "@mui/icons-material/Group";
+import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import TimelineIcon from "@mui/icons-material/Timeline";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   Chip,
+  darken,
   Divider,
   Grid2 as Grid,
-  Typography,
-  darken,
   LinearProgress,
+  Typography,
 } from "@mui/material";
-import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
-import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
 import { useBusinessContext } from "../../../../../../../core/context/use/useBusinessContext";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-import GroupIcon from "@mui/icons-material/Group";
-import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import TimelineIcon from "@mui/icons-material/Timeline";
-import { formatDateToString } from "../../../../../../../core/utilities/helpers/dateFormat";
+import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
+import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
 
 export const SaleReport = () => {
   const { businessSale, cards } = useBusinessReportContext();
@@ -65,19 +65,23 @@ export const SaleReport = () => {
       sx={{
         backgroundColor: selectedTheme.background_color,
         color: selectedTheme.text_color,
-        p: 2,
+        px: 2,
       }}
     >
       {/* Encabezado del Reporte */}
-      <Box sx={{ mb: 4, textAlign: "center" }}>
-        {/* <Typography variant="h4" gutterBottom>
-          Reporte de Ventas
-        </Typography> */}
+      <Box sx={{ mb: 1, display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
         <Typography variant="h6" sx={{ color: selectedTheme.text_color }}>
-          {formatDateToString(new Date())}
+          {businessSale.name}
         </Typography>
-        <Divider sx={{ my: 2 }} />
+        <Button
+          variant="outlined"
+          startIcon={<AssignmentIcon />}
+          sx={{ mt: 1, color: selectedTheme.text_color, borderColor: selectedTheme.secondary_color }}
+        >
+          Agregar Nota
+        </Button>
       </Box>
+      <Divider sx={{ mb: 2 }} />
 
       <Grid container spacing={3}>
         {/* Resumen Financiero */}
@@ -98,9 +102,16 @@ export const SaleReport = () => {
                 <Typography variant="body2" gutterBottom>
                   Fondo: ${businessSale.found.toLocaleString()}
                 </Typography>
+                <Typography variant="body2" gutterBottom>
+                  Deuda: ${getTotalDebts()}
+                </Typography>
                 <Typography variant="body2">
-                  Ganancia Neta: $
-                  {(businessSale.total - businessSale.found).toLocaleString()}
+                  Efectivo en Caja: $
+                  {(
+                    businessSale.total -
+                    businessSale.found -
+                    getTotalDebts()
+                  ).toLocaleString()}
                 </Typography>
               </Box>
             </CardContent>
@@ -149,7 +160,7 @@ export const SaleReport = () => {
                 </Typography>
                 <LinearProgress
                   variant="determinate"
-                  value={(businessSale.paid / businessSale.total) * 100}
+                  value={(businessSale.total - getTotalCards()) / businessSale.total * 100}
                   sx={{
                     mb: 1,
                     backgroundColor: darken(
@@ -165,7 +176,7 @@ export const SaleReport = () => {
                   variant="h6"
                   sx={{ color: selectedTheme.secondary_color }}
                 >
-                  ${businessSale.paid.toLocaleString()}
+                  ${businessSale.total - getTotalCards()}
                 </Typography>
 
                 {/* Tarjetas */}

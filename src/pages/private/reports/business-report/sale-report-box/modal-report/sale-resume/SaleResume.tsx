@@ -17,18 +17,19 @@ import {
   Select,
   Typography,
 } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import CustomInput from "../../../../../../../components/common/ui/CustomInput";
-import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
-import { useCallback, useEffect, useState } from "react";
-import { useBusinessContext } from "../../../../../../../core/context/use/useBusinessContext";
-import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
-import { allowedRole } from "../../../../../../../core/utilities/helpers/allowedRole.util";
 import { useAuthContext } from "../../../../../../../core/context/use/useAuthContext";
+import { useBusinessContext } from "../../../../../../../core/context/use/useBusinessContext";
+import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
 import { ERole } from "../../../../../../../core/models/api";
 import { EmployeeModel } from "../../../../../../../core/models/api/employee.model";
 import { employeeService } from "../../../../../../../core/services/employeeService";
+import { allowedRole } from "../../../../../../../core/utilities/helpers/allowedRole.util";
+import { formatDateToString } from "../../../../../../../core/utilities/helpers/dateFormat";
+import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
 
 enum ERegisterType {
   INDIVIDUAL = "individual",
@@ -52,7 +53,7 @@ type TSaleResume = z.infer<typeof SaleResumeZodSchema>;
 
 export const SaleResume = () => {
   const { selectedTheme } = useThemeContext();
-  const { role } = useAuthContext();
+  const { role, user } = useAuthContext();
   const { business } = useBusinessContext();
   const [loading, setLoading] = useState(false);
   const [employees, setEmployees] = useState<EmployeeModel[]>([]);
@@ -67,10 +68,9 @@ export const SaleResume = () => {
   const {
     handleSubmit,
     control,
-    formState: { errors, isValid },
+    formState: { errors },
     setValue,
     watch,
-    reset,
   } = useForm<TSaleResume>({
     resolver: zodResolver(SaleResumeZodSchema),
     mode: "all",
@@ -109,6 +109,22 @@ export const SaleResume = () => {
     }
   };
 
+  const createReportName = () => {
+    let title = formatDateToString(new Date());
+    const machinesNames = business.machines
+      ?.filter((machine) =>
+        businessSale.machines?.includes(machine.id as number)
+      )
+      .map((machine) => machine.name)
+      .join(", ");
+    if (registerTypeWatch === ERegisterType.INDIVIDUAL) {
+      title += ` Individual`;
+    } else {
+      title += ` General`;
+    }
+    return title + ` - ${machinesNames}`;
+  };
+
   const onSubmit = (data: TSaleResume) => {
     setLoading(true);
 
@@ -118,12 +134,13 @@ export const SaleResume = () => {
       found: Number(data.found),
       machines: data.machines,
       workers: data.workers,
+      name: createReportName(),
+      businessId: business.id!,
+      doneBy: user!.id as number,
     }));
 
-    setTimeout(() => {
-      setLoading(false);
-      nextSection();
-    }, 1000);
+    setLoading(false);
+    nextSection();
   };
 
   const getEmployeesByBusiness = useCallback(async () => {
@@ -146,16 +163,6 @@ export const SaleResume = () => {
       setValue("machines", business.machines?.map((m) => m.id as number) ?? []);
     }
   }, [registerTypeWatch, setValue, business.machines]);
-
-  useEffect(() => {
-    reset({
-      total: businessSale.total.toString(),
-      found: businessSale.found?.toString(),
-      machines: businessSale.machines || [],
-      workers: businessSale.workers || [],
-      registerType: defaultRegisterType,
-    });
-  }, [businessSale, reset, business.machines?.length, defaultRegisterType]);
 
   return (
     <Box
@@ -352,7 +359,6 @@ export const SaleResume = () => {
             marginTop: 2,
             display: "flex",
             flexDirection: "column",
-            gap: 1,
           }}
         >
           <Typography variant="h6" sx={{ color: selectedTheme.text_color }}>
@@ -425,7 +431,7 @@ export const SaleResume = () => {
             type="submit"
             size="small"
             variant="contained"
-            disabled={!isValid || loading}
+            disabled={loading}
             sx={{ backgroundColor: darken(selectedTheme.secondary_color, 0.3) }}
           >
             {loading ? "Procesando..." : "Procesar"}

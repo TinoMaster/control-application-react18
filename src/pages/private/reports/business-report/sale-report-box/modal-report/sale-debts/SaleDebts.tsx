@@ -62,12 +62,20 @@ export const SaleDebts = () => {
   };
 
   const handleSaveDebts = () => {
-    const debtsToSave: DebtModel[] = debts.map((debt) => ({
-      total: debt.amount,
-      name: debt.debtor,
-      paid: 0,
-    }));
-    setBusinessSale({ ...businessSale, debts: debtsToSave });
+    let moneyToDiscount = 0;
+    const debtsToSave: DebtModel[] = debts.map((debt) => {
+      moneyToDiscount += debt.amount;
+      return {
+        total: debt.amount,
+        name: debt.debtor,
+        paid: 0,
+      };
+    });
+    setBusinessSale({
+      ...businessSale,
+      debts: debtsToSave,
+      paid: businessSale.total - moneyToDiscount,
+    });
   };
 
   const handleNextSection = () => {
@@ -155,9 +163,7 @@ export const SaleDebts = () => {
                 backgroundColor: darken(selectedTheme.secondary_color, 0.4),
               }}
             >
-              <TableCell sx={{ color: "white" }}>
-                Deudor
-              </TableCell>
+              <TableCell sx={{ color: "white" }}>Deudor</TableCell>
               <TableCell align="right" sx={{ color: "white" }}>
                 Monto
               </TableCell>
@@ -239,12 +245,14 @@ export const SaleDebts = () => {
             },
           }}
         >
-          Anterior  
+          Anterior
         </Button>
         <Button
           variant="contained"
           onClick={handleNextSection}
-          endIcon={debts.length === 0 ? <BlockIcon /> : <KeyboardArrowRightIcon />}
+          endIcon={
+            debts.length === 0 ? <BlockIcon /> : <KeyboardArrowRightIcon />
+          }
           size="small"
           sx={{
             backgroundColor: darken(selectedTheme.secondary_color, 0.3),
