@@ -4,8 +4,13 @@ import {
   CardPayment,
   SECTIONS_BUSINESS_REPORT,
 } from "./useBusinessReportContext";
-import { BusinessFinalSaleModel } from "../../../../../core/models/api/businessFinalSale.model";
+import {
+  BusinessFinalSaleModel,
+  BusinessFinalSaleModelToCreate,
+} from "../../../../../core/models/api/businessFinalSale.model";
 import { businessFinalSaleService } from "../../../../../core/services/businessFinalSaleService";
+import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
+import { MachineModel } from "../../../../../core/models/api/machine.model";
 
 interface IContextProps {
   children: ReactNode;
@@ -46,6 +51,7 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
     SECTIONS_BUSINESS_REPORT.RESUME
   );
   const [businessSale, setBusinessSale] = useState(initialBusinessSale);
+  const { business } = useBusinessContext();
   const [cards, setCards] = useState<CardPayment[]>([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -61,8 +67,15 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
     setError(false);
     setSuccess(false);
 
+    const dataToSave: BusinessFinalSaleModelToCreate = {
+      ...businessSale,
+      machines: business.machines?.filter((m) =>
+        businessSale.machines.includes(m.id!)
+      ) as MachineModel[],
+    };
+
     const response = await businessFinalSaleService.saveBusinessFinalSale(
-      businessSale
+      dataToSave
     );
 
     if (response.status === 200) {

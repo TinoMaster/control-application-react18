@@ -1,5 +1,9 @@
 import { apiConfig } from "../config/api.config";
-import { BusinessFinalSaleModel } from "../models/api/businessFinalSale.model";
+import {
+  BusinessFinalSaleModelResponse,
+  BusinessFinalSaleModelToCreate
+} from "../models/api/businessFinalSale.model";
+import { ByBusinessAndDateRequestModel } from "../models/api/requests/byBusinessAndDateRequest.model";
 import { IResponse } from "../types/request.types";
 import { handleFetchError } from "../utilities/helpers/errorManager";
 import { requestService } from "./RequestService";
@@ -7,6 +11,23 @@ import { requestService } from "./RequestService";
 class BusinessFinalSaleService {
   private adminUrl = apiConfig.adminUrl;
   private privateUrl = apiConfig.privateUrl;
+
+  async getBusinessFinalSalesByBusinessIdAndDate(
+    requestType: ByBusinessAndDateRequestModel
+  ): Promise<IResponse<BusinessFinalSaleModelResponse[]>> {
+    try {
+      return await requestService.fetch<BusinessFinalSaleModelResponse[]>(
+        `${this.privateUrl}/business-final-sale/getByBusinessAndDate`,
+        {
+          method: "POST",
+          body: JSON.stringify(requestType),
+        }
+      );
+    } catch (error: any) {
+      console.log(error);
+      return handleFetchError(error);
+    }
+  }
 
   async existEmployeeInAnyBusinessFinalSale(
     employeeId: string
@@ -22,10 +43,10 @@ class BusinessFinalSaleService {
   }
 
   async saveBusinessFinalSale(
-    businessSale: BusinessFinalSaleModel
-  ): Promise<IResponse<null>> {
+    businessSale: BusinessFinalSaleModelToCreate
+  ): Promise<IResponse<boolean>> {
     try {
-      return await requestService.fetch<null>(
+      return await requestService.fetch<boolean>(
         `${this.privateUrl}/business-final-sale`,
         {
           method: "POST",

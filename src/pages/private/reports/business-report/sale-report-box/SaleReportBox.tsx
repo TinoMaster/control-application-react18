@@ -12,10 +12,18 @@ import AddIcon from "@mui/icons-material/Add";
 import { ModalReport } from "./modal-report/ModalReport";
 import { SaleCard } from "./sale-card/SaleCard";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
+import { useBusinessFinalSale } from "../../../../../core/hooks/useBusinessFinalSale";
+import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 
 export const SaleReportBox = () => {
   const [openModal, setOpenModal] = useState(false);
+  const { business } = useBusinessContext();
+  const { todayReports } = useBusinessFinalSale({
+    businessId: business?.id,
+  });
   const { selectedTheme } = useThemeContext();
+
+  console.log("todayReports", todayReports);
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -24,9 +32,12 @@ export const SaleReportBox = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
-        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-          <SaleCard />
-        </Grid>
+        {todayReports.map((sale) => (
+          <Grid key={sale.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+            <SaleCard sale={sale} />
+          </Grid>
+        ))}
+
         <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
           <Card
             sx={{

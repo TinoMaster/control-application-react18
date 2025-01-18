@@ -490,17 +490,13 @@ export const SaleReport = () => {
                     Máquinas Registradas
                   </Typography>
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                    {business.machines
-                      ?.filter((machine) =>
-                        businessSale.machines.includes(machine.id!)
-                      )
-                      .map((machine) => (
-                        <Chip
-                          key={machine.id}
-                          label={machine.name}
-                          sx={chipStyle}
-                        />
-                      ))}
+                    {business?.machines?.map((machine) => (
+                      <Chip
+                        key={machine.id}
+                        label={machine.name}
+                        sx={chipStyle}
+                      />
+                    ))}
                   </Box>
                 </Box>
                 <Divider sx={{ my: 2 }} />
