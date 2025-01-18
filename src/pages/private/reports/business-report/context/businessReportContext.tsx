@@ -20,6 +20,7 @@ export interface IBusinessReportContext {
   cancelProcess: () => void;
   cards: CardPayment[];
   setCards: React.Dispatch<React.SetStateAction<CardPayment[]>>;
+  saveBusinessSale: () => void;
 }
 
 const initialBusinessSale: BusinessFinalSaleModel = {
@@ -47,6 +48,9 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
     setCurrentSection(SECTIONS_BUSINESS_REPORT.RESUME);
     setBusinessSale(initialBusinessSale);
   };
+
+  /* TODO: complete this function */
+  const saveBusinessSale = async () => {};
 
   const nextSection = () => {
     switch (currentSection) {
@@ -115,6 +119,7 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
         cancelProcess,
         cards,
         setCards,
+        saveBusinessSale,
       }}
     >
       {children}

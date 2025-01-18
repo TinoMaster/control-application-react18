@@ -110,19 +110,11 @@ export const SaleResume = () => {
   };
 
   const createReportName = () => {
-    let title = formatDateToString(new Date());
-    const machinesNames = business.machines
-      ?.filter((machine) =>
-        businessSale.machines?.includes(machine.id as number)
-      )
-      .map((machine) => machine.name)
-      .join(", ");
     if (registerTypeWatch === ERegisterType.INDIVIDUAL) {
-      title += ` Individual`;
+      return `Individual ${formatDateToString(new Date())}`;
     } else {
-      title += ` General`;
+      return `General ${formatDateToString(new Date())}`;
     }
-    return title + ` - ${machinesNames}`;
   };
 
   const onSubmit = (data: TSaleResume) => {
