@@ -5,6 +5,7 @@ import {
   SECTIONS_BUSINESS_REPORT,
 } from "./useBusinessReportContext";
 import { BusinessFinalSaleModel } from "../../../../../core/models/api/businessFinalSale.model";
+import { businessFinalSaleService } from "../../../../../core/services/businessFinalSaleService";
 
 interface IContextProps {
   children: ReactNode;
@@ -21,11 +22,14 @@ export interface IBusinessReportContext {
   cards: CardPayment[];
   setCards: React.Dispatch<React.SetStateAction<CardPayment[]>>;
   saveBusinessSale: () => void;
+  loading: boolean;
+  success: boolean;
+  error: boolean;
 }
 
 const initialBusinessSale: BusinessFinalSaleModel = {
   name: "",
-  businessId: 0,
+  business: 0,
   total: 0,
   paid: 0,
   debts: [],
@@ -43,14 +47,33 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
   );
   const [businessSale, setBusinessSale] = useState(initialBusinessSale);
   const [cards, setCards] = useState<CardPayment[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   const cancelProcess = () => {
     setCurrentSection(SECTIONS_BUSINESS_REPORT.RESUME);
     setBusinessSale(initialBusinessSale);
   };
 
-  /* TODO: complete this function */
-  const saveBusinessSale = async () => {};
+  const saveBusinessSale = async () => {
+    setLoading(true);
+    setError(false);
+    setSuccess(false);
+
+    const response = await businessFinalSaleService.saveBusinessFinalSale(
+      businessSale
+    );
+
+    if (response.status === 200) {
+      nextSection();
+      setSuccess(true);
+    } else {
+      setError(true);
+    }
+
+    setLoading(false);
+  };
 
   const nextSection = () => {
     switch (currentSection) {
@@ -120,6 +143,9 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
         cards,
         setCards,
         saveBusinessSale,
+        loading,
+        success,
+        error,
       }}
     >
       {children}

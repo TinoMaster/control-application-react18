@@ -5,7 +5,7 @@ import { ServiceSaleModel } from "./serviceSale.model";
 export interface BusinessFinalSaleModel {
   id?: number;
   name: string;
-  businessId: number;
+  business: number;
   total: number;
   paid: number;
   debts: DebtModel[];

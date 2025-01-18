@@ -127,7 +127,7 @@ export const SaleResume = () => {
       machines: data.machines,
       workers: data.workers,
       name: createReportName(),
-      businessId: business.id!,
+      business: business.id!,
       doneBy: user!.id as number,
     }));
 

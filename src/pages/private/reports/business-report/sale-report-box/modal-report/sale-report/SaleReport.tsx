@@ -20,13 +20,23 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
+import { CustomSnackbar } from "../../../../../../../components/common/ui/CustomSnackbar";
+import { LoadingCircularProgress } from "../../../../../../../components/common/ui/LoadingCircularProgress";
 import { useBusinessContext } from "../../../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
 import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
-import { useState } from "react";
 
 export const SaleReport = () => {
-  const { businessSale, cards, setBusinessSale } = useBusinessReportContext();
+  const {
+    businessSale,
+    cards,
+    setBusinessSale,
+    loading,
+    success,
+    error,
+    saveBusinessSale,
+  } = useBusinessReportContext();
   const { selectedTheme } = useThemeContext();
   const { business } = useBusinessContext();
   const [modalAddNote, setModalAddNote] = useState(false);
@@ -76,6 +86,13 @@ export const SaleReport = () => {
 
   return (
     <>
+      <LoadingCircularProgress loading={loading} />
+      <CustomSnackbar
+        error={error}
+        success={success}
+        errorMessage={error ? "Error al guardar la venta" : ""}
+        successMessage={success ? "Venta guardada con éxito" : ""}
+      />
       <Modal
         open={modalAddNote}
         onClose={() => setModalAddNote(false)}
@@ -193,7 +210,14 @@ export const SaleReport = () => {
           <Typography variant="h6" sx={{ color: selectedTheme.text_color }}>
             {businessSale.name}
           </Typography>
-          <Box sx={{ display: "flex", gap: { xs: 1, sm: 2 }, flexWrap: "wrap", width: { xs: "100%", sm: "auto" } }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: { xs: 1, sm: 2 },
+              flexWrap: "wrap",
+              width: { xs: "100%", sm: "auto" },
+            }}
+          >
             <Button
               variant="outlined"
               startIcon={<AssignmentIcon />}
@@ -210,7 +234,7 @@ export const SaleReport = () => {
             <Button
               variant="contained"
               startIcon={<SaveIcon />}
-              onClick={() => setModalAddNote(true)}
+              onClick={saveBusinessSale}
               sx={{
                 mt: 1,
                 color: "#fff",
