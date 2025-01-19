@@ -23,6 +23,8 @@ import { useThemeContext } from "../../../../../../core/context/use/useThemeCont
 import { BusinessFinalSaleModelResponse } from "../../../../../../core/models/api/businessFinalSale.model";
 import { formatCurrency } from "../../../../../../core/utilities/helpers/formatCurrency";
 import { ViewFinalReport } from "../view-final-report/ViewFinalReport";
+import { CardModel } from "../../../../../../core/models/api/card.model";
+import { CardPayment } from "../../context/useBusinessReportContext";
 
 interface Props {
   sale: BusinessFinalSaleModelResponse;
@@ -34,6 +36,14 @@ export const SaleCard = ({ sale }: Props) => {
 
   const hasDebts = sale.debts && sale.debts.length > 0;
   const pendingAmount = sale.total - sale.paid;
+
+  const transformCardModelToCardPayment = (card: CardModel): CardPayment => {
+    return {
+      id: card?.id?.toString() || crypto.randomUUID(),
+      amount: card.amount,
+      cardNumber: card.number,
+    };
+  };
 
   return (
     <>
@@ -89,7 +99,13 @@ export const SaleCard = ({ sale }: Props) => {
               <CancelIcon sx={{ color: selectedTheme.text_color }} />
             </IconButton>
           </Box>
-          <ViewFinalReport sale={sale} />
+          <ViewFinalReport
+            sale={sale}
+            editable={true}
+            cards={sale.cards.map((card) =>
+              transformCardModelToCardPayment(card)
+            )}
+          />
         </Box>
       </Modal>
       <Card

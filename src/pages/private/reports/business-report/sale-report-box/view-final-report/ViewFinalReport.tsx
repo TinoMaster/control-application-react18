@@ -5,6 +5,8 @@ import GroupIcon from "@mui/icons-material/Group";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import SaveIcon from "@mui/icons-material/Save";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import {
   Box,
@@ -54,6 +56,10 @@ export const ViewFinalReport = ({
     );
   };
 
+  /* Handlers */
+  /* TODO: Implementar */
+  const handleDelete = () => {};
+
   const cardStyle = {
     height: "100%",
     backgroundColor: darken(selectedTheme.background_color, 0.1),
@@ -73,12 +79,61 @@ export const ViewFinalReport = ({
     m: 0.5,
   };
 
+  const creationButtons = () => (
+    <>
+      <Button
+        variant="outlined"
+        startIcon={<AssignmentIcon />}
+        onClick={onAddNote}
+        sx={{
+          mt: 1,
+          width: { xs: "100%", sm: "auto" },
+          color: selectedTheme.text_color,
+          borderColor: selectedTheme.secondary_color,
+        }}
+      >
+        Agregar Nota
+      </Button>
+      <Button
+        variant="contained"
+        startIcon={<SaveIcon />}
+        onClick={onSave}
+        sx={{
+          mt: 1,
+          color: "#fff",
+          backgroundColor: darken(selectedTheme.secondary_color, 0.2),
+          "&:hover": {
+            backgroundColor: darken(selectedTheme.secondary_color, 0.1),
+          },
+          width: { xs: "100%", sm: "auto" },
+        }}
+      >
+        Guardar Reporte
+      </Button>
+    </>
+  );
+
+  const editionsButtons = () => (
+    <>
+      <Button variant="contained" startIcon={<EditIcon />} color="warning">
+        Editar
+      </Button>
+      <Button
+        variant="contained"
+        startIcon={<DeleteIcon />}
+        onClick={handleDelete}
+        color="error"
+      >
+        Eliminar
+      </Button>
+    </>
+  );
+
   return (
     <Box
       sx={{
         backgroundColor: selectedTheme.background_color,
         color: selectedTheme.text_color,
-        p: editable ? 2 : 0,
         borderRadius: "8px",
         height: editable ? "100%" : "auto",
         overflow: editable ? "auto" : "hidden",
@@ -105,35 +160,7 @@ export const ViewFinalReport = ({
             width: { xs: "100%", sm: "auto" },
           }}
         >
-          <Button
-            variant="outlined"
-            startIcon={<AssignmentIcon />}
-            onClick={onAddNote}
-            sx={{
-              mt: 1,
-              width: { xs: "100%", sm: "auto" },
-              color: selectedTheme.text_color,
-              borderColor: selectedTheme.secondary_color,
-            }}
-          >
-            Agregar Nota
-          </Button>
-          <Button
-            variant="contained"
-            startIcon={<SaveIcon />}
-            onClick={onSave}
-            sx={{
-              mt: 1,
-              color: "#fff",
-              backgroundColor: darken(selectedTheme.secondary_color, 0.2),
-              "&:hover": {
-                backgroundColor: darken(selectedTheme.secondary_color, 0.1),
-              },
-              width: { xs: "100%", sm: "auto" },
-            }}
-          >
-            Guardar Reporte
-          </Button>
+          {!editable ? creationButtons() : editionsButtons()}
         </Box>
       </Box>
       <Divider sx={{ mb: 2 }} />

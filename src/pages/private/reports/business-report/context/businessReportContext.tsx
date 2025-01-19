@@ -72,6 +72,10 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
       machines: business.machines?.filter((m) =>
         businessSale.machines.includes(m.id!)
       ) as MachineModel[],
+      cards: cards.map((card) => ({
+        amount: card.amount,
+        number: card.cardNumber,
+      })),
     };
 
     const response = await businessFinalSaleService.saveBusinessFinalSale(

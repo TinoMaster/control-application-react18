@@ -1,3 +1,5 @@
+import { CardPayment } from "../../../pages/private/reports/business-report/context/useBusinessReportContext";
+import { CardModel } from "./card.model";
 import { DebtModel } from "./debt.model";
 import { EmployeeModel } from "./employee.model";
 import { MachineModel } from "./machine.model";
@@ -13,6 +15,7 @@ export interface BusinessFinalSaleModelResponse {
   note: string;
   workers: EmployeeModel[];
   machines: MachineModel[];
+  cards: CardModel[];
   servicesSales: ServiceSaleModel[];
   doneBy: number;
   found: number;
@@ -46,6 +49,7 @@ export interface BusinessFinalSaleModelToCreate {
   note: string;
   workers: EmployeeModel[];
   machines: MachineModel[];
+  cards: CardModel[];
   servicesSales: ServiceSaleModel[];
   doneBy: number;
   found: number;
@@ -55,12 +59,18 @@ export interface BusinessFinalSaleModelToCreate {
 
 export const transformBusinessSaleToBusinessSaleResponse = (
   businessSale: BusinessFinalSaleModel,
-  machines: MachineModel[]
+  machines: MachineModel[],
+  cards: CardPayment[]
 ): BusinessFinalSaleModelResponse => {
   return {
     ...businessSale,
     machines: machines.filter((m) =>
       businessSale.machines.includes(m.id!)
     ) as MachineModel[],
+    cards: cards.map((card) => ({
+      id: card.id,
+      amount: card.amount,
+      number: card.cardNumber,
+    })),
   };
 };

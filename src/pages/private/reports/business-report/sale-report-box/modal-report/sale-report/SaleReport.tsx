@@ -13,9 +13,7 @@ import { CustomSnackbar } from "../../../../../../../components/common/ui/Custom
 import { LoadingCircularProgress } from "../../../../../../../components/common/ui/LoadingCircularProgress";
 import { useBusinessContext } from "../../../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
-import {
-  transformBusinessSaleToBusinessSaleResponse
-} from "../../../../../../../core/models/api/businessFinalSale.model";
+import { transformBusinessSaleToBusinessSaleResponse } from "../../../../../../../core/models/api/businessFinalSale.model";
 import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
 import { ViewFinalReport } from "../../view-final-report/ViewFinalReport";
 
@@ -151,7 +149,8 @@ export const SaleReport = () => {
       <ViewFinalReport
         sale={transformBusinessSaleToBusinessSaleResponse(
           businessSale,
-          business.machines || []
+          business.machines || [],
+          cards
         )}
         cards={cards}
         onSave={saveBusinessSale}

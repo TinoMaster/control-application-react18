@@ -12,7 +12,7 @@ export const SECTIONS_BUSINESS_REPORT = {
 };
 
 export interface CardPayment {
-  id: number | string;
+  id: string;
   cardNumber: string;
   amount: number;
 }
