@@ -30,9 +30,24 @@ export const useBusinessFinalSale = ({
     }
   }, [businessId]);
 
+  const machinesAlreadySelected = () => {
+    return todayReports
+      .map((report) => report.machines.map((machine) => machine.id))
+      .flat();
+  };
+
+  const workersAlreadySelected = () => {
+    return todayReports.map((report) => report.workers).flat();
+  };
+
   useEffect(() => {
     if (businessId) getTodayReport();
   }, [getTodayReport, businessId]);
 
-  return { todayReports, setTodayReports };
+  return {
+    todayReports,
+    setTodayReports,
+    machinesAlreadySelected,
+    workersAlreadySelected,
+  };
 };

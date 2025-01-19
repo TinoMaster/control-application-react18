@@ -80,7 +80,7 @@ export const SaleReport = () => {
 
   const chipStyle = {
     backgroundColor: selectedTheme.secondary_color,
-    color: selectedTheme.primary_color,
+    color: "white",
     m: 0.5,
   };
 
@@ -516,7 +516,8 @@ export const SaleReport = () => {
                               width: 24,
                               height: 24,
                               borderRadius: "50%",
-                              backgroundColor: selectedTheme.primary_color,
+                              backgroundColor: "#fff",
+                              color: selectedTheme.primary_color,
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",

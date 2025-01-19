@@ -1,3 +1,8 @@
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import BuildIcon from "@mui/icons-material/Build";
+import GroupIcon from "@mui/icons-material/Group";
+import MoneyOffIcon from "@mui/icons-material/MoneyOff";
+import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import {
   Button,
   Card,
@@ -5,19 +10,12 @@ import {
   CardContent,
   Chip,
   Divider,
-  Grid,
-  lighten,
+  Grid2 as Grid,
   Stack,
   Typography,
 } from "@mui/material";
 import { useThemeContext } from "../../../../../../core/context/use/useThemeContext";
 import { BusinessFinalSaleModelResponse } from "../../../../../../core/models/api/businessFinalSale.model";
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
-import MoneyOffIcon from "@mui/icons-material/MoneyOff";
-import GroupIcon from "@mui/icons-material/Group";
-import BuildIcon from "@mui/icons-material/Build";
-import { formatDateToString } from "../../../../../../core/utilities/helpers/dateFormat";
 import { formatCurrency } from "../../../../../../core/utilities/helpers/formatCurrency";
 
 interface Props {
@@ -35,7 +33,7 @@ export const SaleCard = ({ sale }: Props) => {
       sx={{
         width: "100%",
         margin: "0 auto",
-        maxWidth: { xs: "100%", sm: "400px" },
+        maxWidth: { xs: "100%", sm: "350px" },
         borderColor: selectedTheme.secondary_color,
         backgroundColor: selectedTheme.background_color,
         color: selectedTheme.text_color,
@@ -54,16 +52,13 @@ export const SaleCard = ({ sale }: Props) => {
             <Typography variant="h6" component="div" fontWeight="bold">
               {sale.name}
             </Typography>
-            <Typography variant="caption" sx={{ color: lighten(selectedTheme.text_color, 0.5) }}>
-              {formatDateToString(sale.createdAt as Date)}
-            </Typography>
           </Stack>
 
           <Divider />
 
           {/* Financial Information */}
           <Grid container spacing={1}>
-            <Grid item xs={6}>
+            <Grid size={6}>
               <Stack direction="row" spacing={1} alignItems="center">
                 <AccountBalanceWalletIcon fontSize="small" />
                 <Typography variant="body2">Total:</Typography>
@@ -72,7 +67,7 @@ export const SaleCard = ({ sale }: Props) => {
                 {formatCurrency(sale.total)}
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={6}>
               <Stack direction="row" spacing={1} alignItems="center">
                 <PointOfSaleIcon fontSize="small" />
                 <Typography variant="body2">Pagado:</Typography>
@@ -114,7 +109,7 @@ export const SaleCard = ({ sale }: Props) => {
                   label={worker.user.name}
                   size="small"
                   variant="outlined"
-                  sx={{ mb: 0.5 }}
+                  sx={{ mb: 0.5, color: selectedTheme.text_color }}
                 />
               ))}
             </Stack>
@@ -134,7 +129,7 @@ export const SaleCard = ({ sale }: Props) => {
                   label={machine.name}
                   size="small"
                   variant="outlined"
-                  sx={{ mb: 0.5 }}
+                  sx={{ mb: 0.5, color: selectedTheme.text_color }}
                 />
               ))}
             </Stack>
@@ -142,7 +137,14 @@ export const SaleCard = ({ sale }: Props) => {
         </Stack>
       </CardContent>
       <CardActions>
-        <Button size="small" color="primary">
+        <Button
+          variant="outlined"
+          size="small"
+          sx={{
+            color: selectedTheme.text_color,
+            borderColor: selectedTheme.text_color,
+          }}
+        >
           Ver detalles
         </Button>
       </CardActions>

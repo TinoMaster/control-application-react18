@@ -17,19 +17,19 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import CustomInput from "../../../../../../../components/common/ui/CustomInput";
 import { useAuthContext } from "../../../../../../../core/context/use/useAuthContext";
 import { useBusinessContext } from "../../../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
+import { useEmployees } from "../../../../../../../core/hooks/useEmployees";
 import { ERole } from "../../../../../../../core/models/api";
-import { EmployeeModel } from "../../../../../../../core/models/api/employee.model";
-import { employeeService } from "../../../../../../../core/services/employeeService";
 import { allowedRole } from "../../../../../../../core/utilities/helpers/allowedRole.util";
 import { formatDateToString } from "../../../../../../../core/utilities/helpers/dateFormat";
 import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
+import { useBusinessFinalSale } from "../../../../../../../core/hooks/useBusinessFinalSale";
 
 enum ERegisterType {
   INDIVIDUAL = "individual",
@@ -55,10 +55,18 @@ export const SaleResume = () => {
   const { selectedTheme } = useThemeContext();
   const { role, user } = useAuthContext();
   const { business } = useBusinessContext();
+  const { filterEmployeesReadyToWork } = useEmployees({
+    businessId: business.id,
+  });
   const [loading, setLoading] = useState(false);
-  const [employees, setEmployees] = useState<EmployeeModel[]>([]);
   const { setBusinessSale, businessSale, nextSection } =
     useBusinessReportContext();
+  const { todayReports, machinesAlreadySelected, workersAlreadySelected } =
+    useBusinessFinalSale({ businessId: business.id });
+
+  console.log("todayReports", todayReports);
+  console.log("machinesAlreadySelected", machinesAlreadySelected());
+  console.log("workersAlreadySelected", workersAlreadySelected());
 
   const defaultRegisterType =
     businessSale.machines?.length === business.machines?.length
@@ -88,7 +96,9 @@ export const SaleResume = () => {
   const debtsWatch = watch("found");
 
   const handleSelectEmployee = (employeeId: string) => {
-    const employee = employees.find((e) => e.id === employeeId);
+    const employee = filterEmployeesReadyToWork().find(
+      (e) => e.id === employeeId
+    );
     if (employee) {
       const currentWorkers = [...(control._formValues.workers || [])];
       const workerIndex = currentWorkers.findIndex((w) => w.id === employee.id);
@@ -134,19 +144,6 @@ export const SaleResume = () => {
     setLoading(false);
     nextSection();
   };
-
-  const getEmployeesByBusiness = useCallback(async () => {
-    const response = await employeeService.getEmployeesByBusinessId(
-      business.id!
-    );
-    if (response.status === 200) {
-      setEmployees(response.data || []);
-    }
-  }, [business.id]);
-
-  useEffect(() => {
-    getEmployeesByBusiness();
-  }, [getEmployeesByBusiness]);
 
   useEffect(() => {
     if (registerTypeWatch === ERegisterType.INDIVIDUAL) {
@@ -309,11 +306,16 @@ export const SaleResume = () => {
                     <MenuItem value="" disabled>
                       Seleccionar
                     </MenuItem>
-                    {business.machines?.map((machine) => (
-                      <MenuItem key={machine.id} value={machine.id}>
-                        {machine.name}
-                      </MenuItem>
-                    ))}
+                    {business.machines
+                      ?.filter(
+                        (machine) =>
+                          !machinesAlreadySelected().includes(machine.id)
+                      )
+                      .map((machine) => (
+                        <MenuItem key={machine.id} value={machine.id}>
+                          {machine.name}
+                        </MenuItem>
+                      ))}
                   </Select>
                   {errors.machines && (
                     <FormHelperText>{errors.machines.message}</FormHelperText>
@@ -363,11 +365,12 @@ export const SaleResume = () => {
               fontSize: "0.8rem",
             }}
           >
-            Seleccione el o los trabajadores que serán parte de este reporte
+            Nota: Solo aparecerán los trabajadores activos y con algún tipo de
+            salario asignado
           </Typography>
           <FormControl error={!!errors.workers} fullWidth>
             <Grid container spacing={2}>
-              {employees.map((employee) => (
+              {filterEmployeesReadyToWork().map((employee) => (
                 <Grid
                   key={employee.id}
                   size={{ xs: 12, sm: 6 }}
