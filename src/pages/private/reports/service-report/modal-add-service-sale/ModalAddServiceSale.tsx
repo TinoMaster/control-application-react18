@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
   Button,
+  darken,
   Dialog,
   DialogActions,
   DialogContent,
@@ -10,22 +11,21 @@ import {
   Grid2 as Grid,
   MenuItem,
   Select,
-  darken,
 } from "@mui/material";
-import { ServiceSaleModel } from "../../../../../core/models/api/serviceSale.model";
-import { ServiceModel } from "../../../../../core/models/api/service.model";
+import { useCallback, useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import CustomInput from "../../../../../components/common/ui/CustomInput";
+import { useAuthContext } from "../../../../../core/context/use/useAuthContext";
+import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
+import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
+import { useService } from "../../../../../core/hooks/useServices";
 import { EmployeeModel } from "../../../../../core/models/api/employee.model";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { ServiceSaleModel } from "../../../../../core/models/api/serviceSale.model";
 import {
   serviceSaleSchema,
   ServiceSaleSchema,
 } from "../../../../../core/models/zod/serviceSaleSchema";
-import CustomInput from "../../../../../components/common/ui/CustomInput";
-import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
 import { employeeService } from "../../../../../core/services/employeeService";
-import { useAuthContext } from "../../../../../core/context/use/useAuthContext";
-import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 
 interface ModalAddServiceSaleProps {
   open: boolean;
@@ -33,7 +33,6 @@ interface ModalAddServiceSaleProps {
   onSubmit: (serviceSale: ServiceSaleModel) => void;
   serviceSale?: ServiceSaleModel;
   isEditing?: boolean;
-  services?: ServiceModel[];
 }
 
 export const ModalAddServiceSale = ({
@@ -42,12 +41,13 @@ export const ModalAddServiceSale = ({
   onSubmit,
   serviceSale,
   isEditing = false,
-  services = [],
 }: ModalAddServiceSaleProps) => {
   const { selectedTheme } = useThemeContext();
   const { user } = useAuthContext();
   const { business } = useBusinessContext();
   const [employee, setEmployee] = useState<EmployeeModel>();
+
+  const { services } = useService({ businessId: business?.id });
 
   const getEmployee = useCallback(async () => {
     if (user) {

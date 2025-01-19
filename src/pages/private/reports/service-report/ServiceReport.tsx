@@ -1,43 +1,22 @@
-import { useCallback, useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  IconButton,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Typography,
-  useMediaQuery,
-  Card,
-  CardContent,
-  Grid2 as Grid,
-  darken,
-} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useThemeContext } from "../../../../core/context/use/useThemeContext";
-import { useAppContext } from "../../../../core/context/use/useAppContext";
-import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
-import { ServiceSaleModel } from "../../../../core/models/api/serviceSale.model";
-import { ServiceModel } from "../../../../core/models/api/service.model";
-import { ModalAddServiceSale } from "./modal-add-service-sale/ModalAddServiceSale";
-import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
-import { LoadingCircularProgress } from "../../../../components/common/ui/LoadingCircularProgress";
-import { serviceService } from "../../../../core/services/serviceService";
-import { serviceSaleService } from "../../../../core/services/serviceSaleService";
-import { ByBusinessAndDateRequestModel } from "../../../../core/models/api/requests/byBusinessAndDateRequest.model";
-import { ERole } from "../../../../core/models/api";
-import { formatDateToHourString } from "../../../../core/utilities/helpers/dateFormat";
-import { allowedRole } from "../../../../core/utilities/helpers/allowedRole.util";
-import { useAuthContext } from "../../../../core/context/use/useAuthContext";
+import { Box, Button, Typography, darken, useMediaQuery } from "@mui/material";
+import { useState } from "react";
 import { CustomPopover } from "../../../../components/common/ui/CustomPopover";
+import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
 import { CustomTooltip } from "../../../../components/common/ui/CustomTooltip";
+import { LoadingCircularProgress } from "../../../../components/common/ui/LoadingCircularProgress";
+import { useAppContext } from "../../../../core/context/use/useAppContext";
+import { useAuthContext } from "../../../../core/context/use/useAuthContext";
+import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
+import { useThemeContext } from "../../../../core/context/use/useThemeContext";
+import { useServiceSale } from "../../../../core/hooks/useServiceSale";
+import { ERole } from "../../../../core/models/api";
+import { ServiceSaleModel } from "../../../../core/models/api/serviceSale.model";
+import { serviceSaleService } from "../../../../core/services/serviceSaleService";
+import { allowedRole } from "../../../../core/utilities/helpers/allowedRole.util";
+import { ModalAddServiceSale } from "./modal-add-service-sale/ModalAddServiceSale";
+import { RenderServiceSaleDesktop } from "./RenderServiceSaleDesktop";
+import { RenderServiceSaleMobile } from "./RenderServiceSaleMobile";
 
 const ServiceReport = () => {
   const { selectedTheme } = useThemeContext();
@@ -46,91 +25,39 @@ const ServiceReport = () => {
   const { user } = useAuthContext();
 
   const isMobile = useMediaQuery(materialTheme.breakpoints.down("sm"));
-  const allowedToDelete = allowedRole(role, [ERole.ADMIN, ERole.OWNER]);
 
-  const allowedToEdit = (userId: number) => {
+  const allowedToDelete = (businessFinalSale: boolean) => {
+    const allowedByRole = allowedRole(role, [ERole.ADMIN, ERole.OWNER]);
+    return allowedByRole && !businessFinalSale;
+  };
+
+  const allowedToEdit = (userId: number, businessFinalSale: boolean) => {
     const allowedByRole = allowedRole(role, [
       ERole.ADMIN,
       ERole.OWNER,
       ERole.EMPLOYEE,
     ]);
     const allowedByUser = role === ERole.EMPLOYEE ? userId === user?.id : true;
-    return allowedByRole && allowedByUser;
+    return allowedByRole && allowedByUser && !businessFinalSale;
   };
+
+  const {
+    serviceSales,
+    editServiceSaleFromServiceSales,
+    addServiceSaleToServiceSales,
+    deleteServiceSaleFromServiceSales,
+  } = useServiceSale({ businessId: business?.id });
 
   // Estados
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [open, setOpen] = useState(false);
-  const [serviceSales, setServiceSales] = useState<ServiceSaleModel[]>([]);
-  const [services, setServices] = useState<ServiceModel[]>([]);
   const [serviceSaleToEdit, setServiceSaleToEdit] =
     useState<ServiceSaleModel>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
-  // Funciones de manejo de datos
-  const addServiceSaleToServiceSales = (serviceSale: ServiceSaleModel) => {
-    setServiceSales([...serviceSales, serviceSale]);
-  };
-
-  const editServiceSaleFromServiceSales = (serviceSale: ServiceSaleModel) => {
-    setServiceSales(
-      serviceSales.map((s) => (s.id === serviceSale.id ? serviceSale : s))
-    );
-  };
-
-  const deleteServiceSaleFromServiceSales = (id: number) => {
-    setServiceSales(serviceSales.filter((s) => s.id !== id));
-  };
-
-  const getServiceSales = useCallback(async () => {
-    if (!business?.id) return;
-
-    const requestType: ByBusinessAndDateRequestModel = {
-      businessId: business.id,
-      startDate: new Date(),
-      endDate: new Date(),
-    };
-
-    setLoading(true);
-    try {
-      const response =
-        await serviceSaleService.getServiceSalesByBusinessIdAndDate(
-          requestType
-        );
-      console.log(response);
-      if (response.status === 200) {
-        setServiceSales(response.data || []);
-      }
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching service sales:", error);
-      setLoading(false);
-    }
-  }, [business?.id]);
-
-  const getServices = useCallback(async () => {
-    if (!business?.id) return;
-
-    try {
-      const response = await serviceService.getServicesByBusinessId(
-        business.id
-      );
-      if (response.status === 200) {
-        setServices(response.data || []);
-      }
-    } catch (error) {
-      console.error("Error fetching services:", error);
-    }
-  }, [business?.id]);
-
-  useEffect(() => {
-    getServiceSales();
-    getServices();
-  }, [getServiceSales, getServices]);
 
   // Handlers
   const handleChangePage = (_: unknown, newPage: number) => {
@@ -207,281 +134,6 @@ const ServiceReport = () => {
   if (loading) {
     return <LoadingCircularProgress loading={loading} />;
   }
-
-  // Vista de escritorio
-  const DesktopView = () => (
-    <TableContainer
-      component={Paper}
-      sx={{ backgroundColor: selectedTheme.background_color }}
-    >
-      <Table>
-        <TableHead>
-          <TableRow
-            sx={{
-              backgroundImage: `linear-gradient(to right, ${
-                selectedTheme.primary_color
-              }, ${darken(selectedTheme.primary_color, 0.2)})`,
-            }}
-          >
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Servicio
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Cantidad
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Realizado por
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Precio Final
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Creado
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Actualizado
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Acciones
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {serviceSales
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((serviceSale) => (
-              <TableRow key={serviceSale.id}>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  {serviceSale.service.name}
-                </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  {serviceSale.quantity}
-                </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  {serviceSale.employee.user.name}
-                </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  $ {serviceSale.quantity * serviceSale.service.price}
-                </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  {serviceSale.createdAt
-                    ? formatDateToHourString(serviceSale.createdAt)
-                    : "N/A"}
-                </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  {serviceSale.updatedAt
-                    ? formatDateToHourString(serviceSale.updatedAt)
-                    : "N/A"}
-                </TableCell>
-                <TableCell>
-                  <CustomTooltip
-                    message={
-                      allowedToEdit(serviceSale.employee.user.id as number)
-                        ? "Editar"
-                        : "Sin permiso"
-                    }
-                  >
-                    <IconButton
-                      disabled={
-                        !allowedToEdit(serviceSale.employee.user.id as number)
-                      }
-                      onClick={() => handleEditServiceSale(serviceSale)}
-                      sx={{
-                        color: selectedTheme.text_color,
-                      }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </CustomTooltip>
-
-                  <CustomTooltip
-                    message={allowedToDelete ? "Eliminar" : "Sin permiso"}
-                  >
-                    <IconButton
-                      disabled={!allowedToDelete}
-                      onClick={() => handleDeleteServiceSale(serviceSale.id!)}
-                      sx={{
-                        color: selectedTheme.text_color,
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </CustomTooltip>
-                </TableCell>
-              </TableRow>
-            ))}
-        </TableBody>
-      </Table>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={serviceSales.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        sx={{
-          color: selectedTheme.text_color,
-        }}
-      />
-    </TableContainer>
-  );
-
-  // Vista móvil
-  const MobileView = () => (
-    <Box>
-      {serviceSales
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        .map((serviceSale) => (
-          <Card
-            key={serviceSale.id}
-            sx={{
-              mb: 2,
-              backgroundColor: selectedTheme.background_color,
-              boxShadow: `0 0 70px 10px ${selectedTheme.primary_color}15 , 0 0 5px 2px #00000015`,
-              borderRadius: "8px",
-            }}
-          >
-            <CardContent>
-              <Grid container spacing={2}>
-                <Grid size={12}>
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      color: selectedTheme.text_color,
-                    }}
-                  >
-                    {serviceSale.service.name}
-                  </Typography>
-                </Grid>
-                <Grid size={6}>
-                  <Typography
-                    sx={{
-                      color: selectedTheme.text_color,
-                    }}
-                  >
-                    Cantidad: {serviceSale.quantity}
-                  </Typography>
-                </Grid>
-                <Grid size={6}>
-                  <Typography
-                    sx={{
-                      color: selectedTheme.text_color,
-                    }}
-                  >
-                    Trabajador: {serviceSale.employee.user.name}
-                  </Typography>
-                </Grid>
-                <Grid size={6}>
-                  <Typography
-                    sx={{
-                      color: selectedTheme.text_color,
-                    }}
-                  >
-                    Precio Final: $
-                    {serviceSale.quantity * serviceSale.service.price}
-                  </Typography>
-                </Grid>
-                <Grid size={6}>
-                  <Typography
-                    sx={{
-                      color: selectedTheme.text_color,
-                    }}
-                  >
-                    Creado:{" "}
-                    {serviceSale.createdAt
-                      ? formatDateToHourString(serviceSale.createdAt)
-                      : "N/A"}
-                  </Typography>
-                </Grid>
-                <Grid size={6}>
-                  <Typography
-                    sx={{
-                      color: selectedTheme.text_color,
-                    }}
-                  >
-                    Actualizado:{" "}
-                    {serviceSale.updatedAt
-                      ? formatDateToHourString(serviceSale.updatedAt)
-                      : "N/A"}
-                  </Typography>
-                </Grid>
-                <Grid size={12}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      mt: 1,
-                    }}
-                  >
-                    <IconButton
-                      disabled={
-                        !allowedToEdit(serviceSale.employee.user.id as number)
-                      }
-                      onClick={() => handleEditServiceSale(serviceSale)}
-                      sx={{
-                        color: selectedTheme.text_color,
-                      }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      disabled={!allowedToDelete}
-                      onClick={() => handleDeleteServiceSale(serviceSale.id!)}
-                      sx={{
-                        color: selectedTheme.text_color,
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Box>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        ))}
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={serviceSales.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        sx={{
-          color: selectedTheme.text_color,
-        }}
-      />
-    </Box>
-  );
 
   return (
     <Box>
@@ -568,7 +220,31 @@ const ServiceReport = () => {
         )}
       </Box>
 
-      {isMobile ? <MobileView /> : <DesktopView />}
+      {isMobile ? (
+        <RenderServiceSaleMobile
+          serviceSales={serviceSales}
+          allowedToDelete={allowedToDelete}
+          allowedToEdit={allowedToEdit}
+          handleEditServiceSale={handleEditServiceSale}
+          handleDeleteServiceSale={handleDeleteServiceSale}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          handleChangePage={handleChangePage}
+          handleChangeRowsPerPage={handleChangeRowsPerPage}
+        />
+      ) : (
+        <RenderServiceSaleDesktop
+          serviceSales={serviceSales}
+          allowedToDelete={allowedToDelete}
+          allowedToEdit={allowedToEdit}
+          handleEditServiceSale={handleEditServiceSale}
+          handleDeleteServiceSale={handleDeleteServiceSale}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          handleChangePage={handleChangePage}
+          handleChangeRowsPerPage={handleChangeRowsPerPage}
+        />
+      )}
 
       <ModalAddServiceSale
         open={open}
@@ -579,7 +255,6 @@ const ServiceReport = () => {
         onSubmit={handleSubmit}
         serviceSale={serviceSaleToEdit}
         isEditing={!!serviceSaleToEdit}
-        services={services}
       />
 
       <CustomSnackbar
