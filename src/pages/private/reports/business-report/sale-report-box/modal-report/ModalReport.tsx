@@ -57,9 +57,9 @@ export const ModalReport = ({ openModal, closeModal }: Props) => {
       <Box
         sx={{
           width: "auto",
-          maxWidth: "1000px",
+          maxWidth: "1200px",
           height: "100%",
-          maxHeight: "600px",
+          maxHeight: "750px",
           margin: "0 auto",
           gap: 2,
           padding: "0 1rem",

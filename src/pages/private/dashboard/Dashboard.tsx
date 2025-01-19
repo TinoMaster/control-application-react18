@@ -1,37 +1,30 @@
-import { useCallback, useEffect, useState } from "react";
 import {
-  Box,
-  Typography,
-  Grid,
-  Paper,
-  Card,
-  CardContent,
-  IconButton,
-  useTheme,
-  Divider,
-  LinearProgress,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-} from "@mui/material";
-import {
-  AttachMoney,
-  People,
-  Inventory,
   Assignment,
-  TrendingUp,
-  Store,
+  AttachMoney,
+  Inventory,
+  People,
   Person,
   ShoppingCart,
 } from "@mui/icons-material";
-import { useThemeContext } from "../../../core/context/use/useThemeContext";
+import {
+  Avatar,
+  Box,
+  Card,
+  CardContent,
+  Grid2 as Grid,
+  IconButton,
+  LinearProgress,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Paper,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
 import { useBusinessContext } from "../../../core/context/use/useBusinessContext";
-import { BusinessFinalSaleModel } from "../../../core/models/api/businessFinalSale.model";
-import { EmployeeModel } from "../../../core/models/api/employee.model";
-import { ClientModel } from "../../../core/models/api/client.model";
-import { ProductModel } from "../../../core/models/api/shop/product.model";
+import { useThemeContext } from "../../../core/context/use/useThemeContext";
 
 const Dashboard = () => {
   const { selectedTheme } = useThemeContext();
@@ -39,10 +32,10 @@ const Dashboard = () => {
   const theme = useTheme();
 
   // Estados para los datos
-  const [sales, setSales] = useState<BusinessFinalSaleModel[]>([]);
+  /* const [sales, setSales] = useState<BusinessFinalSaleModel[]>([]);
   const [employees, setEmployees] = useState<EmployeeModel[]>([]);
   const [clients, setClients] = useState<ClientModel[]>([]);
-  const [products, setProducts] = useState<ProductModel[]>([]);
+  const [products, setProducts] = useState<ProductModel[]>([]); */
   const [loading, setLoading] = useState(true);
 
   // Función para cargar los datos
@@ -127,7 +120,7 @@ const Dashboard = () => {
 
       {/* Grid de estadísticas principales */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Ventas Totales"
             value="$25,500"
@@ -135,7 +128,7 @@ const Dashboard = () => {
             color={theme.palette.success.main}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Clientes Activos"
             value="124"
@@ -143,7 +136,7 @@ const Dashboard = () => {
             color={theme.palette.info.main}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Productos"
             value="45"
@@ -151,7 +144,7 @@ const Dashboard = () => {
             color={theme.palette.warning.main}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title="Tareas Pendientes"
             value="8"
@@ -164,7 +157,7 @@ const Dashboard = () => {
       {/* Gráficas y listas */}
       <Grid container spacing={3}>
         {/* Ventas Recientes */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Paper sx={{ p: 2, backgroundColor: selectedTheme.background_color }}>
             <Typography
               variant="h6"
@@ -203,7 +196,7 @@ const Dashboard = () => {
         </Grid>
 
         {/* Empleados Activos */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Paper sx={{ p: 2, backgroundColor: selectedTheme.background_color }}>
             <Typography
               variant="h6"

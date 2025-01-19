@@ -24,12 +24,12 @@ import CustomInput from "../../../../../../../components/common/ui/CustomInput";
 import { useAuthContext } from "../../../../../../../core/context/use/useAuthContext";
 import { useBusinessContext } from "../../../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
+import { useBusinessFinalSale } from "../../../../../../../core/hooks/useBusinessFinalSale";
 import { useEmployees } from "../../../../../../../core/hooks/useEmployees";
 import { ERole } from "../../../../../../../core/models/api";
 import { allowedRole } from "../../../../../../../core/utilities/helpers/allowedRole.util";
 import { formatDateToString } from "../../../../../../../core/utilities/helpers/dateFormat";
 import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
-import { useBusinessFinalSale } from "../../../../../../../core/hooks/useBusinessFinalSale";
 
 enum ERegisterType {
   INDIVIDUAL = "individual",
@@ -61,12 +61,9 @@ export const SaleResume = () => {
   const [loading, setLoading] = useState(false);
   const { setBusinessSale, businessSale, nextSection } =
     useBusinessReportContext();
-  const { todayReports, machinesAlreadySelected, workersAlreadySelected } =
-    useBusinessFinalSale({ businessId: business.id });
-
-  console.log("todayReports", todayReports);
-  console.log("machinesAlreadySelected", machinesAlreadySelected());
-  console.log("workersAlreadySelected", workersAlreadySelected());
+  const { machinesAlreadySelected } = useBusinessFinalSale({
+    businessId: business.id,
+  });
 
   const defaultRegisterType =
     businessSale.machines?.length === business.machines?.length

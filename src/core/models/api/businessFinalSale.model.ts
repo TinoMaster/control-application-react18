@@ -52,3 +52,15 @@ export interface BusinessFinalSaleModelToCreate {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export const transformBusinessSaleToBusinessSaleResponse = (
+  businessSale: BusinessFinalSaleModel,
+  machines: MachineModel[]
+): BusinessFinalSaleModelResponse => {
+  return {
+    ...businessSale,
+    machines: machines.filter((m) =>
+      businessSale.machines.includes(m.id!)
+    ) as MachineModel[],
+  };
+};
