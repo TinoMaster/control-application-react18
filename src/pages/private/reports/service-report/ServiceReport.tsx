@@ -17,6 +17,7 @@ import { allowedRole } from "../../../../core/utilities/helpers/allowedRole.util
 import { ModalAddServiceSale } from "./modal-add-service-sale/ModalAddServiceSale";
 import { RenderServiceSaleDesktop } from "./RenderServiceSaleDesktop";
 import { RenderServiceSaleMobile } from "./RenderServiceSaleMobile";
+import { ModalRandomInfo } from "../../../../components/common/ui/ModalRandomInfo";
 
 const ServiceReport = () => {
   const { selectedTheme } = useThemeContext();
@@ -51,7 +52,8 @@ const ServiceReport = () => {
   // Estados
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [open, setOpen] = useState(false);
+  const [openAddServiceModal, setOpenAddServiceModal] = useState(false);
+  const [openEmptyServiceModal, setOpenEmptyServiceModal] = useState(false);
   const [serviceSaleToEdit, setServiceSaleToEdit] =
     useState<ServiceSaleModel>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -105,7 +107,7 @@ const ServiceReport = () => {
       setLoading(false);
       setSuccess(false);
       setError(false);
-      setOpen(false);
+      setOpenAddServiceModal(false);
       setServiceSaleToEdit(undefined);
     } catch (error) {
       console.error("Error submitting service sale:", error);
@@ -115,7 +117,7 @@ const ServiceReport = () => {
 
   const handleEditServiceSale = (serviceSale: ServiceSaleModel) => {
     setServiceSaleToEdit(serviceSale);
-    setOpen(true);
+    setOpenAddServiceModal(true);
   };
 
   const handleDeleteServiceSale = async (id: number) => {
@@ -128,6 +130,15 @@ const ServiceReport = () => {
     } catch (error) {
       console.error("Error deleting service sale:", error);
       setError(true);
+    }
+  };
+
+  const handleClickAddService = () => {
+    setServiceSaleToEdit(undefined);
+    if (serviceSales.length === 0) {
+      setOpenEmptyServiceModal(true);
+    } else {
+      setOpenAddServiceModal(true);
     }
   };
 
@@ -163,8 +174,7 @@ const ServiceReport = () => {
                 ) {
                   setAnchorEl(event.currentTarget);
                 } else {
-                  setServiceSaleToEdit(undefined);
-                  setOpen(true);
+                  handleClickAddService();
                 }
               }}
             >
@@ -202,10 +212,7 @@ const ServiceReport = () => {
               variant="contained"
               startIcon={<AddIcon />}
               disabled={!allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN])}
-              onClick={() => {
-                setServiceSaleToEdit(undefined);
-                setOpen(true);
-              }}
+              onClick={handleClickAddService}
               sx={{
                 backgroundColor: selectedTheme.primary_color,
                 color: "white",
@@ -247,14 +254,24 @@ const ServiceReport = () => {
       )}
 
       <ModalAddServiceSale
-        open={open}
+        open={openAddServiceModal}
         onClose={() => {
-          setOpen(false);
+          setOpenAddServiceModal(false);
           setServiceSaleToEdit(undefined);
         }}
         onSubmit={handleSubmit}
         serviceSale={serviceSaleToEdit}
         isEditing={!!serviceSaleToEdit}
+      />
+
+      <ModalRandomInfo
+        open={openEmptyServiceModal}
+        info={
+          "No hay servicios creados, valla a la pagina de servicios y agregue al menos 1"
+        }
+        onClose={() => {
+          setOpenEmptyServiceModal(false);
+        }}
       />
 
       <CustomSnackbar

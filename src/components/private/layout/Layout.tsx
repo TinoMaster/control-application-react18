@@ -52,8 +52,6 @@ export const PrivateLayout = () => {
         color: selectedTheme.text_color,
       }}
     >
-      {/* Header */}
-
       {/* Sidebar */}
       {role === ERole.SUPERADMIN && (
         <>

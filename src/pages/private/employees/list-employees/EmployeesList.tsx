@@ -2,10 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 import { CardEmployee } from "../card-employee/CardEmployee";
 import { EmployeeModel } from "../../../../core/models/api/employee.model";
 import { employeeService } from "../../../../core/services/employeeService";
-import { Box, Skeleton } from "@mui/material";
+import { Box, Skeleton, Typography } from "@mui/material";
 import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
+import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 
 const EmployeesList = () => {
+  const { selectedTheme } = useThemeContext();
   const { business } = useBusinessContext();
   const [employees, setEmployees] = useState<EmployeeModel[]>([]);
 
@@ -77,9 +79,20 @@ const EmployeesList = () => {
     <Box
       sx={{
         padding: "16px 0",
+        display: "flex",
+        justifyContent: "center",
+        minHeight: "100vh",
       }}
     >
-      <p>No hay empleados</p>
+      <Typography
+        sx={{
+          color: selectedTheme.text_color,
+          fontSize: "1.2rem",
+          fontWeight: "bold",
+        }}
+      >
+        Este negocio no tiene empleados
+      </Typography>
     </Box>
   );
 };

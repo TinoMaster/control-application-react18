@@ -27,7 +27,6 @@ export const useServiceSale = ({ businessId }: Props) => {
         await serviceSaleService.getServiceSalesByBusinessIdAndDate(
           requestType
         );
-      console.log(response);
       if (response.status === 200) {
         setServiceSales(response.data || []);
       }

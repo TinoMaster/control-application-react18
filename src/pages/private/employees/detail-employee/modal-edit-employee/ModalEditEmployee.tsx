@@ -438,6 +438,7 @@ export const ModalEditEmployee = ({
             form="edit-employee-form"
             variant="contained"
             disabled={loading}
+            sx={{ backgroundColor: selectedTheme.primary_color }}
           >
             {loading ? <CircularProgress size={24} /> : "Guardar Cambios"}
           </Button>

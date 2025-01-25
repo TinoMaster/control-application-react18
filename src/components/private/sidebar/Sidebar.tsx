@@ -9,11 +9,10 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  useMediaQuery
+  useMediaQuery,
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { useAppContext } from "../../../core/context/use/useAppContext";
-import { useThemeContext } from "../../../core/context/use/useThemeContext";
 import { PRIVATE_NAV_LINKS } from "../../../core/data/global.data";
 import { INavLinkItem } from "../../../core/types/global.types";
 import { filterRoutesByRole } from "../../../core/utilities/helpers/filterRoutesByRole";
@@ -25,7 +24,6 @@ interface SidebarProps {
 }
 
 export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
-  const { selectedTheme } = useThemeContext();
   const { materialTheme, role } = useAppContext();
   const routes: INavLinkItem[] = filterRoutesByRole(PRIVATE_NAV_LINKS, role);
 
@@ -51,7 +49,7 @@ export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "flex-end",
-          height: "75px",
+          height: "73px",
         }}
       >
         <IconButton onClick={handleDrawerToggle}>
@@ -66,8 +64,6 @@ export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
             "linear-gradient(to bottom, var(--bg-dark-light), var(--bg-dark))",
           color: "white",
           height: "100%",
-          border: "1px solid",
-          borderColor: selectedTheme.secondary_color,
         }}
       >
         {routes.map((item, index) => (

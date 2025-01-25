@@ -110,10 +110,10 @@ export const EmployeeDetailAssociatedBusinesses = ({
               <TableCell sx={{ color: selectedTheme.text_color }}>
                 Nombre
               </TableCell>
-              <TableCell>Dirección</TableCell>
-              <TableCell>Teléfono</TableCell>
-              <TableCell>Creado</TableCell>
-              <TableCell>Acciones</TableCell>
+              <TableCell sx={{ color: selectedTheme.text_color }}>Dirección</TableCell>
+              <TableCell sx={{ color: selectedTheme.text_color }}>Teléfono</TableCell>
+              <TableCell sx={{ color: selectedTheme.text_color }}>Creado</TableCell>
+              <TableCell sx={{ color: selectedTheme.text_color }}>Acciones</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

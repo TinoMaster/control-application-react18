@@ -77,8 +77,6 @@ export const ModalAddServiceSale = ({
     },
   });
 
-  console.log(errors);
-
   useEffect(() => {
     if (serviceSale && isEditing) {
       reset({

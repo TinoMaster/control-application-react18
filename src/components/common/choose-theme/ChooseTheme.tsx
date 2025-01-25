@@ -36,7 +36,10 @@ export const ChooseTheme = () => {
           backgroundColor: selectedTheme.background_color,
         }}
       >
-        <Typography variant="body1" sx={{ padding: "0 15px" }}>
+        <Typography variant="body1" sx={{ padding: "0 15px", display: "flex", alignItems: "center", gap: 1 }}>
+          <span style={{ fontWeight: "bold", color: selectedTheme.text_color }}>
+            Tema:
+          </span>
           <span
             style={{
               font: "bold",
@@ -60,7 +63,14 @@ export const ChooseTheme = () => {
         aria-haspopup="true"
         color="inherit"
         onClick={handleClick}
-        sx={{ position: "absolute", top: 0, right: 0, bottom: 0, color: "white" }}
+        sx={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          bottom: 0,
+          color: "white",
+          visibility: themes.length > 1 ? "visible" : "hidden",
+        }}
       >
         <MoreVertIcon />
       </IconButton>

@@ -48,8 +48,9 @@ export const AppThemeProvider = ({ children }: IContextProps) => {
     if (response.status === 200) {
       setThemes(response.data || []);
       if (response.data && !themeId) {
+        console.log(response.data);
         setSelectedTheme(response.data[0]);
-        localStorage.setItem("themeId", response.data[0].id.toString());
+        localStorage.setItem("themeId", response.data[0]?.id.toString() || "0");
       }else{
         setSelectedTheme(chooseThemeById(Number(themeId), response.data || []));
       }

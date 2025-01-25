@@ -2,10 +2,11 @@ import { ThemeModel } from "../../models/api/theme.model";
 
 export const defaultTheme: ThemeModel = {
   id: 0,
-  primary_color: "#1976d2",
-  secondary_color: "#f44336",
-  background_color: "#f5f5f5",
-  text_color: "#212121",
+  name: "Default",
+  primary_color: "#0B5A58",
+  secondary_color: "#027483",
+  background_color: "#242424",
+  text_color: "#FFFFFF",
 };
 
 export const chooseThemeById = (
