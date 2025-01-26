@@ -18,7 +18,7 @@ export const MenuPages = ({ title, links }: IMenuPagesProps) => {
         justifyContent: "space-between",
         alignItems: "center",
         p: 2,
-        backgroundImage: `linear-gradient(to right, ${selectedTheme.secondary_color}, ${selectedTheme.primary_color})`,
+        backgroundImage: `linear-gradient(to bottom, ${selectedTheme.secondary_color}, ${selectedTheme.primary_color})`,
         zIndex: 10,
         color: selectedTheme.text_color,
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",

@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
 import { ServiceModel } from "../../../../../core/models/api";
+import { formatCurrency } from "../../../../../core/utilities/helpers/formatCurrency";
 
 interface Props {
   services: ServiceModel[];
@@ -72,7 +73,9 @@ export const ServiceListDesktop = ({
                 <TableCell sx={bodyTableCellStyle}>
                   {service.description}
                 </TableCell>
-                <TableCell sx={bodyTableCellStyle}>${service.price}</TableCell>
+                <TableCell sx={bodyTableCellStyle}>
+                  {formatCurrency(service.price)}
+                </TableCell>
                 <TableCell sx={bodyTableCellStyle}>
                   {service.costs.length}
                 </TableCell>
