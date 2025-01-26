@@ -1,36 +1,28 @@
-import { useCallback, useEffect, useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
 import {
   Box,
   Button,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TablePagination,
-  IconButton,
-  Typography,
-  useMediaQuery,
-  Card,
-  CardContent,
   Grid2 as Grid,
+  TablePagination,
+  Typography,
   darken,
+  useMediaQuery,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useThemeContext } from "../../../../core/context/use/useThemeContext";
-import { ServiceModel } from "../../../../core/models/api/service.model";
-import { ConsumableModel } from "../../../../core/models/api/consumables.model";
-import { ModalAddService } from "./modal-add-service/ModalAddService";
-import { useAppContext } from "../../../../core/context/use/useAppContext";
+import { useCallback, useEffect, useState } from "react";
 import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
 import { LoadingCircularProgress } from "../../../../components/common/ui/LoadingCircularProgress";
+import { useAppContext } from "../../../../core/context/use/useAppContext";
 import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
+import { useThemeContext } from "../../../../core/context/use/useThemeContext";
+import { ConsumableModel } from "../../../../core/models/api/consumables.model";
+import { ServiceModel } from "../../../../core/models/api/service.model";
 import { consumableService } from "../../../../core/services/consumableService";
 import { serviceService } from "../../../../core/services/serviceService";
+import { ServiceListDesktop } from "./components/ServiceListDesktop";
+import { ServiceListMobile } from "./components/ServiceListMobile";
+import { ModalAddService } from "./modal-add-service/ModalAddService";
+import { ModalConfirm } from "../../../../components/common/ui/ModalConfirm";
+import { formatTextReference } from "../../../../core/utilities/helpers/formatters";
 
 const BusinessServices = () => {
   const { selectedTheme } = useThemeContext();
@@ -42,10 +34,12 @@ const BusinessServices = () => {
   // Estados
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [open, setOpen] = useState(false);
+  const [openModalAdd, setOpenModalAdd] = useState(false);
+  const [openModalConfirmDelete, setOpenModalConfirmDelete] = useState(false);
   const [services, setServices] = useState<ServiceModel[]>([]);
   const [consumables, setConsumables] = useState<ConsumableModel[]>([]);
   const [serviceToEdit, setServiceToEdit] = useState<ServiceModel>();
+  const [serviceToDelete, setServiceToDelete] = useState<ServiceModel>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
@@ -112,19 +106,25 @@ const BusinessServices = () => {
 
   const handleOpenModal = () => {
     setServiceToEdit(undefined);
-    setOpen(true);
+    setOpenModalAdd(true);
   };
 
   const handleEditModal = (service: ServiceModel) => {
-    setOpen(true);
+    setOpenModalAdd(true);
     setServiceToEdit(service);
   };
 
-  const handleDeleteService = async (id: number) => {
-    console.log(id);
+  const handleDeleteService = (service: ServiceModel) => {
+    setOpenModalConfirmDelete(true);
+    setServiceToDelete(service);
+  };
+
+  const deleteService = async () => {
     setLoading(true);
     setError(false);
     setSuccess(false);
+    if (!serviceToDelete?.id) return;
+    const id = serviceToDelete?.id;
 
     try {
       const response = await serviceService.deleteService(id);
@@ -150,7 +150,7 @@ const BusinessServices = () => {
       const response = await serviceService.saveService(service);
       if (response.status === 200) {
         setSuccess(true);
-        setOpen(false);
+        setOpenModalAdd(false);
         if (serviceToEdit) {
           editServiceFromServices(response.data as ServiceModel);
         } else {
@@ -166,130 +166,18 @@ const BusinessServices = () => {
     setLoading(false);
   };
 
-  // Vista móvil
-  const MobileView = () => (
-    <Box sx={{ mt: 2 }}>
-      {services
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        .map((service) => (
-          <Card
-            key={service.id}
-            sx={{
-              mb: 2,
-              backgroundColor: selectedTheme.background_color,
-              boxShadow: `0 0 70px 10px ${selectedTheme.primary_color}15 , 0 0 5px 2px #00000015`,
-              borderRadius: "8px",
-            }}
-          >
-            <CardContent>
-              <Typography
-                variant="h6"
-                component="div"
-                color={selectedTheme.text_color}
-              >
-                {service.name}
-              </Typography>
-              <Typography variant="body2" color={selectedTheme.text_color}>
-                Descripción: {service.description}
-              </Typography>
-              <Typography variant="body2" color={selectedTheme.text_color}>
-                Precio: ${service.price}
-              </Typography>
-              <Typography variant="body2" color={selectedTheme.text_color}>
-                Costos: {service.costs.length}
-              </Typography>
-              <Box sx={{ mt: 1, display: "flex", gap: 1 }}>
-                <IconButton
-                  size="small"
-                  onClick={() => handleEditModal(service)}
-                  sx={{ color: selectedTheme.text_color }}
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  onClick={() => handleDeleteService(service.id as number)}
-                  sx={{ color: selectedTheme.text_color }}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </Box>
-            </CardContent>
-          </Card>
-        ))}
-    </Box>
-  );
-
-  // Vista de escritorio
-  const DesktopView = () => (
-    <TableContainer
-      component={Paper}
-      sx={{ backgroundColor: selectedTheme.background_color }}
-    >
-      <Table>
-        <TableHead>
-          <TableRow sx={{ backgroundColor: selectedTheme.primary_color }}>
-            <TableCell sx={{ color: "#fff" }}>Nombre</TableCell>
-            <TableCell sx={{ color: "#fff" }}>Descripción</TableCell>
-            <TableCell sx={{ color: "#fff" }}>Precio</TableCell>
-            <TableCell sx={{ color: "#fff" }}>Costos</TableCell>
-            <TableCell sx={{ color: "#fff" }}>Acciones</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {services
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((service) => (
-              <TableRow key={service.id}>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  {service.name}
-                </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  {service.description}
-                </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  ${service.price}
-                </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  {service.costs.length}
-                </TableCell>
-                <TableCell>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleEditModal(service)}
-                    sx={{ color: selectedTheme.text_color }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleDeleteService(service.id as number)}
-                    sx={{ color: selectedTheme.text_color }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          {services.length === 0 && (
-            <TableRow>
-              <TableCell
-                colSpan={5}
-                align="center"
-                sx={{ color: selectedTheme.text_color }}
-              >
-                No hay servicios registrados
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-
   return (
     <>
       <LoadingCircularProgress loading={loading} />
+      <ModalConfirm
+        open={openModalConfirmDelete}
+        onClose={() => setOpenModalConfirmDelete(false)}
+        onConfirm={deleteService}
+        title="Confirmar eliminación"
+        message={`¿Está seguro que desea eliminar el servicio ${formatTextReference(
+          serviceToDelete?.name
+        )}?`}
+      />
       <CustomSnackbar
         success={success}
         error={error}
@@ -331,34 +219,52 @@ const BusinessServices = () => {
           </Grid>
         </Grid>
 
-        {isMobile ? <MobileView /> : <DesktopView />}
+        {isMobile ? (
+          <ServiceListMobile
+            services={services}
+            handleDeleteService={handleDeleteService}
+            handleEditModal={handleEditModal}
+            page={page}
+            rowsPerPage={rowsPerPage}
+          />
+        ) : (
+          <ServiceListDesktop
+            services={services}
+            handleDeleteService={handleDeleteService}
+            handleEditModal={handleEditModal}
+            page={page}
+            rowsPerPage={rowsPerPage}
+          />
+        )}
 
-        <TablePagination
-          component="div"
-          count={services.length}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[5, 10, 25, 50]}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage="Filtrar"
-          labelDisplayedRows={({ from, to, count }) =>
-            `${from}-${to} de ${count}`
-          }
-          sx={{
-            color: selectedTheme.text_color,
-            ".MuiTablePagination-select": {
+        {services.length > rowsPerPage && (
+          <TablePagination
+            component="div"
+            count={services.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={[5, 10, 25, 50]}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage="Filtrar"
+            labelDisplayedRows={({ from, to, count }) =>
+              `${from}-${to} de ${count}`
+            }
+            sx={{
               color: selectedTheme.text_color,
-            },
-            ".MuiTablePagination-selectIcon": {
-              color: selectedTheme.text_color,
-            },
-          }}
-        />
+              ".MuiTablePagination-select": {
+                color: selectedTheme.text_color,
+              },
+              ".MuiTablePagination-selectIcon": {
+                color: selectedTheme.text_color,
+              },
+            }}
+          />
+        )}
 
         <ModalAddService
-          open={open}
-          onClose={() => setOpen(false)}
+          open={openModalAdd}
+          onClose={() => setOpenModalAdd(false)}
           onSubmit={handleSubmit}
           service={serviceToEdit}
           isEditing={serviceToEdit !== undefined}

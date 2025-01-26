@@ -1,35 +1,26 @@
-import { useCallback, useEffect, useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
 import {
   Box,
   Button,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TablePagination,
-  IconButton,
-  Typography,
-  useMediaQuery,
-  Card,
-  CardContent,
   Grid2 as Grid,
+  TablePagination,
+  Typography,
   darken,
+  useMediaQuery,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useThemeContext } from "../../../../core/context/use/useThemeContext";
-import { ConsumableModel } from "../../../../core/models/api/consumables.model";
-import { ModalAddConsumable } from "./modal-add-consumable/ModalAddConsumable";
-import { useAppContext } from "../../../../core/context/use/useAppContext";
-import { consumableService } from "../../../../core/services/consumableService";
+import { useCallback, useEffect, useState } from "react";
 import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
 import { LoadingCircularProgress } from "../../../../components/common/ui/LoadingCircularProgress";
+import { useAppContext } from "../../../../core/context/use/useAppContext";
 import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
-import { EUnit, TRANSLATE_UNIT } from "../../../../core/models/api/unit.model";
+import { useThemeContext } from "../../../../core/context/use/useThemeContext";
+import { ConsumableModel } from "../../../../core/models/api/consumables.model";
+import { consumableService } from "../../../../core/services/consumableService";
+import { ConsumableListDesktop } from "./components/ConsumableListDesktop";
+import { ConsumableListMobile } from "./components/ConsumableListMobile";
+import { ModalAddConsumable } from "./modal-add-consumable/ModalAddConsumable";
+import { ModalConfirm } from "../../../../components/common/ui/ModalConfirm";
+import { formatTextReference } from "../../../../core/utilities/helpers/formatters";
 
 const BusinessConsumables = () => {
   const { selectedTheme } = useThemeContext();
@@ -37,18 +28,20 @@ const BusinessConsumables = () => {
   const { business } = useBusinessContext();
 
   const isMobile = useMediaQuery(materialTheme.breakpoints.down("sm"));
-  // Estado para la paginación
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  // Estado para el modal (lo implementaremos después)
-  const [open, setOpen] = useState(false);
-  // Datos de ejemplo (después los traeremos de una API)
+
+  const [openModalAdd, setOpenModalAdd] = useState(false);
+  const [openModalConfirmDelete, setOpenModalConfirmDelete] = useState(false);
   const [consumables, setConsumables] = useState<ConsumableModel[]>([]);
   const [consumableToEdit, setConsumableToEdit] = useState<ConsumableModel>();
+  const [consumableToDelete, setConsumableToDelete] =
+    useState<ConsumableModel>();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
+  // Estado para la pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const addConsumableToConsumables = (consumable: ConsumableModel) => {
     setConsumables([...consumables, consumable]);
@@ -94,16 +87,24 @@ const BusinessConsumables = () => {
 
   const handleOpenModal = () => {
     setConsumableToEdit(undefined);
-    setOpen(true);
+    setOpenModalAdd(true);
   };
 
   const handleEditModal = (consumable: ConsumableModel) => {
-    setOpen(true);
+    setOpenModalAdd(true);
     setConsumableToEdit(consumable);
   };
 
-  const handleDeleteConsumable = async (id: number) => {
+  const handleDeleteConsumable = (consumable: ConsumableModel) => {
+    setConsumableToDelete(consumable);
+    setOpenModalConfirmDelete(true);
+  };
+
+  const deleteConsumable = async () => {
     setLoading(true);
+    if (!consumableToDelete || !consumableToDelete.id) return;
+    const id = consumableToDelete?.id;
+
     setError(false);
     setSuccess(false);
 
@@ -123,11 +124,16 @@ const BusinessConsumables = () => {
     setError(false);
     setSuccess(false);
 
-    const response = await consumableService.saveConsumable(consumable);
+    const consumableToSave: ConsumableModel = {
+      ...consumable,
+      price: parseFloat((consumable.price / consumable.stock).toFixed(2)),
+    };
+
+    const response = await consumableService.saveConsumable(consumableToSave);
 
     if (response.status === 200) {
       setSuccess(true);
-      setOpen(false);
+      setOpenModalAdd(false);
       if (consumableToEdit) {
         editConsumableFromConsumables(response.data as ConsumableModel);
       } else {
@@ -139,140 +145,18 @@ const BusinessConsumables = () => {
     setLoading(false);
   };
 
-  /* Vistas */
-  // Vista móvil en forma de tarjetas
-  const MobileView = () => (
-    <Box sx={{ mt: 2 }}>
-      {consumables
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        .map((consumable) => (
-          <Card
-            key={consumable.id}
-            sx={{
-              mb: 2,
-              backgroundColor: selectedTheme.background_color,
-              boxShadow: `0 0 70px 10px ${selectedTheme.primary_color}15 , 0 0 5px 2px #00000015`,
-              borderRadius: "8px",
-            }}
-          >
-            <CardContent>
-              <Typography
-                variant="h6"
-                component="div"
-                color={selectedTheme.text_color}
-              >
-                {consumable.name}
-              </Typography>
-              <Typography variant="body2" color={selectedTheme.text_color}>
-                Descripción: {consumable.description}
-              </Typography>
-              <Typography variant="body2" color={selectedTheme.text_color}>
-                Cantidad: {consumable.stock}{" "}
-                {TRANSLATE_UNIT[consumable.unit as EUnit] || consumable.unit}
-              </Typography>
-              <Typography variant="body2" color={selectedTheme.text_color}>
-                Precio: ${consumable.price}
-              </Typography>
-              <Box sx={{ mt: 1, display: "flex", gap: 1 }}>
-                <IconButton
-                  size="small"
-                  onClick={() => handleEditModal(consumable)}
-                  sx={{ color: selectedTheme.text_color }}
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  onClick={() =>
-                    handleDeleteConsumable(consumable.id as number)
-                  }
-                  sx={{ color: selectedTheme.text_color }}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </Box>
-            </CardContent>
-          </Card>
-        ))}
-    </Box>
-  );
-
-  // Vista de escritorio en forma de tabla
-  const DesktopView = () => (
-    <TableContainer
-      component={Paper}
-      sx={{ backgroundColor: selectedTheme.background_color }}
-    >
-      <Table>
-        <TableHead>
-          <TableRow sx={{ backgroundColor: selectedTheme.primary_color }}>
-            <TableCell sx={{ color: "#fff" }}>Nombre</TableCell>
-            <TableCell sx={{ color: "#fff" }}>Descripción</TableCell>
-            <TableCell sx={{ color: "#fff" }}>Cantidad</TableCell>
-            <TableCell sx={{ color: "#fff" }}>Unidad</TableCell>
-            <TableCell sx={{ color: "#fff" }}>Precio</TableCell>
-            <TableCell sx={{ color: "#fff" }}>Acciones</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {consumables
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((consumable) => (
-              <TableRow key={consumable.id}>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  {consumable.name}
-                </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  {consumable.description}
-                </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  {consumable.stock}
-                </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  {TRANSLATE_UNIT[consumable.unit as EUnit] || consumable.unit}
-                </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
-                  ${consumable.price}
-                </TableCell>
-                <TableCell>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleEditModal(consumable)}
-                    sx={{ color: selectedTheme.text_color }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    onClick={() =>
-                      handleDeleteConsumable(consumable.id as number)
-                    }
-                    sx={{ color: selectedTheme.text_color }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          {consumables.length === 0 && (
-            <TableRow>
-              <TableCell
-                colSpan={6}
-                align="center"
-                sx={{ color: selectedTheme.text_color }}
-              >
-                No hay insumos registrados
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-
   return (
     <>
       <LoadingCircularProgress loading={loading} />
+      <ModalConfirm
+        open={openModalConfirmDelete}
+        onClose={() => setOpenModalConfirmDelete(false)}
+        onConfirm={deleteConsumable}
+        title="Eliminar consumible"
+        message={`¿Esta seguro que desea eliminar el insumo ${formatTextReference(
+          consumableToDelete?.name
+        )}?`}
+      />
       <CustomSnackbar
         success={success}
         error={error}
@@ -315,35 +199,53 @@ const BusinessConsumables = () => {
         </Grid>
 
         {/* Vista condicional basada en el tamaño de la pantalla */}
-        {isMobile ? <MobileView /> : <DesktopView />}
+        {isMobile ? (
+          <ConsumableListMobile
+            consumables={consumables}
+            handleDeleteConsumable={handleDeleteConsumable}
+            handleEditModal={handleEditModal}
+            page={page}
+            rowsPerPage={rowsPerPage}
+          />
+        ) : (
+          <ConsumableListDesktop
+            consumables={consumables}
+            handleDeleteConsumable={handleDeleteConsumable}
+            handleEditModal={handleEditModal}
+            page={page}
+            rowsPerPage={rowsPerPage}
+          />
+        )}
 
-        {/* Paginación */}
-        <TablePagination
-          component="div"
-          count={consumables.length}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[5, 10, 25, 50]}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage="Filtrar"
-          labelDisplayedRows={({ from, to, count }) =>
-            `${from}-${to} de ${count}`
-          }
-          sx={{
-            color: selectedTheme.text_color,
-            ".MuiTablePagination-select": {
+        {/* Pagination */}
+        {consumables.length > rowsPerPage && (
+          <TablePagination
+            component="div"
+            count={consumables.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={[5, 10, 25, 50]}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage="Filtrar"
+            labelDisplayedRows={({ from, to, count }) =>
+              `${from}-${to} de ${count}`
+            }
+            sx={{
               color: selectedTheme.text_color,
-            },
-            ".MuiTablePagination-selectIcon": {
-              color: selectedTheme.text_color,
-            },
-          }}
-        />
+              ".MuiTablePagination-select": {
+                color: selectedTheme.text_color,
+              },
+              ".MuiTablePagination-selectIcon": {
+                color: selectedTheme.text_color,
+              },
+            }}
+          />
+        )}
 
         <ModalAddConsumable
-          open={open}
-          onClose={() => setOpen(false)}
+          open={openModalAdd}
+          onClose={() => setOpenModalAdd(false)}
           onSubmit={handleSubmit}
           consumable={consumableToEdit}
           isEditing={consumableToEdit !== undefined}
