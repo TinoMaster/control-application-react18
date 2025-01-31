@@ -2,6 +2,7 @@ import { Box, darken, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { INavLinkItem } from "../../../core/types/global.types";
 import { useThemeContext } from "../../../core/context/use/useThemeContext";
+import { usbBanner } from "../../../core/images/images";
 
 interface IMenuPagesProps {
   title?: string;
@@ -18,11 +19,14 @@ export const MenuPages = ({ title, links }: IMenuPagesProps) => {
         justifyContent: "space-between",
         alignItems: "center",
         p: 2,
-        backgroundImage: `linear-gradient(to bottom, ${selectedTheme.secondary_color}, ${selectedTheme.primary_color})`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.7)), url(${usbBanner})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        boxShadow: "0 5px 8px rgba(0, 0, 0, 0.2)",
+        borderRadius: "3px 0 0 0",
         zIndex: 10,
         color: selectedTheme.text_color,
-        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-        borderRadius: "0 0 2px 2px",
         position: "sticky",
         top: "63px",
       }}

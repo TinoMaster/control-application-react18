@@ -1,5 +1,12 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Box, Button, Typography, darken, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid2 as Grid,
+  Typography,
+  darken,
+  useMediaQuery,
+} from "@mui/material";
 import { useState } from "react";
 import { CustomPopover } from "../../../../components/common/ui/CustomPopover";
 import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
@@ -147,41 +154,75 @@ const ServiceReport = () => {
   }
 
   return (
-    <Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 2,
-        }}
+    <Box sx={{ p: 1 }}>
+      <Grid
+        container
+        spacing={2}
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ mb: 3 }}
       >
-        <Typography
-          variant="h5"
-          sx={{
-            color: selectedTheme.text_color,
-          }}
-        >
-          Reporte de Servicios
-        </Typography>
-        {isMobile ? (
-          <>
-            <div
-              onClick={(event) => {
-                if (
-                  !allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN]) &&
-                  business?.id
-                ) {
-                  setAnchorEl(event.currentTarget);
-                } else {
-                  handleClickAddService();
-                }
-              }}
+        <Grid>
+          <Typography
+            variant="h5"
+            component="h2"
+            sx={{
+              color: selectedTheme.text_color,
+            }}
+          >
+            Reporte de Servicios
+          </Typography>
+        </Grid>
+        <Grid>
+          {isMobile ? (
+            <>
+              <Box
+                onClick={(event) => {
+                  if (
+                    !allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN]) &&
+                    business?.id
+                  ) {
+                    setAnchorEl(event.currentTarget);
+                  } else {
+                    handleClickAddService();
+                  }
+                }}
+              >
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  disabled={!allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN])}
+                  sx={{
+                    backgroundColor: selectedTheme.primary_color,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: darken(selectedTheme.primary_color, 0.1),
+                    },
+                  }}
+                >
+                  Agregar Servicio Vendido
+                </Button>
+              </Box>
+
+              <CustomPopover
+                anchorEl={anchorEl}
+                setAnchorEl={setAnchorEl}
+                message="Solo los empleados pueden agregar servicios vendidos"
+              />
+            </>
+          ) : (
+            <CustomTooltip
+              message={
+                !allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN])
+                  ? "Solo los empleados pueden agregar servicios vendidos"
+                  : "Agregar un Nuevo Servicio Vendido"
+              }
             >
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
                 disabled={!allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN])}
+                onClick={handleClickAddService}
                 sx={{
                   backgroundColor: selectedTheme.primary_color,
                   color: "white",
@@ -192,40 +233,10 @@ const ServiceReport = () => {
               >
                 Agregar Servicio Vendido
               </Button>
-            </div>
-
-            <CustomPopover
-              anchorEl={anchorEl}
-              setAnchorEl={setAnchorEl}
-              message="Solo los empleados pueden agregar servicios vendidos"
-            />
-          </>
-        ) : (
-          <CustomTooltip
-            message={
-              !allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN])
-                ? "Solo los empleados pueden agregar servicios vendidos"
-                : "Agregar un Nuevo Servicio Vendido"
-            }
-          >
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              disabled={!allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN])}
-              onClick={handleClickAddService}
-              sx={{
-                backgroundColor: selectedTheme.primary_color,
-                color: "white",
-                "&:hover": {
-                  backgroundColor: darken(selectedTheme.primary_color, 0.1),
-                },
-              }}
-            >
-              Agregar Servicio Vendido
-            </Button>
-          </CustomTooltip>
-        )}
-      </Box>
+            </CustomTooltip>
+          )}
+        </Grid>
+      </Grid>
 
       {isMobile ? (
         <RenderServiceSaleMobile

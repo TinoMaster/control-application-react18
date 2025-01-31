@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { useAppContext } from "../../../core/context/use/useAppContext";
+import { useThemeContext } from "../../../core/context/use/useThemeContext";
 import { PRIVATE_NAV_LINKS } from "../../../core/data/global.data";
 import { INavLinkItem } from "../../../core/types/global.types";
 import { filterRoutesByRole } from "../../../core/utilities/helpers/filterRoutesByRole";
@@ -25,6 +26,7 @@ interface SidebarProps {
 
 export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
   const { materialTheme, role } = useAppContext();
+  const { selectedTheme } = useThemeContext();
   const routes: INavLinkItem[] = filterRoutesByRole(PRIVATE_NAV_LINKS, role);
 
   const drawerWidth = 240;
@@ -38,9 +40,11 @@ export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
+        boxShadow: "0 5px 8px rgba(0, 0, 0, 0.2)",
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
+          border: "none",
         },
       }}
     >
@@ -56,20 +60,34 @@ export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
           <ChevronLeftIcon />
         </IconButton>
       </Box>
-      <Divider />
       <List
         dense
         sx={{
-          backgroundImage:
-            "linear-gradient(to bottom, var(--bg-dark-light), var(--bg-dark))",
-          color: "white",
+          backgroundColor: selectedTheme.background_color,
+          color: selectedTheme.text_color,
           height: "100%",
+          border: "none",
         }}
       >
-        {routes.map((item, index) => (
-          <ListItem key={index}>
-            <ListItemButton sx={{ padding: 0, borderRadius: "4px" }}>
-              <Badge badgeContent={0} color="secondary" sx={{ width: "100%" }}>
+        {routes.map((item) => (
+          <ListItem key={item.label}>
+            <ListItemButton
+              sx={{
+                padding: 0,
+                borderRadius: "4px",
+                border: "none",
+                "&:hover": { border: "none" },
+              }}
+            >
+              <Badge
+                badgeContent={0}
+                color="secondary"
+                sx={{
+                  width: "100%",
+                  border: "none",
+                  "& .MuiBadge-badge": { border: "none" },
+                }}
+              >
                 <NavLink
                   onClick={handleDrawerToggle}
                   to={item.path}

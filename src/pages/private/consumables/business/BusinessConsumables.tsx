@@ -163,7 +163,7 @@ const BusinessConsumables = () => {
         successMessage="Operación realizada con éxito"
         errorMessage="Error al realizar la operación"
       />
-      <Box sx={{ p: 3 }}>
+      <Box sx={{ p: 1 }}>
         <Grid
           container
           spacing={2}

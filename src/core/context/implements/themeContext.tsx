@@ -1,9 +1,45 @@
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ThemeContext } from "../use/useThemeContext";
 import { ThemeModel } from "../../models/api/theme.model";
 import { appService } from "../../services/appService";
-import { chooseThemeById } from "../../utilities/helpers/chooseTheme";
+import {
+  chooseThemeById,
+  defaultTheme,
+  globalMaterialTheme,
+} from "../../utilities/helpers/chooseTheme";
 import { useAuthContext } from "../use/useAuthContext";
+import { createTheme, ThemeProvider } from "@mui/material";
+
+const muiTheme = createTheme({
+  palette: {
+    primary: { main: globalMaterialTheme.primary_color },
+    secondary: { main: globalMaterialTheme.secondary_color },
+    background: { default: globalMaterialTheme.background_color },
+    text: { primary: globalMaterialTheme.text_color },
+  },
+  typography: {
+    fontFamily: globalMaterialTheme.font_family,
+    fontSize: 14,
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius:
+            globalMaterialTheme.components?.button?.border_radius || "8px",
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: globalMaterialTheme.background_color,
+          color: globalMaterialTheme.text_color,
+        },
+      },
+    },
+  },
+});
 
 interface IContextProps {
   children: ReactNode;
@@ -16,22 +52,13 @@ export interface IThemeContext {
   onChangeTheme: (theme: ThemeModel) => void;
 }
 
-const defaultTheme: ThemeModel = {
-  id: 0,
-  name: "Default",
-  primary_color: "#027483",
-  secondary_color: "#00abc2",
-  background_color: "#1a1a1a",
-  text_color: "#ffffff",
-};
-
 export const AppThemeProvider = ({ children }: IContextProps) => {
- const { isLoggedIn } = useAuthContext();
+  const { isLoggedIn } = useAuthContext();
   const themeId = localStorage.getItem("themeId");
   const [themes, setThemes] = useState<ThemeModel[]>([]);
   const [loadingThemes, setLoadingThemes] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState<ThemeModel>(
-    themeId ? chooseThemeById(Number(themeId), themes) : chooseThemeById(0, themes)
+    themeId ? chooseThemeById(Number(themeId), themes) : defaultTheme
   );
 
   const getThemes = useCallback(async () => {
@@ -51,7 +78,7 @@ export const AppThemeProvider = ({ children }: IContextProps) => {
         console.log(response.data);
         setSelectedTheme(response.data[0]);
         localStorage.setItem("themeId", response.data[0]?.id.toString() || "0");
-      }else{
+      } else {
         setSelectedTheme(chooseThemeById(Number(themeId), response.data || []));
       }
     }
@@ -67,10 +94,19 @@ export const AppThemeProvider = ({ children }: IContextProps) => {
     getThemes();
   }, [getThemes]);
 
+  const contextValue = useMemo(
+    () => ({
+      themes,
+      selectedTheme,
+      loadingThemes,
+      onChangeTheme,
+    }),
+    [themes, selectedTheme, loadingThemes]
+  );
+
   return (
-    <ThemeContext.Provider
-      value={{ themes, selectedTheme, loadingThemes, onChangeTheme }}
-      children={children}
-    />
+    <ThemeContext.Provider value={contextValue}>
+      <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>
+    </ThemeContext.Provider>
   );
 };

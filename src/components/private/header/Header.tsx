@@ -4,6 +4,7 @@ import UserOptions from "../user-options/UserOptions";
 import { useAppContext } from "../../../core/context/use/useAppContext";
 import { useBusinessContext } from "../../../core/context/use/useBusinessContext";
 import { ChooseBusiness } from "../choose-business/ChooseBusiness";
+import { useThemeContext } from "../../../core/context/use/useThemeContext";
 
 interface HeaderProps {
   handleDrawerToggle: () => void;
@@ -12,6 +13,7 @@ interface HeaderProps {
 export const Header = ({ handleDrawerToggle }: HeaderProps) => {
   const { materialTheme } = useAppContext();
   const { business, businessList, onChangeBusiness } = useBusinessContext();
+  const { selectedTheme } = useThemeContext();
   return (
     <AppBar
       position="fixed"
@@ -25,13 +27,12 @@ export const Header = ({ handleDrawerToggle }: HeaderProps) => {
           }
         ),
         backdropFilter: "blur(10px)",
-        backgroundImage:
-          "linear-gradient(to top, var(--bg-dark-light), var(--bg-dark), var(--bg-dark-dark))",
+        backgroundColor: selectedTheme.background_color,
         borderRadius: "0",
         height: "64px",
         border: "none",
         boxShadow: "none",
-        color: "white",
+        color: selectedTheme.text_color,
       }}
     >
       <Toolbar
