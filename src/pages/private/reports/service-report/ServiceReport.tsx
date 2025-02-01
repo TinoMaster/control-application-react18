@@ -266,7 +266,7 @@ const ServiceReport = () => {
         />
       )}
 
-      {serviceSales.length > 0 ? (
+      {serviceSales.length > 5 && (
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
@@ -279,7 +279,9 @@ const ServiceReport = () => {
             color: selectedTheme.text_color,
           }}
         />
-      ) : (
+      )}
+
+      {serviceSales.length === 0 && (
         <Typography sx={emptyInfoStyle}>
           No hay servicios vendidos hoy
         </Typography>

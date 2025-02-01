@@ -13,6 +13,7 @@ import {
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 import { ServiceSaleModel } from "../../../../core/models/api/serviceSale.model";
 import { formatDateToHourString } from "../../../../core/utilities/helpers/dateFormat";
+import { useTableStyles } from "../../../../core/styles/useTableStyles";
 
 interface Props {
   serviceSales: ServiceSaleModel[];
@@ -34,20 +35,13 @@ export const RenderServiceSaleMobile = ({
   rowsPerPage,
 }: Props) => {
   const { selectedTheme } = useThemeContext();
+  const { cardStyle } = useTableStyles();
   return (
     <Box>
       {serviceSales
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
         .map((serviceSale) => (
-          <Card
-            key={serviceSale.id}
-            sx={{
-              mb: 2,
-              backgroundColor: selectedTheme.background_color,
-              boxShadow: `0 0 70px 10px ${selectedTheme.primary_color}15 , 0 0 5px 2px #00000015`,
-              borderRadius: "8px",
-            }}
-          >
+          <Card key={serviceSale.id} sx={cardStyle}>
             <CardContent>
               <Grid container spacing={2}>
                 <Grid size={12}>

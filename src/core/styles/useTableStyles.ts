@@ -7,6 +7,12 @@ export const useTableStyles = () => {
 
   return useMemo(
     () => ({
+      cardStyle: {
+        backgroundColor: selectedTheme.background_color,
+        borderRadius: "8px",
+        overflow: "hidden",
+        boxShadow: `0 0 30px 10px ${selectedTheme.secondary_color}70, 0 0 5px 2px #00000015`,
+      },
       tableContainerStyle: {
         backgroundColor: selectedTheme.background_color,
         borderRadius: "8px",

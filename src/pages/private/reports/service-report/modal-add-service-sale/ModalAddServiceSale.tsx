@@ -3,7 +3,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
-  darken,
   DialogActions,
   DialogContent,
   FormControl,
@@ -142,9 +141,7 @@ export const ModalAddServiceSale = ({
               variant="h6"
               sx={{
                 fontWeight: 600,
-                color: isEditing
-                  ? "#ffe500"
-                  : selectedTheme.text_color,
+                color: isEditing ? "#ffe500" : selectedTheme.text_color,
               }}
             >
               {isEditing
@@ -225,10 +222,6 @@ export const ModalAddServiceSale = ({
 
             <DialogActions
               sx={{
-                borderTop: `1px solid ${darken(
-                  selectedTheme.background_color,
-                  0.1
-                )}`,
                 p: 2,
               }}
             >

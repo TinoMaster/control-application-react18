@@ -2,7 +2,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   IconButton,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -43,7 +42,7 @@ export const ConsumableListDesktop = ({
   } = useTableStyles();
 
   return (
-    <TableContainer component={Paper} sx={tableContainerStyle}>
+    <TableContainer sx={tableContainerStyle}>
       <Table sx={{ minWidth: 650 }}>
         <TableHead>
           <TableRow>

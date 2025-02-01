@@ -4,7 +4,6 @@ import LibraryAddCheckIcon from "@mui/icons-material/LibraryAddCheck";
 import RunningWithErrorsIcon from "@mui/icons-material/RunningWithErrors";
 import {
   IconButton,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -44,7 +43,7 @@ export const RenderServiceSaleDesktop = ({
   } = useTableStyles();
 
   return (
-    <TableContainer component={Paper} sx={tableContainerStyle}>
+    <TableContainer sx={tableContainerStyle}>
       <Table>
         <TableHead>
           <TableRow>

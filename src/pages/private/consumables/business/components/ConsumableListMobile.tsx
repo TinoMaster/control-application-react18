@@ -7,6 +7,7 @@ import {
   EUnit,
   TRANSLATE_UNIT,
 } from "../../../../../core/models/api/unit.model";
+import { useTableStyles } from "../../../../../core/styles/useTableStyles";
 
 interface Props {
   consumables: ConsumableModel[];
@@ -24,20 +25,13 @@ export const ConsumableListMobile = ({
   handleDeleteConsumable,
 }: Props) => {
   const { selectedTheme } = useThemeContext();
+  const { cardStyle } = useTableStyles();
   return (
-    <Box sx={{ mt: 2 }}>
+    <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
       {consumables
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
         .map((consumable) => (
-          <Card
-            key={consumable.id}
-            sx={{
-              mb: 2,
-              backgroundColor: selectedTheme.background_color,
-              boxShadow: `0 0 70px 10px ${selectedTheme.primary_color}15 , 0 0 5px 2px #00000015`,
-              borderRadius: "8px",
-            }}
-          >
+          <Card key={consumable.id} sx={cardStyle}>
             <CardContent>
               <Typography
                 variant="h6"

@@ -4,6 +4,7 @@ import { Box, Card, CardContent, IconButton, Typography } from "@mui/material";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
 import { ServiceModel } from "../../../../../core/models/api";
 import { formatCurrency } from "../../../../../core/utilities/helpers/formatCurrency";
+import { useTableStyles } from "../../../../../core/styles/useTableStyles";
 
 interface Props {
   services: ServiceModel[];
@@ -21,26 +22,13 @@ export const ServiceListMobile = ({
   rowsPerPage,
 }: Props) => {
   const { selectedTheme } = useThemeContext();
+  const { cardStyle } = useTableStyles();
   return (
     <Box sx={{ mt: 2 }}>
       {services
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
         .map((service) => (
-          <Card
-            key={service.id}
-            sx={{
-              mb: 2,
-              backgroundColor: selectedTheme.background_color,
-              boxShadow: `0 0 20px ${selectedTheme.primary_color}15`,
-              borderRadius: "12px",
-              transition:
-                "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: `0 8px 25px ${selectedTheme.primary_color}25`,
-              },
-            }}
-          >
+          <Card key={service.id} sx={cardStyle}>
             <CardContent sx={{ p: 2.5 }}>
               <Box
                 sx={{
@@ -122,10 +110,7 @@ export const ServiceListMobile = ({
                       gap: 0.5,
                     }}
                   >
-                    Precio:{" "}
-                    <span style={{ color: selectedTheme.primary_color }}>
-                      {formatCurrency(service.price)}
-                    </span>
+                    Precio: <span>{formatCurrency(service.price)}</span>
                   </Typography>
                   <Typography
                     variant="body2"

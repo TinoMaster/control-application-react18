@@ -48,6 +48,7 @@
   --text-color-dark: #242424;
   --text-color-darkMode: #f5f5f5;
   --text-color-contrast: #ffffffde;
+  --warning-color: #ffc107;
 }
 
 *, *::before, *::after {

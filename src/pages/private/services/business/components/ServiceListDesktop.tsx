@@ -2,7 +2,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   IconButton,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -12,6 +11,7 @@ import {
 } from "@mui/material";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
 import { ServiceModel } from "../../../../../core/models/api";
+import { useTableStyles } from "../../../../../core/styles/useTableStyles";
 import { formatCurrency } from "../../../../../core/utilities/helpers/formatCurrency";
 
 interface Props {
@@ -30,30 +30,11 @@ export const ServiceListDesktop = ({
   rowsPerPage,
 }: Props) => {
   const { selectedTheme } = useThemeContext();
+  const { headerTableCellStyle, bodyTableCellStyle, tableContainerStyle } =
+    useTableStyles();
 
-  const headerTableCellStyle = {
-    color: "#fff",
-    padding: "12px 16px",
-    border: "none",
-    fontSize: "0.875rem",
-    fontWeight: 600,
-  };
-
-  const bodyTableCellStyle = {
-    color: selectedTheme.text_color,
-    padding: "12px 16px",
-    border: "none",
-  };
   return (
-    <TableContainer
-      component={Paper}
-      sx={{
-        backgroundColor: selectedTheme.background_color,
-        borderRadius: "5px",
-        overflow: "hidden",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      }}
-    >
+    <TableContainer sx={tableContainerStyle}>
       <Table>
         <TableHead>
           <TableRow sx={{ backgroundColor: selectedTheme.primary_color }}>
