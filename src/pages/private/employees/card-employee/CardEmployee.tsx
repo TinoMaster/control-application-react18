@@ -5,14 +5,14 @@ import {
   Card,
   CardContent,
   CardHeader,
-  lighten,
   Typography,
 } from "@mui/material";
-import { EmployeeModel } from "../../../../core/models/api/employee.model";
-import { formatDateToString } from "../../../../core/utilities/helpers/dateFormat";
-import { translateRole } from "../../../../core/utilities/helpers/translateRole";
 import { Link } from "react-router-dom";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
+import { EmployeeModel } from "../../../../core/models/api/employee.model";
+import { useTableStyles } from "../../../../core/styles/useTableStyles";
+import { formatDateToString } from "../../../../core/utilities/helpers/dateFormat";
+import { translateRole } from "../../../../core/utilities/helpers/translateRole";
 
 interface CardEmployeeProps {
   employee: EmployeeModel;
@@ -20,16 +20,13 @@ interface CardEmployeeProps {
 
 export const CardEmployee = ({ employee }: CardEmployeeProps) => {
   const { selectedTheme } = useThemeContext();
+  const { cardStyle } = useTableStyles();
   return (
     <Card
       sx={{
-        width: "100%",
-        maxWidth: 400,
-        margin: { xs: "0 auto", sm: "0" },
-        borderRadius: 2,
-        backgroundColor: lighten(selectedTheme.background_color, 0.1),
-        color: selectedTheme.text_color,
-        boxShadow: `0 0 70px 10px ${selectedTheme.primary_color}15 , 0 0 5px 5px #00000015`,
+        ...cardStyle,
+        width: { xs: "95%", sm: "400px" },
+        mx: "auto",
       }}
     >
       <CardHeader
