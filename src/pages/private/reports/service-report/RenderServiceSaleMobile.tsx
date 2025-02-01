@@ -8,10 +8,8 @@ import {
   CardContent,
   Grid2 as Grid,
   IconButton,
-  TablePagination,
   Typography,
 } from "@mui/material";
-import React from "react";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 import { ServiceSaleModel } from "../../../../core/models/api/serviceSale.model";
 import { formatDateToHourString } from "../../../../core/utilities/helpers/dateFormat";
@@ -24,8 +22,6 @@ interface Props {
   handleDeleteServiceSale: (serviceSaleId: number) => void;
   page: number;
   rowsPerPage: number;
-  handleChangePage: (event: unknown, newPage: number) => void;
-  handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const RenderServiceSaleMobile = ({
@@ -36,8 +32,6 @@ export const RenderServiceSaleMobile = ({
   handleDeleteServiceSale,
   page,
   rowsPerPage,
-  handleChangePage,
-  handleChangeRowsPerPage,
 }: Props) => {
   const { selectedTheme } = useThemeContext();
   return (
@@ -168,18 +162,6 @@ export const RenderServiceSaleMobile = ({
             </CardContent>
           </Card>
         ))}
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={serviceSales.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        sx={{
-          color: selectedTheme.text_color,
-        }}
-      />
     </Box>
   );
 };

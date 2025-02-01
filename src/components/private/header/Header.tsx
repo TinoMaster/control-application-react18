@@ -1,4 +1,11 @@
-import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  darken,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import UserOptions from "../user-options/UserOptions";
 import { useAppContext } from "../../../core/context/use/useAppContext";
@@ -26,8 +33,7 @@ export const Header = ({ handleDrawerToggle }: HeaderProps) => {
             duration: materialTheme.transitions.duration.leavingScreen,
           }
         ),
-        backdropFilter: "blur(10px)",
-        backgroundColor: selectedTheme.background_color,
+        backgroundColor: darken(selectedTheme.background_color, 0.2),
         borderRadius: "0",
         height: "64px",
         border: "none",

@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { ServiceModel } from "../models/api";
 import { serviceService } from "../services/serviceService";
+import { useBusinessContext } from "../context/use/useBusinessContext";
 
-interface Props {
-  businessId: number | undefined;
-}
-
-export const useService = ({ businessId }: Props) => {
+export const useService = () => {
   const [services, setServices] = useState<ServiceModel[]>([]);
+  const { business } = useBusinessContext();
+  const businessId = business?.id;
 
   const getServices = useCallback(async () => {
     if (!businessId) return;

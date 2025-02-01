@@ -3,7 +3,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import LibraryAddCheckIcon from "@mui/icons-material/LibraryAddCheck";
 import RunningWithErrorsIcon from "@mui/icons-material/RunningWithErrors";
 import {
-  darken,
   IconButton,
   Paper,
   Table,
@@ -11,13 +10,11 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
-  Typography,
 } from "@mui/material";
 import { CustomTooltip } from "../../../../components/common/ui/CustomTooltip";
-import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 import { ServiceSaleModel } from "../../../../core/models/api/serviceSale.model";
+import { useTableStyles } from "../../../../core/styles/useTableStyles";
 import { formatDateToHourString } from "../../../../core/utilities/helpers/dateFormat";
 
 interface Props {
@@ -28,8 +25,6 @@ interface Props {
   handleDeleteServiceSale: (serviceSaleId: number) => void;
   page: number;
   rowsPerPage: number;
-  handleChangePage: (event: unknown, newPage: number) => void;
-  handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const RenderServiceSaleDesktop = ({
@@ -40,81 +35,27 @@ export const RenderServiceSaleDesktop = ({
   handleDeleteServiceSale,
   page,
   rowsPerPage,
-  handleChangePage,
-  handleChangeRowsPerPage,
 }: Props) => {
-  const { selectedTheme } = useThemeContext();
+  const {
+    bodyTableCellStyle,
+    headerTableCellStyle,
+    tableContainerStyle,
+    iconButtonStyle,
+  } = useTableStyles();
 
   return (
-    <TableContainer
-      component={Paper}
-      sx={{ backgroundColor: selectedTheme.background_color }}
-    >
+    <TableContainer component={Paper} sx={tableContainerStyle}>
       <Table>
         <TableHead>
-          <TableRow
-            sx={{
-              backgroundImage: `linear-gradient(to right, ${
-                selectedTheme.primary_color
-              }, ${darken(selectedTheme.primary_color, 0.2)})`,
-            }}
-          >
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Servicio
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Cantidad
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Realizado por
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Precio Final
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Creado
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Actualizado
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Acciones
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-              }}
-            >
-              Finalizado
-            </TableCell>
+          <TableRow>
+            <TableCell sx={headerTableCellStyle}>Servicio</TableCell>
+            <TableCell sx={headerTableCellStyle}>Cantidad</TableCell>
+            <TableCell sx={headerTableCellStyle}>Realizado por</TableCell>
+            <TableCell sx={headerTableCellStyle}>Precio Final</TableCell>
+            <TableCell sx={headerTableCellStyle}>Creado</TableCell>
+            <TableCell sx={headerTableCellStyle}>Actualizado</TableCell>
+            <TableCell sx={headerTableCellStyle}>Acciones</TableCell>
+            <TableCell sx={headerTableCellStyle}>Procesado</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -122,29 +63,29 @@ export const RenderServiceSaleDesktop = ({
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((serviceSale) => (
               <TableRow key={serviceSale.id}>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
+                <TableCell sx={bodyTableCellStyle}>
                   {serviceSale.service.name}
                 </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
+                <TableCell sx={bodyTableCellStyle}>
                   {serviceSale.quantity}
                 </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
+                <TableCell sx={bodyTableCellStyle}>
                   {serviceSale.employee.user.name}
                 </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
+                <TableCell sx={bodyTableCellStyle}>
                   $ {serviceSale.quantity * serviceSale.service.price}
                 </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
+                <TableCell sx={bodyTableCellStyle}>
                   {serviceSale.createdAt
                     ? formatDateToHourString(serviceSale.createdAt)
                     : "N/A"}
                 </TableCell>
-                <TableCell sx={{ color: selectedTheme.text_color }}>
+                <TableCell sx={bodyTableCellStyle}>
                   {serviceSale.updatedAt
                     ? formatDateToHourString(serviceSale.updatedAt)
                     : "N/A"}
                 </TableCell>
-                <TableCell>
+                <TableCell sx={bodyTableCellStyle}>
                   <CustomTooltip
                     message={
                       allowedToEdit(
@@ -163,11 +104,10 @@ export const RenderServiceSaleDesktop = ({
                         )
                       }
                       onClick={() => handleEditServiceSale(serviceSale)}
-                      sx={{
-                        color: selectedTheme.text_color,
-                      }}
+                      size="small"
+                      sx={iconButtonStyle}
                     >
-                      <EditIcon />
+                      <EditIcon sx={{ fontSize: "1.2rem" }} />
                     </IconButton>
                   </CustomTooltip>
 
@@ -183,19 +123,20 @@ export const RenderServiceSaleDesktop = ({
                         !allowedToDelete(serviceSale.businessFinalSale !== null)
                       }
                       onClick={() => handleDeleteServiceSale(serviceSale.id!)}
-                      sx={{
-                        color: selectedTheme.text_color,
-                      }}
+                      size="small"
+                      sx={iconButtonStyle}
                     >
-                      <DeleteIcon />
+                      <DeleteIcon sx={{ fontSize: "1.2rem" }} />
                     </IconButton>
                   </CustomTooltip>
                 </TableCell>
-                <TableCell>
-                  <Typography
-                    sx={{
-                      color: selectedTheme.text_color,
-                    }}
+                <TableCell sx={bodyTableCellStyle}>
+                  <CustomTooltip
+                    message={
+                      serviceSale.businessFinalSale
+                        ? "Procesado en una venta"
+                        : "Sin procesar en una venta"
+                    }
                   >
                     <IconButton
                       disabled={
@@ -204,7 +145,7 @@ export const RenderServiceSaleDesktop = ({
                           serviceSale.businessFinalSale !== null
                         )
                       }
-                      onClick={() => handleEditServiceSale(serviceSale)}
+                      sx={iconButtonStyle}
                     >
                       {serviceSale.businessFinalSale ? (
                         <LibraryAddCheckIcon
@@ -216,24 +157,12 @@ export const RenderServiceSaleDesktop = ({
                         />
                       )}
                     </IconButton>
-                  </Typography>
+                  </CustomTooltip>
                 </TableCell>
               </TableRow>
             ))}
         </TableBody>
       </Table>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={serviceSales.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        sx={{
-          color: selectedTheme.text_color,
-        }}
-      />
     </TableContainer>
   );
 };

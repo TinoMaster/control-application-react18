@@ -12,6 +12,7 @@ import { BusinessModel } from "../../../../core/models/api";
 import { formatDateToString } from "../../../../core/utilities/helpers/dateFormat";
 import { Link } from "react-router-dom";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
+import CheckCircleSharpIcon from '@mui/icons-material/CheckCircleSharp';
 
 interface IBusinessCardProps {
   business: BusinessModel;
@@ -31,31 +32,31 @@ export const BusinessCard = ({
         margin: { xs: "0 auto", sm: "0" },
         boxShadow: `0 0 70px 10px ${selectedTheme.secondary_color}15 , 0 0 5px 2px #00000015`,
         borderRadius: 2,
-        border: "2px solid",
+        border: "1px solid",
         position: "relative",
         backgroundColor: lighten(selectedTheme.background_color, 0.1),
         borderColor:
           currentBusinessId === business.id
             ? selectedTheme.secondary_color
-            : selectedTheme.background_color,
+            : selectedTheme.primary_color,
       }}
     >
       <Typography
         sx={{
           position: "absolute",
-          top: 0,
+          bottom: 5,
           right: "10px",
           fontSize: "0.7rem",
-          color: "success.main",
+          color: selectedTheme.secondary_color,
         }}
       >
-        {currentBusinessId === business.id && "Seleccionado"}
+        {currentBusinessId === business.id && <CheckCircleSharpIcon />}
       </Typography>
       <CardHeader
         avatar={
           <Avatar
             sx={{
-              backgroundColor: selectedTheme.secondary_color,
+              backgroundColor: lighten(selectedTheme.primary_color, 0.1),
               color: "white",
               width: 56,
               height: 56,
@@ -89,7 +90,7 @@ export const BusinessCard = ({
               variant="contained"
               size="small"
               sx={{
-                backgroundColor: lighten(selectedTheme.secondary_color, 0.1),
+                backgroundColor: lighten(selectedTheme.primary_color, 0.1),
                 mt: 1,
                 fontSize: "0.7rem",
               }}

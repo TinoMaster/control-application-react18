@@ -6,7 +6,7 @@ import {
   chooseThemeById,
   defaultTheme,
   globalMaterialTheme,
-} from "../../utilities/helpers/chooseTheme";
+} from "../../styles/chooseTheme";
 import { useAuthContext } from "../use/useAuthContext";
 import { createTheme, ThemeProvider } from "@mui/material";
 

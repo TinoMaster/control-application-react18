@@ -1,4 +1,4 @@
-import { ThemeModel } from "../../models/api/theme.model";
+import { ThemeModel } from "../models/api/theme.model";
 
 export const globalMaterialTheme = {
   id: 0,
@@ -19,7 +19,7 @@ export const globalMaterialTheme = {
 export const defaultTheme: ThemeModel = {
   id: 0,
   name: "Default",
-  primary_color: "#00626d",
+  primary_color: "#161616",
   secondary_color: "#027483",
   background_color: "#242424",
   text_color: "#FFFFFF",

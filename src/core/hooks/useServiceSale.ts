@@ -2,12 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import { ServiceSaleModel } from "../models/api/serviceSale.model";
 import { serviceSaleService } from "../services/serviceSaleService";
 import { ByBusinessAndDateRequestModel } from "../models/api/requests/byBusinessAndDateRequest.model";
+import { useBusinessContext } from "../context/use/useBusinessContext";
 
-interface Props {
-  businessId?: number;
-}
-
-export const useServiceSale = ({ businessId }: Props) => {
+export const useServiceSale = () => {
+  const { business } = useBusinessContext();
+  const businessId = business?.id;
   const [serviceSales, setServiceSales] = useState<ServiceSaleModel[]>([]);
   const [loadingServiceSales, setLoadingServiceSales] =
     useState<boolean>(false);

@@ -1,16 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
   darken,
-  Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   FormControl,
   Grid2 as Grid,
+  IconButton,
   MenuItem,
+  Modal,
   Select,
+  Stack,
+  Typography,
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -26,6 +29,7 @@ import {
   ServiceSaleSchema,
 } from "../../../../../core/models/zod/serviceSaleSchema";
 import { employeeService } from "../../../../../core/services/employeeService";
+import { useTableStyles } from "../../../../../core/styles/useTableStyles";
 
 interface ModalAddServiceSaleProps {
   open: boolean;
@@ -45,9 +49,10 @@ export const ModalAddServiceSale = ({
   const { selectedTheme } = useThemeContext();
   const { user } = useAuthContext();
   const { business } = useBusinessContext();
-  const [employee, setEmployee] = useState<EmployeeModel>();
+  const { modalBlurStyle, modalBoxStyle, buttonStyle } = useTableStyles();
+  const { services } = useService();
 
-  const { services } = useService({ businessId: business?.id });
+  const [employee, setEmployee] = useState<EmployeeModel>();
 
   const getEmployee = useCallback(async () => {
     if (user) {
@@ -105,133 +110,148 @@ export const ModalAddServiceSale = ({
   };
 
   return (
-    <Dialog
+    <Modal
       open={open}
       onClose={onClose}
-      maxWidth="sm"
-      fullWidth
-      PaperProps={{
-        sx: {
-          bgcolor: selectedTheme.background_color,
-        },
-      }}
+      aria-labelledby="modal-random-info"
+      aria-describedby="modal-random-information"
+      sx={modalBlurStyle}
     >
-      <DialogTitle
+      <Box
         sx={{
-          color: selectedTheme.text_color,
-          borderBottom: `1px solid ${darken(
-            selectedTheme.background_color,
-            0.1
-          )}`,
+          ...modalBoxStyle,
+          width: { xs: "90%", sm: 500 },
         }}
       >
-        {isEditing ? "Editar Servicio Vendido" : "Agregar Servicio Vendido"}
-      </DialogTitle>
-
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <DialogContent>
-          <Box sx={{ mt: 2 }}>
-            <Grid container spacing={2}>
-              <Grid size={12}>
-                <FormControl
-                  fullWidth
-                  error={!!errors.serviceId}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      color: selectedTheme.text_color,
-                      "& fieldset": {
-                        borderColor: selectedTheme.text_color,
-                      },
-                      "&:hover fieldset": {
-                        borderColor: selectedTheme.text_color,
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: selectedTheme.text_color,
-                      },
-                    },
-                    "& .MuiSelect-icon": {
-                      color: selectedTheme.text_color,
-                    },
-                  }}
-                >
-                  <Controller
-                    name="serviceId"
-                    control={control}
-                    rules={{
-                      required: "Este campo es requerido",
-                    }}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        // ... other Select props
-                      >
-                        <MenuItem value={0}>Selecciona un servicio</MenuItem>
-                        {services.map((service) => (
-                          <MenuItem key={service.id} value={service.id}>
-                            {service.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    )}
-                  />
-                </FormControl>
-              </Grid>
-
-              <Grid size={12}>
-                <Controller
-                  name="quantity"
-                  control={control}
-                  render={({ field }) => (
-                    <CustomInput
-                      {...field}
-                      label="Cantidad"
-                      type="number"
-                      error={!!errors.quantity}
-                      helperText={errors.quantity?.message}
-                    />
-                  )}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        </DialogContent>
-
-        <DialogActions
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
           sx={{
-            borderTop: `1px solid ${darken(
-              selectedTheme.background_color,
-              0.1
-            )}`,
-            p: 2,
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: selectedTheme.text_color,
           }}
         >
-          <Button
-            onClick={onClose}
-            sx={{
-              color: selectedTheme.text_color,
-              "&:hover": {
-                backgroundColor: "var(--error-color)",
-                color: "white",
-              },
-            }}
-          >
-            Cancelar
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              backgroundColor: selectedTheme.primary_color,
-              color: "white",
-              "&:hover": {
-                backgroundColor: darken(selectedTheme.primary_color, 0.1),
-              },
-            }}
-          >
-            {isEditing ? "Guardar Cambios" : "Agregar"}
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
+          <CloseIcon />
+        </IconButton>
+
+        <Stack spacing={2}>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 600,
+                color: isEditing
+                  ? "#ffe500"
+                  : selectedTheme.text_color,
+              }}
+            >
+              {isEditing
+                ? "Editar Servicio Vendido"
+                : "Agregar Servicio Vendido"}
+            </Typography>
+          </Stack>
+
+          <form onSubmit={handleSubmit(handleFormSubmit)}>
+            <DialogContent>
+              <Box>
+                <Grid container spacing={2}>
+                  <Grid size={12}>
+                    <FormControl
+                      fullWidth
+                      error={!!errors.serviceId}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          color: selectedTheme.text_color,
+                          "& fieldset": {
+                            borderColor: selectedTheme.text_color,
+                          },
+                          "&:hover fieldset": {
+                            borderColor: selectedTheme.text_color,
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: selectedTheme.text_color,
+                          },
+                        },
+                        "& .MuiSelect-icon": {
+                          color: selectedTheme.text_color,
+                        },
+                      }}
+                    >
+                      <Controller
+                        name="serviceId"
+                        control={control}
+                        rules={{
+                          required: "Este campo es requerido",
+                        }}
+                        render={({ field }) => (
+                          <Select
+                            {...field}
+                            // ... other Select props
+                          >
+                            <MenuItem value={0}>
+                              Selecciona un servicio
+                            </MenuItem>
+                            {services.map((service) => (
+                              <MenuItem key={service.id} value={service.id}>
+                                {service.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        )}
+                      />
+                    </FormControl>
+                  </Grid>
+
+                  <Grid size={12}>
+                    <Controller
+                      name="quantity"
+                      control={control}
+                      render={({ field }) => (
+                        <CustomInput
+                          {...field}
+                          label="Cantidad"
+                          type="number"
+                          error={!!errors.quantity}
+                          helperText={errors.quantity?.message}
+                        />
+                      )}
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+            </DialogContent>
+
+            <DialogActions
+              sx={{
+                borderTop: `1px solid ${darken(
+                  selectedTheme.background_color,
+                  0.1
+                )}`,
+                p: 2,
+              }}
+            >
+              <Button
+                onClick={onClose}
+                sx={{
+                  color: selectedTheme.text_color,
+                  borderRadius: "8px",
+                  "&:hover": {
+                    backgroundColor: "var(--error-color)",
+                    color: "white",
+                  },
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button type="submit" variant="contained" sx={buttonStyle}>
+                {isEditing ? "Guardar Cambios" : "Agregar"}
+              </Button>
+            </DialogActions>
+          </form>
+        </Stack>
+      </Box>
+    </Modal>
   );
 };

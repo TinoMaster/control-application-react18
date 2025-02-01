@@ -4,12 +4,12 @@ import {
   Box,
   Button,
   IconButton,
-  lighten,
   Modal,
   Stack,
   Typography,
 } from "@mui/material";
 import { useThemeContext } from "../../../core/context/use/useThemeContext";
+import { useTableStyles } from "../../../core/styles/useTableStyles";
 
 export const ModalRandomInfo = ({
   open,
@@ -21,25 +21,19 @@ export const ModalRandomInfo = ({
   onClose: () => void;
 }) => {
   const { selectedTheme } = useThemeContext();
+  const { modalBlurStyle, modalBoxStyle, buttonStyle } = useTableStyles();
   return (
     <Modal
       open={open}
       onClose={onClose}
       aria-labelledby="modal-random-info"
       aria-describedby="modal-random-information"
+      sx={modalBlurStyle}
     >
       <Box
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
+          ...modalBoxStyle,
           width: { xs: "90%", sm: 400 },
-          bgcolor: selectedTheme.background_color,
-          color: selectedTheme.text_color,
-          borderRadius: 3,
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
-          p: 3,
         }}
       >
         <IconButton
@@ -58,10 +52,9 @@ export const ModalRandomInfo = ({
         <Stack spacing={2}>
           <Stack direction="row" spacing={1} alignItems="center">
             <InfoIcon
-              color="info"
               sx={{
                 fontSize: 28,
-                color: selectedTheme.primary_color,
+                color: selectedTheme.secondary_color,
               }}
             />
             <Typography variant="h6" component="h2" sx={{ fontWeight: 600 }}>
@@ -74,20 +67,7 @@ export const ModalRandomInfo = ({
           </Typography>
 
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-            <Button
-              variant="contained"
-              onClick={onClose}
-              sx={{
-                textTransform: "none",
-                px: 4,
-                borderRadius: 2,
-                backgroundColor: selectedTheme.primary_color,
-                color: selectedTheme.text_color,
-                "&:hover": {
-                  backgroundColor: lighten(selectedTheme.primary_color, 0.1),
-                },
-              }}
-            >
+            <Button variant="contained" onClick={onClose} sx={buttonStyle}>
               Aceptar
             </Button>
           </Box>

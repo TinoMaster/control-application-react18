@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Grid2 as Grid,
+  TablePagination,
   Typography,
   darken,
   useMediaQuery,
@@ -25,14 +26,38 @@ import { ModalAddServiceSale } from "./modal-add-service-sale/ModalAddServiceSal
 import { RenderServiceSaleDesktop } from "./RenderServiceSaleDesktop";
 import { RenderServiceSaleMobile } from "./RenderServiceSaleMobile";
 import { ModalRandomInfo } from "../../../../components/common/ui/ModalRandomInfo";
+import { useService } from "../../../../core/hooks/useServices";
+import { useTableStyles } from "../../../../core/styles/useTableStyles";
 
 const ServiceReport = () => {
   const { selectedTheme } = useThemeContext();
   const { materialTheme, role } = useAppContext();
   const { business } = useBusinessContext();
   const { user } = useAuthContext();
+  const { emptyInfoStyle } = useTableStyles();
 
   const isMobile = useMediaQuery(materialTheme.breakpoints.down("sm"));
+
+  const {
+    serviceSales,
+    editServiceSaleFromServiceSales,
+    addServiceSaleToServiceSales,
+    deleteServiceSaleFromServiceSales,
+  } = useServiceSale();
+
+  const { services } = useService();
+
+  // Estados
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [openAddServiceModal, setOpenAddServiceModal] = useState(false);
+  const [openEmptyServiceModal, setOpenEmptyServiceModal] = useState(false);
+  const [serviceSaleToEdit, setServiceSaleToEdit] =
+    useState<ServiceSaleModel>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const allowedToDelete = (businessFinalSale: boolean) => {
     const allowedByRole = allowedRole(role, [ERole.ADMIN, ERole.OWNER]);
@@ -48,25 +73,6 @@ const ServiceReport = () => {
     const allowedByUser = role === ERole.EMPLOYEE ? userId === user?.id : true;
     return allowedByRole && allowedByUser && !businessFinalSale;
   };
-
-  const {
-    serviceSales,
-    editServiceSaleFromServiceSales,
-    addServiceSaleToServiceSales,
-    deleteServiceSaleFromServiceSales,
-  } = useServiceSale({ businessId: business?.id });
-
-  // Estados
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [openAddServiceModal, setOpenAddServiceModal] = useState(false);
-  const [openEmptyServiceModal, setOpenEmptyServiceModal] = useState(false);
-  const [serviceSaleToEdit, setServiceSaleToEdit] =
-    useState<ServiceSaleModel>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
-  const [success, setSuccess] = useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   // Handlers
   const handleChangePage = (_: unknown, newPage: number) => {
@@ -142,7 +148,7 @@ const ServiceReport = () => {
 
   const handleClickAddService = () => {
     setServiceSaleToEdit(undefined);
-    if (serviceSales.length === 0) {
+    if (services.length === 0) {
       setOpenEmptyServiceModal(true);
     } else {
       setOpenAddServiceModal(true);
@@ -247,8 +253,6 @@ const ServiceReport = () => {
           handleDeleteServiceSale={handleDeleteServiceSale}
           page={page}
           rowsPerPage={rowsPerPage}
-          handleChangePage={handleChangePage}
-          handleChangeRowsPerPage={handleChangeRowsPerPage}
         />
       ) : (
         <RenderServiceSaleDesktop
@@ -259,9 +263,26 @@ const ServiceReport = () => {
           handleDeleteServiceSale={handleDeleteServiceSale}
           page={page}
           rowsPerPage={rowsPerPage}
-          handleChangePage={handleChangePage}
-          handleChangeRowsPerPage={handleChangeRowsPerPage}
         />
+      )}
+
+      {serviceSales.length > 0 ? (
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={serviceSales.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          sx={{
+            color: selectedTheme.text_color,
+          }}
+        />
+      ) : (
+        <Typography sx={emptyInfoStyle}>
+          No hay servicios vendidos hoy
+        </Typography>
       )}
 
       <ModalAddServiceSale
@@ -278,7 +299,7 @@ const ServiceReport = () => {
       <ModalRandomInfo
         open={openEmptyServiceModal}
         info={
-          "No hay servicios creados, valla a la pagina de servicios y agregue al menos 1"
+          "No hay servicios creados, valla a la pagina de servicios y agregue al menos uno."
         }
         onClose={() => {
           setOpenEmptyServiceModal(false);

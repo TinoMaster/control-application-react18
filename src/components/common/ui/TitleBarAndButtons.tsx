@@ -1,4 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
+import { useThemeContext } from "../../../core/context/use/useThemeContext";
 
 type ButtonConfig = {
   label: string;
@@ -15,6 +16,7 @@ export const TitleBarAndButtons = ({
   title: string;
   buttons?: ButtonConfig[];
 }) => {
+  const { selectedTheme } = useThemeContext();
   return (
     <Box
       sx={{
@@ -22,18 +24,22 @@ export const TitleBarAndButtons = ({
         justifyContent: "space-between",
         alignItems: "center",
         p: 2,
-        bgcolor: "#EFEFEF",
-        color: "text.primary",
+        bgcolor: selectedTheme.primary_color,
+        color: selectedTheme.text_color,
         borderRadius: "8px",
       }}
     >
-      <Typography variant="h5" fontWeight="bold" sx={{ fontSize: "1.2rem" }}>
+      <Typography
+        variant="h5"
+        fontWeight="bold"
+        sx={{ fontSize: "1.2rem" }}
+      >
         {title}
       </Typography>
       <Box>
-        {buttons?.map((button, index) => (
+        {buttons?.map((button) => (
           <Button
-            key={index}
+            key={button.label}
             onClick={button.onClick}
             variant={button.variant || "contained"}
             color={button.color || "primary"}

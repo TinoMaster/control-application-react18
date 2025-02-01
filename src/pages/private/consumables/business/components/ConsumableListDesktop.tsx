@@ -16,6 +16,8 @@ import {
   EUnit,
   TRANSLATE_UNIT,
 } from "../../../../../core/models/api/unit.model";
+import { useTableStyles } from "../../../../../core/styles/useTableStyles";
+import { formatCurrency } from "../../../../../core/utilities/helpers/formatCurrency";
 
 interface Props {
   consumables: ConsumableModel[];
@@ -33,34 +35,18 @@ export const ConsumableListDesktop = ({
   handleDeleteConsumable,
 }: Props) => {
   const { selectedTheme } = useThemeContext();
-
-  const headerTableCellStyle = {
-    color: "#fff",
-    padding: "12px 16px",
-    border: "none",
-    fontSize: "0.875rem",
-    fontWeight: 600,
-  };
-
-  const bodyTableCellStyle = {
-    color: selectedTheme.text_color,
-    padding: "12px 16px",
-    border: "none",
-  };
+  const {
+    headerTableCellStyle,
+    bodyTableCellStyle,
+    tableContainerStyle,
+    iconButtonStyle,
+  } = useTableStyles();
 
   return (
-    <TableContainer
-      component={Paper}
-      sx={{
-        backgroundColor: selectedTheme.background_color,
-        borderRadius: "5px",
-        overflow: "hidden",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      }}
-    >
+    <TableContainer component={Paper} sx={tableContainerStyle}>
       <Table sx={{ minWidth: 650 }}>
         <TableHead>
-          <TableRow sx={{ backgroundColor: selectedTheme.primary_color }}>
+          <TableRow>
             <TableCell sx={headerTableCellStyle}>Nombre</TableCell>
             <TableCell sx={headerTableCellStyle}>Descripción</TableCell>
             <TableCell sx={headerTableCellStyle}>Cantidad</TableCell>
@@ -97,39 +83,20 @@ export const ConsumableListDesktop = ({
                   {TRANSLATE_UNIT[consumable.unit as EUnit] || consumable.unit}
                 </TableCell>
                 <TableCell sx={bodyTableCellStyle}>
-                  ${consumable.price}
+                  {formatCurrency(consumable.price)}
                 </TableCell>
                 <TableCell sx={bodyTableCellStyle}>
                   <IconButton
                     size="small"
                     onClick={() => handleEditModal(consumable)}
-                    sx={{
-                      color: selectedTheme.text_color,
-                      "&:hover": {
-                        backgroundColor: `${
-                          selectedTheme.background_color === "#fff"
-                            ? "rgba(0, 0, 0, 0.08)"
-                            : "rgba(255, 255, 255, 0.08)"
-                        }`,
-                      },
-                      marginRight: 1,
-                    }}
+                    sx={iconButtonStyle}
                   >
                     <EditIcon fontSize="small" />
                   </IconButton>
                   <IconButton
                     size="small"
                     onClick={() => handleDeleteConsumable(consumable)}
-                    sx={{
-                      color: selectedTheme.text_color,
-                      "&:hover": {
-                        backgroundColor: `${
-                          selectedTheme.background_color === "#fff"
-                            ? "rgba(0, 0, 0, 0.08)"
-                            : "rgba(255, 255, 255, 0.08)"
-                        }`,
-                      },
-                    }}
+                    sx={iconButtonStyle}
                   >
                     <DeleteIcon fontSize="small" />
                   </IconButton>

@@ -5,27 +5,28 @@ import {
   Grid2 as Grid,
   TablePagination,
   Typography,
-  darken,
   useMediaQuery,
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
 import { LoadingCircularProgress } from "../../../../components/common/ui/LoadingCircularProgress";
+import { ModalConfirm } from "../../../../components/common/ui/ModalConfirm";
 import { useAppContext } from "../../../../core/context/use/useAppContext";
 import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 import { ConsumableModel } from "../../../../core/models/api/consumables.model";
 import { consumableService } from "../../../../core/services/consumableService";
+import { useTableStyles } from "../../../../core/styles/useTableStyles";
+import { formatTextReference } from "../../../../core/utilities/helpers/formatters";
 import { ConsumableListDesktop } from "./components/ConsumableListDesktop";
 import { ConsumableListMobile } from "./components/ConsumableListMobile";
 import { ModalAddConsumable } from "./modal-add-consumable/ModalAddConsumable";
-import { ModalConfirm } from "../../../../components/common/ui/ModalConfirm";
-import { formatTextReference } from "../../../../core/utilities/helpers/formatters";
 
 const BusinessConsumables = () => {
   const { selectedTheme } = useThemeContext();
   const { materialTheme } = useAppContext();
   const { business } = useBusinessContext();
+  const { buttonStyle } = useTableStyles();
 
   const isMobile = useMediaQuery(materialTheme.breakpoints.down("sm"));
 
@@ -174,7 +175,7 @@ const BusinessConsumables = () => {
           <Grid>
             <Typography
               variant="h5"
-              component="h1"
+              component="h2"
               color={selectedTheme.text_color}
             >
               Insumos del Negocio
@@ -185,13 +186,7 @@ const BusinessConsumables = () => {
               variant="contained"
               startIcon={<AddIcon />}
               onClick={handleOpenModal}
-              sx={{
-                backgroundColor: selectedTheme.primary_color,
-                color: "#fff",
-                "&:hover": {
-                  backgroundColor: darken(selectedTheme.primary_color, 0.3),
-                },
-              }}
+              sx={buttonStyle}
             >
               Agregar Insumo
             </Button>
