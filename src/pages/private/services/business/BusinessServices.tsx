@@ -8,163 +8,44 @@ import {
   darken,
   useMediaQuery,
 } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
 import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
 import { LoadingCircularProgress } from "../../../../components/common/ui/LoadingCircularProgress";
+import { ModalConfirm } from "../../../../components/common/ui/ModalConfirm";
 import { useAppContext } from "../../../../core/context/use/useAppContext";
-import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
-import { ConsumableModel } from "../../../../core/models/api/consumables.model";
-import { ServiceModel } from "../../../../core/models/api/service.model";
-import { consumableService } from "../../../../core/services/consumableService";
-import { serviceService } from "../../../../core/services/serviceService";
+import { formatTextReference } from "../../../../core/utilities/helpers/formatters";
 import { ServiceListDesktop } from "./components/ServiceListDesktop";
 import { ServiceListMobile } from "./components/ServiceListMobile";
 import { ModalAddService } from "./modal-add-service/ModalAddService";
-import { ModalConfirm } from "../../../../components/common/ui/ModalConfirm";
-import { formatTextReference } from "../../../../core/utilities/helpers/formatters";
+import { useBusinessServices } from "./useBusinessServices";
 
 const BusinessServices = () => {
   const { selectedTheme } = useThemeContext();
   const { materialTheme } = useAppContext();
-  const { business } = useBusinessContext();
+  const {
+    page,
+    rowsPerPage,
+    openModalAdd,
+    openModalConfirmDelete,
+    services,
+    loading,
+    success,
+    error,
+    consumables,
+    serviceToDelete,
+    serviceToEdit,
+    setOpenModalAdd,
+    setOpenModalConfirmDelete,
+    handleSubmit,
+    deleteService,
+    handleChangePage,
+    handleChangeRowsPerPage,
+    handleOpenModal,
+    handleEditModal,
+    handleDeleteService,
+  } = useBusinessServices();
 
   const isMobile = useMediaQuery(materialTheme.breakpoints.down("sm"));
-
-  // Estados
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [openModalAdd, setOpenModalAdd] = useState(false);
-  const [openModalConfirmDelete, setOpenModalConfirmDelete] = useState(false);
-  const [services, setServices] = useState<ServiceModel[]>([]);
-  const [consumables, setConsumables] = useState<ConsumableModel[]>([]);
-  const [serviceToEdit, setServiceToEdit] = useState<ServiceModel>();
-  const [serviceToDelete, setServiceToDelete] = useState<ServiceModel>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
-  const [success, setSuccess] = useState<boolean>(false);
-
-  // Funciones de manejo de datos
-  const addServiceToServices = (service: ServiceModel) => {
-    setServices([...services, service]);
-  };
-
-  const editServiceFromServices = (service: ServiceModel) => {
-    setServices(services.map((s) => (s.id === service.id ? service : s)));
-  };
-
-  const deleteServiceFromServices = (id: number) => {
-    setServices(services.filter((s) => s.id !== id));
-  };
-
-  const getServices = useCallback(async () => {
-    if (!business?.id) return;
-
-    setLoading(true);
-    try {
-      const response = await serviceService.getServicesByBusinessId(
-        business.id
-      );
-      if (response.status === 200) {
-        setServices(response.data || []);
-      }
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching services:", error);
-      setLoading(false);
-    }
-  }, [business?.id]);
-
-  const getConsumables = useCallback(async () => {
-    if (!business?.id) return;
-
-    const response = await consumableService.getConsumablesByBusinessId(
-      business.id
-    );
-
-    if (response.status === 200) {
-      setConsumables(response.data || []);
-    }
-  }, [business?.id]);
-
-  useEffect(() => {
-    getServices();
-    getConsumables();
-  }, [getServices, getConsumables]);
-
-  // Handlers
-  const handleChangePage = (_event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleOpenModal = () => {
-    setServiceToEdit(undefined);
-    setOpenModalAdd(true);
-  };
-
-  const handleEditModal = (service: ServiceModel) => {
-    setOpenModalAdd(true);
-    setServiceToEdit(service);
-  };
-
-  const handleDeleteService = (service: ServiceModel) => {
-    setOpenModalConfirmDelete(true);
-    setServiceToDelete(service);
-  };
-
-  const deleteService = async () => {
-    setLoading(true);
-    setError(false);
-    setSuccess(false);
-    if (!serviceToDelete?.id) return;
-    const id = serviceToDelete?.id;
-
-    try {
-      const response = await serviceService.deleteService(id);
-      if (response.status === 200) {
-        setSuccess(true);
-        deleteServiceFromServices(id);
-      } else {
-        setError(true);
-      }
-    } catch (error) {
-      setError(true);
-      console.error("Error deleting service:", error);
-    }
-    setLoading(false);
-  };
-
-  const handleSubmit = async (service: ServiceModel) => {
-    setLoading(true);
-    setError(false);
-    setSuccess(false);
-
-    try {
-      const response = await serviceService.saveService(service);
-      if (response.status === 200) {
-        setSuccess(true);
-        setOpenModalAdd(false);
-        if (serviceToEdit) {
-          editServiceFromServices(response.data as ServiceModel);
-        } else {
-          addServiceToServices(response.data as ServiceModel);
-        }
-      } else {
-        setError(true);
-      }
-    } catch (error) {
-      setError(true);
-      console.error("Error saving service:", error);
-    }
-    setLoading(false);
-  };
 
   return (
     <>
