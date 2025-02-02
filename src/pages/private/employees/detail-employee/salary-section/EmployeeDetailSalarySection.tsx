@@ -1,12 +1,7 @@
-import {
-  Box,
-  Card,
-  Grid2 as Grid,
-  Typography,
-  darken
-} from "@mui/material";
+import { Box, Card, Grid2 as Grid, Typography, darken } from "@mui/material";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
 import { EmployeeModel } from "../../../../../core/models/api/employee.model";
+import { formatCurrency } from "../../../../../core/utilities/helpers/formatCurrency";
 
 interface Props {
   employee: EmployeeModel;
@@ -53,13 +48,13 @@ export const EmployeeDetailSalarySection = ({ employee }: Props) => {
             <Typography
               variant="h4"
               sx={{
-                color: selectedTheme.primary_color,
+                color: selectedTheme.text_color,
                 fontWeight: "bold",
                 textAlign: "center",
                 my: 2,
               }}
             >
-              ${employee?.fixedSalary?.toLocaleString() || 0}
+              {formatCurrency(employee?.fixedSalary || 0)}
             </Typography>
             <Typography
               variant="body2"
@@ -106,7 +101,7 @@ export const EmployeeDetailSalarySection = ({ employee }: Props) => {
             <Typography
               variant="h4"
               sx={{
-                color: selectedTheme.primary_color,
+                color: selectedTheme.text_color,
                 fontWeight: "bold",
                 textAlign: "center",
                 my: 2,

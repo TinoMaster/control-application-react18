@@ -3,8 +3,8 @@ import { Box, Button, IconButton, Modal } from "@mui/material";
 import { useThemeContext } from "../../../core/context/use/useThemeContext";
 import { useTableStyles } from "../../../core/styles/useTableStyles";
 import { ErrorMessage } from "./info_types/Error";
-import { InfoMessage } from "./info_types/info";
 import { WarningMessage } from "./info_types/Warning";
+import { InfoMessage } from "./info_types/Info";
 
 type MessageType = "info" | "warning" | "error";
 
@@ -13,10 +13,12 @@ export const ModalRandomInfo = ({
   info,
   onClose,
   messageType = "info",
+  title,
 }: {
   open: boolean;
   info: string;
   messageType?: MessageType;
+  title?: string;
   onClose: () => void;
 }) => {
   const { selectedTheme } = useThemeContext();
@@ -24,9 +26,9 @@ export const ModalRandomInfo = ({
 
   const getMessageType = () =>
     ({
-      info: <InfoMessage message={info} />,
-      warning: <WarningMessage message={info} />,
-      error: <ErrorMessage message={info} />,
+      info: <InfoMessage message={info} title={title} />,
+      warning: <WarningMessage message={info} title={title} />,
+      error: <ErrorMessage message={info} title={title} />,
     }[messageType]);
 
   return (
@@ -59,7 +61,7 @@ export const ModalRandomInfo = ({
         {getMessageType()}
         <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
           <Button variant="contained" onClick={onClose} sx={buttonStyle}>
-            Aceptar
+            Entendido
           </Button>
         </Box>
       </Box>

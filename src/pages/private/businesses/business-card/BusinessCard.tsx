@@ -12,7 +12,8 @@ import { BusinessModel } from "../../../../core/models/api";
 import { formatDateToString } from "../../../../core/utilities/helpers/dateFormat";
 import { Link } from "react-router-dom";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
-import CheckCircleSharpIcon from '@mui/icons-material/CheckCircleSharp';
+import CheckCircleSharpIcon from "@mui/icons-material/CheckCircleSharp";
+import { useTableStyles } from "../../../../core/styles/useTableStyles";
 
 interface IBusinessCardProps {
   business: BusinessModel;
@@ -24,17 +25,16 @@ export const BusinessCard = ({
   currentBusinessId,
 }: IBusinessCardProps) => {
   const { selectedTheme } = useThemeContext();
+  const { cardStyle } = useTableStyles();
   return (
     <Card
       sx={{
+        ...cardStyle,
         width: "100%",
         maxWidth: 400,
-        margin: { xs: "0 auto", sm: "0" },
-        boxShadow: `0 0 70px 10px ${selectedTheme.secondary_color}15 , 0 0 5px 2px #00000015`,
         borderRadius: 2,
         border: "1px solid",
         position: "relative",
-        backgroundColor: lighten(selectedTheme.background_color, 0.1),
         borderColor:
           currentBusinessId === business.id
             ? selectedTheme.secondary_color

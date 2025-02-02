@@ -1,7 +1,13 @@
 import InfoIcon from "@mui/icons-material/Info";
 import { Stack, Typography } from "@mui/material";
 
-export const ErrorMessage = ({ message }: { message: string }) => {
+export const ErrorMessage = ({
+  message,
+  title = "Error",
+}: {
+  message: string;
+  title?: string;
+}) => {
   return (
     <Stack spacing={2}>
       <Stack direction="row" spacing={1} alignItems="center">
@@ -16,7 +22,7 @@ export const ErrorMessage = ({ message }: { message: string }) => {
           component="h2"
           sx={{ fontWeight: 600, color: "var(--error-color)" }}
         >
-          Error
+          {title}
         </Typography>
       </Stack>
 

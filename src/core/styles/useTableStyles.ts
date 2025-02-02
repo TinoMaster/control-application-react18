@@ -11,13 +11,13 @@ export const useTableStyles = () => {
         backgroundColor: selectedTheme.background_color,
         borderRadius: "8px",
         overflow: "hidden",
-        boxShadow: `0 0 30px 10px ${selectedTheme.secondary_color}70, 0 0 5px 2px #00000015`,
+        boxShadow: `0 0 100px 5px ${selectedTheme.secondary_color}50, 0 0 5px 2px #00000015`,
       },
       tableContainerStyle: {
         backgroundColor: selectedTheme.background_color,
         borderRadius: "8px",
         overflow: "hidden",
-        boxShadow: `0 0 90px 10px ${selectedTheme.secondary_color}70, 0 0 5px 2px #00000015`,
+        boxShadow: `0 0 100px 5px ${selectedTheme.secondary_color}50, 0 0 5px 2px #00000015`,
       },
       headerTableCellStyle: {
         color: selectedTheme.text_color,
@@ -46,6 +46,14 @@ export const useTableStyles = () => {
           backgroundColor: darken(selectedTheme.primary_color, 0.3),
         },
       },
+      buttonOutlineStyle: {
+        borderRadius: "8px",
+        color: selectedTheme.text_color,
+        border: `1px solid ${selectedTheme.primary_color}`,
+        "&:hover": {
+          borderColor: darken(selectedTheme.primary_color, 0.3),
+        },
+      },
       iconButtonStyle: {
         color: selectedTheme.text_color,
         "&:hover": {
@@ -61,7 +69,7 @@ export const useTableStyles = () => {
         borderStyle: "solid",
         borderRadius: "8px",
         fontSize: "0.875rem",
-        boxShadow: `0 0 70px 10px ${selectedTheme.secondary_color}15 , 0 0 5px 2px #00000015`,
+        boxShadow: `0 0 100px 5px ${selectedTheme.secondary_color}50, 0 0 5px 2px #00000015`,
         p: 1,
       },
       modalBlurStyle: {
@@ -76,11 +84,12 @@ export const useTableStyles = () => {
         left: "50%",
         transform: "translate(-50%, -50%)",
         width: "auto",
+        minWidth: 350,
         backgroundColor: selectedTheme.background_color,
         color: selectedTheme.text_color,
         border: `2px solid ${selectedTheme.secondary_color}20`,
         borderRadius: 3,
-        boxShadow: `0 0 300px 10px ${selectedTheme.secondary_color}50, 0 0 5px 2px #00000015`,
+        boxShadow: `0 0 300px 5px ${selectedTheme.secondary_color}50, 0 0 5px 2px #00000015`,
         p: 2,
       },
     }),

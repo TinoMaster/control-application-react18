@@ -25,7 +25,7 @@ const BusinessesLayout = () => {
   const linksToRender = filterRoutesByRole(links, role);
   return (
     <>
-      <MenuPages variant="secondary" title="Negocios" links={linksToRender} />
+      <MenuPages title="Negocios" links={linksToRender} />
       <Box
         sx={{
           padding: "16px 0",

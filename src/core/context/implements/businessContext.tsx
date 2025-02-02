@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { BusinessModel, ERole } from "../../models/api";
 import { BusinessContext } from "../use/useBusinessContext";
 import { useAuthContext } from "../use/useAuthContext";
@@ -38,28 +38,44 @@ export const BusinessProvider = ({ children }: IContextProps) => {
     }
   }, [user, businessList]);
 
-  const addBusinessToBusinessList = (newBusiness: BusinessModel) => {
-    setBusinessList([...businessList, newBusiness]);
-  };
+  const addBusinessToBusinessList = useCallback(
+    (newBusiness: BusinessModel) => {
+      setBusinessList([...businessList, newBusiness]);
+    },
+    [businessList]
+  );
 
-  const onChangeBusiness = (id: number) => {
-    const newBusiness = businessList.find((b) => b.id === id);
-    if (newBusiness) {
-      localStorage.setItem("businessId", newBusiness.id?.toString() || "");
-      setBusiness(newBusiness);
-    }
-  };
+  const onChangeBusiness = useCallback(
+    (id: number) => {
+      const newBusiness = businessList.find((b) => b.id === id);
+      if (newBusiness) {
+        localStorage.setItem("businessId", newBusiness.id?.toString() || "");
+        setBusiness(newBusiness);
+      }
+    },
+    [businessList]
+  );
+
+  const contextValue = useMemo(
+    () => ({
+      businessList,
+      business,
+      loading,
+      addBusinessToBusinessList,
+      onChangeBusiness,
+    }),
+    [
+      business,
+      businessList,
+      loading,
+      addBusinessToBusinessList,
+      onChangeBusiness,
+    ]
+  );
 
   return (
-    <BusinessContext.Provider
-      value={{
-        businessList,
-        business,
-        loading,
-        addBusinessToBusinessList,
-        onChangeBusiness,
-      }}
-      children={children}
-    />
+    <BusinessContext.Provider value={contextValue}>
+      {children}
+    </BusinessContext.Provider>
   );
 };

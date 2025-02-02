@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { ModalError } from "../../../../../components/common/ui/ModalError";
+import { ModalRandomInfo } from "../../../../../components/common/ui/ModalRandomInfo";
 import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
 import { useBusinessFinalSale } from "../../../../../core/hooks/useBusinessFinalSale";
@@ -17,23 +17,33 @@ import { ModalReport } from "./modal-report/ModalReport";
 import { SaleCard } from "./sale-card/SaleCard";
 
 export const SaleReportBox = () => {
-  const [openModalReport, setOpenModalReport] = useState(false);
-  const [openModalFullMachine, setOpenModalFullMachine] = useState(false);
   const { business } = useBusinessContext();
   const { todayReports, machinesAlreadySelected } = useBusinessFinalSale({
     businessId: business?.id,
   });
   const { selectedTheme } = useThemeContext();
 
+  const [openModalReport, setOpenModalReport] = useState(false);
+  const [openModalFullMachine, setOpenModalFullMachine] = useState(false);
+  const [messageMachineDisponible, setMessageMachineDisponible] = useState("");
+
   const handleCloseModal = () => {
     setOpenModalReport(false);
   };
 
   const existFreeMachine = () => {
-    if (!business.machines) {
+    if (!business.machines || business.machines.length === 0) {
+      setMessageMachineDisponible(
+        "Aun no ha creado ningún puesto o maquina de trabajo, el propietario en los detalles del negocio puede crearlos."
+      );
+      return false;
+    } else if (business.machines?.length === machinesAlreadySelected().length) {
+      setMessageMachineDisponible(
+        "En este momento todas las máquinas están asignadas a reportes existentes. Para crear un nuevo reporte, es necesario que haya al menos una máquina disponible."
+      );
       return false;
     }
-    return business.machines?.length > machinesAlreadySelected().length;
+    return true;
   };
 
   const onOpenModalReport = () => {
@@ -46,11 +56,11 @@ export const SaleReportBox = () => {
 
   return (
     <>
-      <ModalError
-        openModal={openModalFullMachine}
+      <ModalRandomInfo
+        open={openModalFullMachine}
         onClose={() => setOpenModalFullMachine(false)}
         title="Máquinas No Disponibles"
-        message="En este momento todas las máquinas están asignadas a reportes existentes. Para crear un nuevo reporte, es necesario que haya al menos una máquina disponible."
+        info={messageMachineDisponible}
       />
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>

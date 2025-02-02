@@ -2,7 +2,13 @@ import InfoIcon from "@mui/icons-material/Info";
 import { Stack, Typography } from "@mui/material";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 
-export const InfoMessage = ({ message }: { message: string }) => {
+export const InfoMessage = ({
+  message,
+  title = "Información",
+}: {
+  message: string;
+  title?: string;
+}) => {
   const { selectedTheme } = useThemeContext();
   return (
     <Stack spacing={2}>
@@ -14,7 +20,7 @@ export const InfoMessage = ({ message }: { message: string }) => {
           }}
         />
         <Typography variant="h6" component="h2" sx={{ fontWeight: 600 }}>
-          Información
+          {title}
         </Typography>
       </Stack>
 

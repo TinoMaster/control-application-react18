@@ -1,117 +1,40 @@
+import { Delete } from "@mui/icons-material";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
   Button,
   IconButton,
   lighten,
+  Modal,
   Stack,
   Typography,
-  Modal,
 } from "@mui/material";
-import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
-import { z } from "zod";
-import { Delete } from "@mui/icons-material";
 import CustomInput from "../../../../../components/common/ui/CustomInput";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { MachineModel } from "../../../../../core/models/api/machine.model";
-import { useState } from "react";
-import { machineService } from "../../../../../core/services/machineService";
-import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 import { CustomSnackbar } from "../../../../../components/common/ui/CustomSnackbar";
 import { LoadingCircularProgress } from "../../../../../components/common/ui/LoadingCircularProgress";
-import { useAuthContext } from "../../../../../core/context/use/useAuthContext";
-import EditIcon from "@mui/icons-material/Edit";
-
-const valueSchema = z.object({
-  value: z.string().min(1, "El campo es requerido"),
-});
-
-type TValue = z.infer<typeof valueSchema>;
-
-const defaultValue: TValue = {
-  value: "",
-};
+import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
+import { useMachineSection } from "./useMachineSection";
+import { useTableStyles } from "../../../../../core/styles/useTableStyles";
 
 export const MachineSection = () => {
   const { selectedTheme } = useThemeContext();
-  const { business } = useBusinessContext();
-  const { reloadUser } = useAuthContext();
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedMachine, setSelectedMachine] = useState<MachineModel | null>(
-    null
-  );
-
+  const { modalBlurStyle, modalBoxStyle, buttonOutlineStyle, buttonStyle } =
+    useTableStyles();
   const {
-    handleSubmit,
+    business,
+    loading,
+    error,
+    success,
     control,
-    formState: { errors },
-    reset,
-    setValue,
-  } = useForm<TValue>({
-    resolver: zodResolver(valueSchema),
-    defaultValues: defaultValue,
-  });
-
-  const onSubmit: SubmitHandler<TValue> = async (data) => {
-    setLoading(true);
-    setError(false);
-
-    const dataToSave: MachineModel = {
-      name: data.value,
-      active: true,
-      business: business?.id as number,
-      ...(selectedMachine && { id: selectedMachine.id }),
-    };
-
-    const response = selectedMachine
-      ? await machineService.updateMachine(dataToSave)
-      : await machineService.saveMachine(dataToSave);
-
-    if (response.status === 200) {
-      setSuccess(true);
-      reloadUser();
-      handleCloseModal();
-    } else {
-      setError(true);
-    }
-    setLoading(false);
-  };
-
-  const handleOpenModal = (machine?: MachineModel) => {
-    if (machine) {
-      setSelectedMachine(machine);
-      setValue("value", machine.name);
-    } else {
-      setSelectedMachine(null);
-      reset(defaultValue);
-    }
-    setOpenModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setSelectedMachine(null);
-    reset(defaultValue);
-  };
-
-  const handleDeleteMachine = async (id: number) => {
-    setLoading(true);
-    setError(false);
-
-    const response = await machineService.deleteMachine(id.toString());
-
-    if (response.status === 200) {
-      setSuccess(true);
-      reloadUser();
-    } else {
-      setError(true);
-    }
-    setLoading(false);
-  };
+    errors,
+    openModal,
+    selectedMachine,
+    handleCloseModal,
+    handleOpenModal,
+    onSubmit,
+    handleDeleteMachine,
+    handleSubmit,
+  } = useMachineSection();
 
   return (
     <>
@@ -132,9 +55,9 @@ export const MachineSection = () => {
             marginBottom: 2,
           }}
         >
-          {business.machines?.map((val, index) => (
+          {business.machines?.map((val) => (
             <Box
-              key={index}
+              key={val.id}
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -180,7 +103,7 @@ export const MachineSection = () => {
         <Button
           variant="contained"
           onClick={() => handleOpenModal()}
-          sx={{ backgroundColor: selectedTheme.primary_color }}
+          sx={buttonStyle}
         >
           Agregar Máquina
         </Button>
@@ -191,20 +114,9 @@ export const MachineSection = () => {
           onClose={handleCloseModal}
           aria-labelledby="modal-add-machine"
           aria-describedby="modal-add-new-machine"
+          sx={modalBlurStyle}
         >
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 400,
-              backgroundColor: selectedTheme.background_color,
-              boxShadow: 24,
-              p: 4,
-              borderRadius: 2,
-            }}
-          >
+          <Box sx={modalBoxStyle}>
             <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
               {selectedMachine ? "Editar Máquina" : "Agregar Nueva Máquina"}
             </Typography>
@@ -212,7 +124,7 @@ export const MachineSection = () => {
               <Stack direction="row" spacing={2} sx={{ marginBottom: 2 }}>
                 <CustomInput
                   name="value"
-                  label="Valor"
+                  label="Nombre de la maquina"
                   type="text"
                   placeholder="ej: Maquina 1"
                   control={control}
@@ -222,12 +134,14 @@ export const MachineSection = () => {
                 />
               </Stack>
               <Stack direction="row" spacing={2} justifyContent="flex-end">
-                <Button onClick={handleCloseModal}>Cancelar</Button>
                 <Button
-                  variant="contained"
-                  type="submit"
-                  sx={{ backgroundColor: selectedTheme.secondary_color }}
+                  variant="outlined"
+                  onClick={handleCloseModal}
+                  sx={buttonOutlineStyle}
                 >
+                  Cancelar
+                </Button>
+                <Button variant="contained" type="submit" sx={buttonStyle}>
                   {selectedMachine ? "Actualizar" : "Agregar"}
                 </Button>
               </Stack>
