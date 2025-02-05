@@ -8,3 +8,8 @@ export interface INavLinkItem {
   label: string;
   rolesExcluded?: TRole[];
 }
+
+export interface SuccessErrorState {
+  status: boolean;
+  message: string;
+}

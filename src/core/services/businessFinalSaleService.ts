@@ -58,6 +58,20 @@ class BusinessFinalSaleService {
       return handleFetchError(error);
     }
   }
+
+  async deleteBusinessFinalSale(id: number): Promise<IResponse<boolean>> {
+    try {
+      return await requestService.fetch<boolean>(
+        `${this.adminUrl}/business-final-sale/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+    } catch (error: any) {
+      console.log(error);
+      return handleFetchError(error);
+    }
+  }
 }
 
 export const businessFinalSaleService = new BusinessFinalSaleService();

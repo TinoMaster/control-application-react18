@@ -1,9 +1,9 @@
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import BuildIcon from "@mui/icons-material/Build";
+import CancelIcon from "@mui/icons-material/Cancel";
 import GroupIcon from "@mui/icons-material/Group";
 import MoneyOffIcon from "@mui/icons-material/MoneyOff";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
-import CancelIcon from "@mui/icons-material/Cancel";
 import {
   Box,
   Button,
@@ -19,12 +19,17 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { LoadingCircularProgress } from "../../../../../../components/common/ui/LoadingCircularProgress";
 import { useThemeContext } from "../../../../../../core/context/use/useThemeContext";
 import { BusinessFinalSaleModelResponse } from "../../../../../../core/models/api/businessFinalSale.model";
-import { formatCurrency } from "../../../../../../core/utilities/helpers/formatCurrency";
-import { ViewFinalReport } from "../view-final-report/ViewFinalReport";
 import { CardModel } from "../../../../../../core/models/api/card.model";
-import { CardPayment } from "../../context/useBusinessReportContext";
+import { useTableStyles } from "../../../../../../core/styles/useTableStyles";
+import { formatCurrency } from "../../../../../../core/utilities/helpers/formatCurrency";
+import {
+  CardPayment,
+  useBusinessReportContext,
+} from "../../context/useBusinessReportContext";
+import { ViewFinalReport } from "../view-final-report/ViewFinalReport";
 
 interface Props {
   sale: BusinessFinalSaleModelResponse;
@@ -33,6 +38,8 @@ interface Props {
 export const SaleCard = ({ sale }: Props) => {
   const [openDetailModal, setOpenDetailModal] = useState(false);
   const { selectedTheme } = useThemeContext();
+  const { modalBlurStyle, modalBoxStyle } = useTableStyles();
+  const { onDeleteSale, loading } = useBusinessReportContext();
 
   const hasDebts = sale.debts && sale.debts.length > 0;
   const pendingAmount = sale.total - sale.paid;
@@ -47,33 +54,21 @@ export const SaleCard = ({ sale }: Props) => {
 
   return (
     <>
+      <LoadingCircularProgress loading={loading} />
       <Modal
         open={openDetailModal}
         onClose={() => setOpenDetailModal(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backdropFilter: "blur(10px)",
-        }}
+        sx={modalBlurStyle}
       >
         <Box
           sx={{
-            width: "auto",
+            ...modalBoxStyle,
             maxWidth: "1200px",
             height: "100%",
             maxHeight: "750px",
-            margin: "0 auto",
             gap: 2,
-            padding: "0 1rem",
-            border: "1px solid",
-            borderColor: selectedTheme.secondary_color,
-            backgroundColor: selectedTheme.background_color,
-            borderRadius: "8px",
-            boxShadow: `0 0 70px 10px ${selectedTheme.secondary_color}15 , 0 0 5px 2px #00000015`,
-            position: "relative",
             overflow: "auto",
             paddingBottom: "20px",
             minWidth: { xs: "100%", sm: "400px" },
@@ -105,6 +100,7 @@ export const SaleCard = ({ sale }: Props) => {
             cards={sale.cards.map((card) =>
               transformCardModelToCardPayment(card)
             )}
+            onDelete={onDeleteSale}
           />
         </Box>
       </Modal>

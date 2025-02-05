@@ -42,7 +42,6 @@ export const SECTIONS_TRANSLATIONS = {
     title: "REPORTE",
     subtitle: "Resumen del reporte",
   },
-  [SECTIONS_BUSINESS_REPORT.END]: { title: "FINALIZADO", subtitle: "" },
 };
 
 export const BusinessReportContext =

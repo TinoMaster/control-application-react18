@@ -1,18 +1,18 @@
-import { Box, darken, IconButton, Modal, Typography } from "@mui/material";
-import { SaleResume } from "./sale-resume/SaleResume";
-import { useThemeContext } from "../../../../../../core/context/use/useThemeContext";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { Box, darken, IconButton, Modal, Typography } from "@mui/material";
+import { useThemeContext } from "../../../../../../core/context/use/useThemeContext";
+import { useTableStyles } from "../../../../../../core/styles/useTableStyles";
 import {
   SECTIONS_BUSINESS_REPORT,
   SECTIONS_TRANSLATIONS,
   useBusinessReportContext,
 } from "../../context/useBusinessReportContext";
-import { SaleDebts } from "./sale-debts/SaleDebts";
 import { SaleCards } from "./sale-cards/SaleCards";
-import { SaleServices } from "./sale-services/SaleServices";
+import { SaleDebts } from "./sale-debts/SaleDebts";
 import { SaleMiron } from "./sale-miron/SaleMiron";
 import { SaleReport } from "./sale-report/SaleReport";
-import { SaleEnd } from "./sale-end/SaleEnd";
+import { SaleResume } from "./sale-resume/SaleResume";
+import { SaleServices } from "./sale-services/SaleServices";
 
 interface Props {
   openModal: boolean;
@@ -22,6 +22,7 @@ interface Props {
 export const ModalReport = ({ openModal, closeModal }: Props) => {
   const { selectedTheme } = useThemeContext();
   const { currentSection, cancelProcess } = useBusinessReportContext();
+  const { modalBlurStyle, modalBoxStyle } = useTableStyles();
 
   const selectedSection = () => {
     switch (currentSection) {
@@ -37,41 +38,26 @@ export const ModalReport = ({ openModal, closeModal }: Props) => {
         return <SaleMiron />;
       case SECTIONS_BUSINESS_REPORT.REPORT:
         return <SaleReport />;
-      case SECTIONS_BUSINESS_REPORT.END:
-        return <SaleEnd />;
       default:
         return null;
     }
   };
 
   return (
-    <Modal
-      open={openModal}
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backdropFilter: "blur(10px)",
-      }}
-    >
+    <Modal open={openModal} sx={modalBlurStyle}>
       <Box
         sx={{
-          width: "auto",
+          ...modalBoxStyle,
+          py: 1,
           maxWidth: "1200px",
+          width: "max-content",
           height: "100%",
           maxHeight: "750px",
-          margin: "0 auto",
           gap: 2,
-          padding: "0 1rem",
-          border: "1px solid",
-          borderColor: selectedTheme.secondary_color,
-          backgroundColor: selectedTheme.background_color,
-          borderRadius: "8px",
-          boxShadow: `0 0 70px 10px ${selectedTheme.secondary_color}15 , 0 0 5px 2px #00000015`,
           position: "relative",
           overflow: "auto",
           paddingBottom: "20px",
-          minWidth: { xs: "100%", sm: "400px" },
+          minWidth: { xs: "100%", sm: "500px" },
         }}
       >
         {/* Titulo de cada sección */}

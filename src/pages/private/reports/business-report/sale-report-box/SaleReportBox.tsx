@@ -12,24 +12,28 @@ import { useState } from "react";
 import { ModalRandomInfo } from "../../../../../components/common/ui/ModalRandomInfo";
 import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
-import { useBusinessFinalSale } from "../../../../../core/hooks/useBusinessFinalSale";
 import { ModalReport } from "./modal-report/ModalReport";
 import { SaleCard } from "./sale-card/SaleCard";
+import { useBusinessReportContext } from "../context/useBusinessReportContext";
+import { LoadingCircularProgress } from "../../../../../components/common/ui/LoadingCircularProgress";
+import { CustomSnackbar } from "../../../../../components/common/ui/CustomSnackbar";
 
 export const SaleReportBox = () => {
   const { business } = useBusinessContext();
-  const { todayReports, machinesAlreadySelected } = useBusinessFinalSale({
-    businessId: business?.id,
-  });
+  const {
+    todayReports,
+    machinesAlreadySelected,
+    openModalReport,
+    handleCloseModalReport,
+    setOpenModalReport,
+    loading,
+    success,
+    error,
+  } = useBusinessReportContext();
   const { selectedTheme } = useThemeContext();
 
-  const [openModalReport, setOpenModalReport] = useState(false);
   const [openModalFullMachine, setOpenModalFullMachine] = useState(false);
   const [messageMachineDisponible, setMessageMachineDisponible] = useState("");
-
-  const handleCloseModal = () => {
-    setOpenModalReport(false);
-  };
 
   const existFreeMachine = () => {
     if (!business.machines || business.machines.length === 0) {
@@ -56,6 +60,13 @@ export const SaleReportBox = () => {
 
   return (
     <>
+      <LoadingCircularProgress loading={loading} />
+      <CustomSnackbar
+        error={error.status}
+        success={success.status}
+        errorMessage={error.message}
+        successMessage={success.message}
+      />
       <ModalRandomInfo
         open={openModalFullMachine}
         onClose={() => setOpenModalFullMachine(false)}
@@ -109,7 +120,7 @@ export const SaleReportBox = () => {
         </Grid>
         <ModalReport
           openModal={openModalReport}
-          closeModal={handleCloseModal}
+          closeModal={handleCloseModalReport}
         />
       </Box>
     </>

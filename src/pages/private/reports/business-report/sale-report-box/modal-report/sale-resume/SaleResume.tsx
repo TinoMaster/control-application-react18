@@ -24,7 +24,6 @@ import CustomInput from "../../../../../../../components/common/ui/CustomInput";
 import { useAuthContext } from "../../../../../../../core/context/use/useAuthContext";
 import { useBusinessContext } from "../../../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
-import { useBusinessFinalSale } from "../../../../../../../core/hooks/useBusinessFinalSale";
 import { useEmployees } from "../../../../../../../core/hooks/useEmployees";
 import { ERole } from "../../../../../../../core/models/api";
 import {
@@ -68,10 +67,8 @@ export const SaleResume = () => {
     businessId: business.id,
   });
   const [loading, setLoading] = useState(false);
-  const { dispatch, businessSale, nextSection } = useBusinessReportContext();
-  const { machinesAlreadySelected } = useBusinessFinalSale({
-    businessId: business.id,
-  });
+  const { dispatch, businessSale, nextSection, machinesAlreadySelected } =
+    useBusinessReportContext();
 
   const defaultRegisterType =
     businessSale.machines?.length === business.machines?.length

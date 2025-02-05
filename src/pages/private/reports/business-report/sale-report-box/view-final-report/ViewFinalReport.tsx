@@ -1,12 +1,12 @@
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import GroupIcon from "@mui/icons-material/Group";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import SaveIcon from "@mui/icons-material/Save";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import {
   Box,
@@ -30,6 +30,7 @@ interface Props {
   editable?: boolean;
   onAddNote?: () => void;
   onSave?: () => void;
+  onDelete?: (sale: BusinessFinalSaleModelResponse) => void;
 }
 
 export const ViewFinalReport = ({
@@ -38,6 +39,7 @@ export const ViewFinalReport = ({
   editable = false,
   onAddNote,
   onSave,
+  onDelete,
 }: Props) => {
   const { selectedTheme } = useThemeContext();
 
@@ -55,10 +57,6 @@ export const ViewFinalReport = ({
       0
     );
   };
-
-  /* Handlers */
-  /* TODO: Implementar */
-  const handleDelete = () => {};
 
   const cardStyle = {
     height: "100%",
@@ -121,7 +119,7 @@ export const ViewFinalReport = ({
       <Button
         variant="contained"
         startIcon={<DeleteIcon />}
-        onClick={handleDelete}
+        onClick={() => onDelete?.(sale)}
         color="error"
       >
         Eliminar
