@@ -16,16 +16,17 @@ import { useThemeContext } from "../../../../../../../core/context/use/useThemeC
 import { transformBusinessSaleToBusinessSaleResponse } from "../../../../../../../core/models/api/businessFinalSale.model";
 import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
 import { ViewFinalReport } from "../../view-final-report/ViewFinalReport";
+import { updateBusinessSaleNote } from "../../../../../../../core/states/actions/businessFinalSaleActions";
 
 export const SaleReport = () => {
   const {
     businessSale,
     cards,
-    setBusinessSale,
     loading,
     success,
     error,
     saveBusinessSale,
+    dispatch,
   } = useBusinessReportContext();
   const { selectedTheme } = useThemeContext();
   const { business } = useBusinessContext();
@@ -33,10 +34,7 @@ export const SaleReport = () => {
   const [note, setNote] = useState(businessSale.note);
 
   const handleAddNote = () => {
-    setBusinessSale({
-      ...businessSale,
-      note: note,
-    });
+    dispatch(updateBusinessSaleNote(note));
     setModalAddNote(false);
   };
 

@@ -27,6 +27,15 @@ import { useThemeContext } from "../../../../../../../core/context/use/useThemeC
 import { useBusinessFinalSale } from "../../../../../../../core/hooks/useBusinessFinalSale";
 import { useEmployees } from "../../../../../../../core/hooks/useEmployees";
 import { ERole } from "../../../../../../../core/models/api";
+import {
+  updateBusinessSaleBusinessId,
+  updateBusinessSaleDoneBy,
+  updateBusinessSaleFound,
+  updateBusinessSaleMachines,
+  updateBusinessSaleName,
+  updateBusinessSaleTotal,
+  updateBusinessSaleWorkers,
+} from "../../../../../../../core/states/actions/businessFinalSaleActions";
 import { allowedRole } from "../../../../../../../core/utilities/helpers/allowedRole.util";
 import { formatDateToString } from "../../../../../../../core/utilities/helpers/dateFormat";
 import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
@@ -59,8 +68,7 @@ export const SaleResume = () => {
     businessId: business.id,
   });
   const [loading, setLoading] = useState(false);
-  const { setBusinessSale, businessSale, nextSection } =
-    useBusinessReportContext();
+  const { dispatch, businessSale, nextSection } = useBusinessReportContext();
   const { machinesAlreadySelected } = useBusinessFinalSale({
     businessId: business.id,
   });
@@ -107,12 +115,10 @@ export const SaleResume = () => {
       }
 
       setValue("workers", currentWorkers, { shouldValidate: true });
-      setBusinessSale((prev) => ({
-        ...prev,
-        workers: currentWorkers,
-        total: Number(totalWatch),
-        found: Number(debtsWatch),
-      }));
+
+      dispatch(updateBusinessSaleWorkers(currentWorkers));
+      dispatch(updateBusinessSaleTotal(Number(totalWatch)));
+      dispatch(updateBusinessSaleFound(Number(debtsWatch)));
     }
   };
 
@@ -127,16 +133,13 @@ export const SaleResume = () => {
   const onSubmit = (data: TSaleResume) => {
     setLoading(true);
 
-    setBusinessSale((prev) => ({
-      ...prev,
-      total: Number(data.total),
-      found: Number(data.found),
-      machines: data.machines,
-      workers: data.workers,
-      name: createReportName(),
-      business: business.id!,
-      doneBy: user!.id as number,
-    }));
+    dispatch(updateBusinessSaleMachines(data.machines));
+    dispatch(updateBusinessSaleWorkers(data.workers));
+    dispatch(updateBusinessSaleTotal(Number(data.total)));
+    dispatch(updateBusinessSaleFound(Number(data.found)));
+    dispatch(updateBusinessSaleDoneBy(user!.id as number));
+    dispatch(updateBusinessSaleBusinessId(business.id as number));
+    dispatch(updateBusinessSaleName(createReportName()));
 
     setLoading(false);
     nextSection();
@@ -286,17 +289,15 @@ export const SaleResume = () => {
                       const selectedValue = e.target.value;
                       if (allowedRole(role, [ERole.ADMIN, ERole.OWNER])) {
                         field.onChange(selectedValue);
-                        setBusinessSale((prev) => ({
-                          ...prev,
-                          machines: selectedValue as number[],
-                        }));
+                        dispatch(
+                          updateBusinessSaleMachines(selectedValue as number[])
+                        );
                       } else {
                         const newValue = [selectedValue].flat();
                         field.onChange(newValue);
-                        setBusinessSale((prev) => ({
-                          ...prev,
-                          machines: newValue as number[],
-                        }));
+                        dispatch(
+                          updateBusinessSaleMachines(newValue as number[])
+                        );
                       }
                     }}
                   >

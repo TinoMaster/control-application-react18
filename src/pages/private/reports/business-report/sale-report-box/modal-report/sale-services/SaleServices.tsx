@@ -26,10 +26,10 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import BlockIcon from "@mui/icons-material/Block";
 import { ERole } from "../../../../../../../core/models/api";
+import { updateBusinessSaleServices } from "../../../../../../../core/states/actions/businessFinalSaleActions";
 
 export const SaleServices = () => {
-  const { businessSale, setBusinessSale, nextSection, prevSection } =
-    useBusinessReportContext();
+  const { dispatch, nextSection, prevSection } = useBusinessReportContext();
   const [serviceSales, setServiceSales] = useState<ServiceSaleModel[]>([]);
   const [selectedServices, setSelectedServices] = useState<ServiceSaleModel[]>(
     []
@@ -84,10 +84,7 @@ export const SaleServices = () => {
   };
 
   const handleSaveServices = () => {
-    setBusinessSale({
-      ...businessSale,
-      servicesSales: selectedServices,
-    });
+    dispatch(updateBusinessSaleServices(selectedServices));
     nextSection();
   };
 

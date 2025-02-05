@@ -1,25 +1,29 @@
+import { Delete } from "@mui/icons-material";
+import BlockIcon from "@mui/icons-material/Block";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
   Box,
+  Button,
+  darken,
+  Grid2 as Grid,
+  IconButton,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Button,
-  darken,
-  Grid2 as Grid,
-  IconButton,
 } from "@mui/material";
 import { useState } from "react";
-import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
 import CustomInput from "../../../../../../../components/common/ui/CustomInput";
-import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
-import { Delete } from "@mui/icons-material";
+import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
 import { DebtModel } from "../../../../../../../core/models/api/debt.model";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import BlockIcon from "@mui/icons-material/Block";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import {
+  updateBusinessSaleDebts,
+  updateBusinessSalePaid,
+} from "../../../../../../../core/states/actions/businessFinalSaleActions";
+import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
 
 interface Debt {
   id: number | string;
@@ -35,7 +39,7 @@ const transformDetModelToDebt = (det: DebtModel): Debt => ({
 
 export const SaleDebts = () => {
   const { selectedTheme } = useThemeContext();
-  const { nextSection, businessSale, setBusinessSale, prevSection } =
+  const { nextSection, businessSale, dispatch, prevSection } =
     useBusinessReportContext();
   const [debts, setDebts] = useState<Debt[]>(
     businessSale.debts.map(transformDetModelToDebt)
@@ -71,11 +75,8 @@ export const SaleDebts = () => {
         paid: 0,
       };
     });
-    setBusinessSale({
-      ...businessSale,
-      debts: debtsToSave,
-      paid: businessSale.total - moneyToDiscount,
-    });
+    dispatch(updateBusinessSaleDebts(debtsToSave));
+    dispatch(updateBusinessSalePaid(businessSale.total - moneyToDiscount));
   };
 
   const handleNextSection = () => {
