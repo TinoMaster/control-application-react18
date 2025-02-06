@@ -2,18 +2,11 @@ import { Alert, Snackbar } from "@mui/material";
 import { useEffect, useState } from "react";
 
 interface Props {
-  success: boolean;
-  error: boolean;
   successMessage?: string;
   errorMessage?: string;
 }
 
-export const CustomSnackbar = ({
-  success,
-  error,
-  successMessage,
-  errorMessage,
-}: Props) => {
+export const CustomSnackbar = ({ successMessage, errorMessage }: Props) => {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -21,12 +14,15 @@ export const CustomSnackbar = ({
   };
 
   useEffect(() => {
-    if (success || error) {
+    if (successMessage || errorMessage) {
       setOpen(true);
     }
-  }, [success, error]);
+  }, [successMessage, errorMessage]);
 
-  return (
+  const message = successMessage || errorMessage;
+  const severity = successMessage ? "success" : "error";
+
+  return message ? (
     <Snackbar
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       open={open}
@@ -34,12 +30,12 @@ export const CustomSnackbar = ({
       onClose={handleClose}
     >
       <Alert
-        severity={success ? "success" : "error"}
+        severity={severity}
         variant="filled"
         sx={{ width: "100%" }}
       >
-        {success ? successMessage : error ? errorMessage : ""}
+        {message}
       </Alert>
     </Snackbar>
-  );
+  ) : null;
 };

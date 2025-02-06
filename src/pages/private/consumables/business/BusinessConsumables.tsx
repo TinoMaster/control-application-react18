@@ -7,148 +7,48 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
 import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
-import { LoadingCircularProgress } from "../../../../components/common/ui/LoadingCircularProgress";
 import { ModalConfirm } from "../../../../components/common/ui/ModalConfirm";
 import { useAppContext } from "../../../../core/context/use/useAppContext";
-import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
-import { ConsumableModel } from "../../../../core/models/api/consumables.model";
-import { consumableService } from "../../../../core/services/consumableService";
 import { useTableStyles } from "../../../../core/styles/useTableStyles";
 import { formatTextReference } from "../../../../core/utilities/helpers/formatters";
 import { ConsumableListDesktop } from "./components/ConsumableListDesktop";
 import { ConsumableListMobile } from "./components/ConsumableListMobile";
 import { ModalAddConsumable } from "./modal-add-consumable/ModalAddConsumable";
+import { useBusinessConsumables } from "./useBusinessConsumables";
 
 const BusinessConsumables = () => {
   const { selectedTheme } = useThemeContext();
   const { materialTheme } = useAppContext();
-  const { business } = useBusinessContext();
   const { buttonStyle } = useTableStyles();
 
   const isMobile = useMediaQuery(materialTheme.breakpoints.down("sm"));
 
-  const [openModalAdd, setOpenModalAdd] = useState(false);
-  const [openModalConfirmDelete, setOpenModalConfirmDelete] = useState(false);
-  const [consumables, setConsumables] = useState<ConsumableModel[]>([]);
-  const [consumableToEdit, setConsumableToEdit] = useState<ConsumableModel>();
-  const [consumableToDelete, setConsumableToDelete] =
-    useState<ConsumableModel>();
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
-  const [success, setSuccess] = useState<boolean>(false);
-  // Estado para la pagination
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const addConsumableToConsumables = (consumable: ConsumableModel) => {
-    setConsumables([...consumables, consumable]);
-  };
-
-  const editConsumableFromConsumables = (consumable: ConsumableModel) => {
-    setConsumables(
-      consumables.map((c) => (c.id === consumable.id ? consumable : c))
-    );
-  };
-
-  const deleteConsumableFromConsumables = (id: number) => {
-    setConsumables(consumables.filter((c) => c.id !== id));
-  };
-
-  const getConsumables = useCallback(async () => {
-    if (!business || !business.id) {
-      return;
-    }
-    const response = await consumableService.getConsumablesByBusinessId(
-      business.id as number
-    );
-    if (response.status === 200) {
-      setConsumables(response.data || []);
-    }
-  }, [business]);
-
-  useEffect(() => {
-    getConsumables();
-  }, [getConsumables]);
-
-  /* handlers */
-  const handleChangePage = (_event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleOpenModal = () => {
-    setConsumableToEdit(undefined);
-    setOpenModalAdd(true);
-  };
-
-  const handleEditModal = (consumable: ConsumableModel) => {
-    setOpenModalAdd(true);
-    setConsumableToEdit(consumable);
-  };
-
-  const handleDeleteConsumable = (consumable: ConsumableModel) => {
-    setConsumableToDelete(consumable);
-    setOpenModalConfirmDelete(true);
-  };
-
-  const deleteConsumable = async () => {
-    setLoading(true);
-    if (!consumableToDelete || !consumableToDelete.id) return;
-    const id = consumableToDelete?.id;
-
-    setError(false);
-    setSuccess(false);
-
-    const response = await consumableService.deleteConsumable(id);
-
-    if (response.status === 200) {
-      setSuccess(true);
-      deleteConsumableFromConsumables(id);
-    } else {
-      setError(true);
-    }
-    setLoading(false);
-  };
-
-  const handleSubmit = async (consumable: ConsumableModel) => {
-    setLoading(true);
-    setError(false);
-    setSuccess(false);
-
-    const consumableToSave: ConsumableModel = {
-      ...consumable,
-      price: parseFloat((consumable.price / consumable.stock).toFixed(2)),
-    };
-
-    const response = await consumableService.saveConsumable(consumableToSave);
-
-    if (response.status === 200) {
-      setSuccess(true);
-      setOpenModalAdd(false);
-      if (consumableToEdit) {
-        editConsumableFromConsumables(response.data as ConsumableModel);
-      } else {
-        addConsumableToConsumables(response.data as ConsumableModel);
-      }
-    } else {
-      setError(true);
-    }
-    setLoading(false);
-  };
+  const {
+    loading,
+    errorMessage,
+    successMessage,
+    openModalAdd,
+    consumableToDelete,
+    consumableToEdit,
+    setOpenModalAdd,
+    openModalConfirmDelete,
+    setOpenModalConfirmDelete,
+    consumables,
+    handleOpenModal,
+    handleEditModal,
+    handleDeleteConsumable,
+    handleSubmit,
+    handleChangePage,
+    handleChangeRowsPerPage,
+    deleteConsumable,
+    page,
+    rowsPerPage,
+  } = useBusinessConsumables();
 
   return (
     <>
-      <LoadingCircularProgress loading={loading} />
       <ModalConfirm
         open={openModalConfirmDelete}
         onClose={() => setOpenModalConfirmDelete(false)}
@@ -158,11 +58,16 @@ const BusinessConsumables = () => {
           consumableToDelete?.name
         )}?`}
       />
+      <ModalAddConsumable
+        open={openModalAdd}
+        onClose={() => setOpenModalAdd(false)}
+        onSubmit={handleSubmit}
+        consumable={consumableToEdit}
+        isEditing={consumableToEdit !== undefined}
+      />
       <CustomSnackbar
-        success={success}
-        error={error}
-        successMessage="Operación realizada con éxito"
-        errorMessage="Error al realizar la operación"
+        successMessage={successMessage}
+        errorMessage={errorMessage}
       />
       <Box sx={{ p: 1 }}>
         <Grid
@@ -209,6 +114,7 @@ const BusinessConsumables = () => {
             handleEditModal={handleEditModal}
             page={page}
             rowsPerPage={rowsPerPage}
+            loadingConsumables={loading}
           />
         )}
 
@@ -237,14 +143,6 @@ const BusinessConsumables = () => {
             }}
           />
         )}
-
-        <ModalAddConsumable
-          open={openModalAdd}
-          onClose={() => setOpenModalAdd(false)}
-          onSubmit={handleSubmit}
-          consumable={consumableToEdit}
-          isEditing={consumableToEdit !== undefined}
-        />
       </Box>
     </>
   );

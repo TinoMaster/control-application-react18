@@ -15,7 +15,7 @@ import { useThemeContext } from "../../../../../core/context/use/useThemeContext
 import { ModalReport } from "./modal-report/ModalReport";
 import { SaleCard } from "./sale-card/SaleCard";
 import { useBusinessReportContext } from "../context/useBusinessReportContext";
-import { LoadingCircularProgress } from "../../../../../components/common/ui/LoadingCircularProgress";
+import { LoadingCircularProgress } from "../../../../../components/common/ui/loaders/LoadingCircularProgress";
 import { CustomSnackbar } from "../../../../../components/common/ui/CustomSnackbar";
 
 export const SaleReportBox = () => {

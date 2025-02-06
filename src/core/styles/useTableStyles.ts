@@ -27,6 +27,16 @@ export const useTableStyles = () => {
         fontSize: "0.875rem",
         fontWeight: 600,
       },
+      bodyTableRowStyle: {
+        "&:hover": {
+          backgroundColor: `${
+            selectedTheme.background_color === "#fff"
+              ? "rgba(0, 0, 0, 0.04)"
+              : "rgba(255, 255, 255, 0.04)"
+          }`,
+        },
+        transition: "background-color 0.2s ease",
+      },
       bodyTableCellStyle: {
         color: selectedTheme.text_color,
         padding: "12px 16px",

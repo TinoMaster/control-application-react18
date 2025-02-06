@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import CustomInput from "../../../../../components/common/ui/CustomInput";
 import { CustomSnackbar } from "../../../../../components/common/ui/CustomSnackbar";
-import { LoadingCircularProgress } from "../../../../../components/common/ui/LoadingCircularProgress";
+import { LoadingCircularProgress } from "../../../../../components/common/ui/loaders/LoadingCircularProgress";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
 import { useMachineSection } from "./useMachineSection";
 import { useTableStyles } from "../../../../../core/styles/useTableStyles";

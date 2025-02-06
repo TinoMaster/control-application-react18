@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
+import { useStatus } from "../../../../core/hooks/customs/useStatus";
 import { ServiceModel } from "../../../../core/models/api";
 import { ConsumableModel } from "../../../../core/models/api/consumables.model";
-import { serviceService } from "../../../../core/services/serviceService";
 import { consumableService } from "../../../../core/services/consumableService";
-import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
+import { serviceService } from "../../../../core/services/serviceService";
 
 export const useBusinessServices = () => {
   const { business } = useBusinessContext();
@@ -16,9 +17,15 @@ export const useBusinessServices = () => {
   const [consumables, setConsumables] = useState<ConsumableModel[]>([]);
   const [serviceToEdit, setServiceToEdit] = useState<ServiceModel>();
   const [serviceToDelete, setServiceToDelete] = useState<ServiceModel>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
-  const [success, setSuccess] = useState<boolean>(false);
+
+  const {
+    loading,
+    errorMessage,
+    successMessage,
+    setError,
+    setSuccess,
+    setLoading,
+  } = useStatus();
 
   // Funciones de manejo de datos
   const addServiceToServices = (service: ServiceModel) => {
@@ -36,20 +43,22 @@ export const useBusinessServices = () => {
   const getServices = useCallback(async () => {
     if (!business?.id) return;
 
-    setLoading(true);
+    setLoading();
     try {
       const response = await serviceService.getServicesByBusinessId(
         business.id
       );
       if (response.status === 200) {
         setServices(response.data || []);
+        setSuccess("");
+      } else {
+        setError("Ah ocurrido un error al cargar los servicios");
       }
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching services:", error);
-      setLoading(false);
+      setError("Ah ocurrido un error al cargar los servicios");
     }
-  }, [business?.id]);
+  }, [business?.id, setError, setSuccess, setLoading]);
 
   const getConsumables = useCallback(async () => {
     if (!business?.id) return;
@@ -96,36 +105,31 @@ export const useBusinessServices = () => {
   };
 
   const deleteService = async () => {
-    setLoading(true);
-    setError(false);
-    setSuccess(false);
+    setLoading();
     if (!serviceToDelete?.id) return;
     const id = serviceToDelete?.id;
 
     try {
       const response = await serviceService.deleteService(id);
       if (response.status === 200) {
-        setSuccess(true);
+        setSuccess("Servicio eliminado correctamente");
         deleteServiceFromServices(id);
       } else {
-        setError(true);
+        setError("Ah ocurrido un error al eliminar el servicio");
       }
     } catch (error) {
-      setError(true);
+      setError("Ah ocurrido un error al eliminar el servicio");
       console.error("Error deleting service:", error);
     }
-    setLoading(false);
   };
 
   const handleSubmit = async (service: ServiceModel) => {
-    setLoading(true);
-    setError(false);
-    setSuccess(false);
+    setLoading();
 
     try {
       const response = await serviceService.saveService(service);
       if (response.status === 200) {
-        setSuccess(true);
+        setSuccess("Servicio guardado correctamente");
         setOpenModalAdd(false);
         if (serviceToEdit) {
           editServiceFromServices(response.data as ServiceModel);
@@ -133,13 +137,12 @@ export const useBusinessServices = () => {
           addServiceToServices(response.data as ServiceModel);
         }
       } else {
-        setError(true);
+        setError("Ah ocurrido un error al guardar el servicio");
       }
     } catch (error) {
-      setError(true);
+      setError("Ah ocurrido un error al guardar el servicio");
       console.error("Error saving service:", error);
     }
-    setLoading(false);
   };
 
   return {
@@ -149,8 +152,8 @@ export const useBusinessServices = () => {
     openModalConfirmDelete,
     services,
     loading,
-    success,
-    error,
+    successMessage,
+    errorMessage,
     consumables,
     serviceToDelete,
     serviceToEdit,

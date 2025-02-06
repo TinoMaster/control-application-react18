@@ -17,6 +17,8 @@ import {
 } from "../../../../../core/models/api/unit.model";
 import { useTableStyles } from "../../../../../core/styles/useTableStyles";
 import { formatCurrency } from "../../../../../core/utilities/helpers/formatCurrency";
+import { LoadingTable } from "../../../../../components/common/ui/loaders/loadingTable";
+import { useDelayedLoading } from "../../../../../core/hooks/customs/useDelayedLoading";
 
 interface Props {
   consumables: ConsumableModel[];
@@ -24,6 +26,7 @@ interface Props {
   rowsPerPage: number;
   handleEditModal: (consumable: ConsumableModel) => void;
   handleDeleteConsumable: (consumable: ConsumableModel) => void;
+  loadingConsumables: boolean;
 }
 
 export const ConsumableListDesktop = ({
@@ -32,14 +35,17 @@ export const ConsumableListDesktop = ({
   rowsPerPage,
   handleEditModal,
   handleDeleteConsumable,
+  loadingConsumables,
 }: Props) => {
   const { selectedTheme } = useThemeContext();
   const {
     headerTableCellStyle,
+    bodyTableRowStyle,
     bodyTableCellStyle,
     tableContainerStyle,
     iconButtonStyle,
   } = useTableStyles();
+  const delayedLoading = useDelayedLoading(loadingConsumables, 1000);
 
   return (
     <TableContainer sx={tableContainerStyle}>
@@ -55,54 +61,52 @@ export const ConsumableListDesktop = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {consumables
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((consumable) => (
-              <TableRow
-                key={consumable.id}
-                sx={{
-                  "&:hover": {
-                    backgroundColor: `${
-                      selectedTheme.background_color === "#fff"
-                        ? "rgba(0, 0, 0, 0.04)"
-                        : "rgba(255, 255, 255, 0.04)"
-                    }`,
-                  },
-                  transition: "background-color 0.2s ease",
-                }}
-              >
-                <TableCell sx={bodyTableCellStyle}>{consumable.name}</TableCell>
-                <TableCell sx={bodyTableCellStyle}>
-                  {consumable.description}
-                </TableCell>
-                <TableCell sx={bodyTableCellStyle}>
-                  {consumable.stock}
-                </TableCell>
-                <TableCell sx={bodyTableCellStyle}>
-                  {TRANSLATE_UNIT[consumable.unit as EUnit] || consumable.unit}
-                </TableCell>
-                <TableCell sx={bodyTableCellStyle}>
-                  {formatCurrency(consumable.price)}
-                </TableCell>
-                <TableCell sx={bodyTableCellStyle}>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleEditModal(consumable)}
-                    sx={iconButtonStyle}
-                  >
-                    <EditIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleDeleteConsumable(consumable)}
-                    sx={iconButtonStyle}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          {consumables.length === 0 && (
+          {delayedLoading && (
+            <TableCell colSpan={6}>
+              <LoadingTable rows={5} columns={6} />
+            </TableCell>
+          )}
+          {!delayedLoading &&
+            consumables.length > 0 &&
+            consumables
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((consumable) => (
+                <TableRow key={consumable.id} sx={bodyTableRowStyle}>
+                  <TableCell sx={bodyTableCellStyle}>
+                    {consumable.name}
+                  </TableCell>
+                  <TableCell sx={bodyTableCellStyle}>
+                    {consumable.description}
+                  </TableCell>
+                  <TableCell sx={bodyTableCellStyle}>
+                    {consumable.stock}
+                  </TableCell>
+                  <TableCell sx={bodyTableCellStyle}>
+                    {TRANSLATE_UNIT[consumable.unit as EUnit] ||
+                      consumable.unit}
+                  </TableCell>
+                  <TableCell sx={bodyTableCellStyle}>
+                    {formatCurrency(consumable.price)}
+                  </TableCell>
+                  <TableCell sx={bodyTableCellStyle}>
+                    <IconButton
+                      size="small"
+                      onClick={() => handleEditModal(consumable)}
+                      sx={iconButtonStyle}
+                    >
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={() => handleDeleteConsumable(consumable)}
+                      sx={iconButtonStyle}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+          {!delayedLoading && consumables.length === 0 && (
             <TableRow>
               <TableCell
                 colSpan={6}

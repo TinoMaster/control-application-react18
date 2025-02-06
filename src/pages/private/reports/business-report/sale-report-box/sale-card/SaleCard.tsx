@@ -14,7 +14,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { LoadingCircularProgress } from "../../../../../../components/common/ui/LoadingCircularProgress";
+import { LoadingCircularProgress } from "../../../../../../components/common/ui/loaders/LoadingCircularProgress";
 import { useThemeContext } from "../../../../../../core/context/use/useThemeContext";
 import { BusinessFinalSaleModelResponse } from "../../../../../../core/models/api/businessFinalSale.model";
 import { formatCurrency } from "../../../../../../core/utilities/helpers/formatCurrency";

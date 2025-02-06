@@ -7,7 +7,7 @@ import { SuperAdminRoutes } from "../../../pages/admin/Admin.routes";
 import { PrivateRoutes } from "../../../pages/private";
 import { HeaderAdmin } from "../../admin/header/header";
 import { SuperAdminSidebar } from "../../admin/sidebar/Sidebar";
-import { LoadingCircularProgress } from "../../common/ui/LoadingCircularProgress";
+import { LoadingCircularProgress } from "../../common/ui/loaders/LoadingCircularProgress";
 import { Header } from "../header/Header";
 import { PrivateSidebar } from "../sidebar/Sidebar";
 

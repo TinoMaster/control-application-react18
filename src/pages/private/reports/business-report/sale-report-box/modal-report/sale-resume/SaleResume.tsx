@@ -39,7 +39,7 @@ import {
 import { allowedRole } from "../../../../../../../core/utilities/helpers/allowedRole.util";
 import { formatDateToString } from "../../../../../../../core/utilities/helpers/dateFormat";
 import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
-import { LoadingCircularProgress } from "../../../../../../../components/common/ui/LoadingCircularProgress";
+import { LoadingCircularProgress } from "../../../../../../../components/common/ui/loaders/LoadingCircularProgress";
 
 enum ERegisterType {
   INDIVIDUAL = "individual",

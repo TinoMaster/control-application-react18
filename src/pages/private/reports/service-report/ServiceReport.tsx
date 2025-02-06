@@ -12,7 +12,7 @@ import { useState } from "react";
 import { CustomPopover } from "../../../../components/common/ui/CustomPopover";
 import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
 import { CustomTooltip } from "../../../../components/common/ui/CustomTooltip";
-import { LoadingCircularProgress } from "../../../../components/common/ui/LoadingCircularProgress";
+import { LoadingCircularProgress } from "../../../../components/common/ui/loaders/LoadingCircularProgress";
 import { useAppContext } from "../../../../core/context/use/useAppContext";
 import { useAuthContext } from "../../../../core/context/use/useAuthContext";
 import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";

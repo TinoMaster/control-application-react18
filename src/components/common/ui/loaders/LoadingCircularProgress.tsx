@@ -1,5 +1,5 @@
 import { Box, CircularProgress } from "@mui/material";
-import { useThemeContext } from "../../../core/context/use/useThemeContext";
+import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 
 interface Props {
   loading: boolean;

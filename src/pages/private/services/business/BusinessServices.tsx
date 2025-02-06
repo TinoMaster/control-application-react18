@@ -9,7 +9,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
-import { LoadingCircularProgress } from "../../../../components/common/ui/LoadingCircularProgress";
 import { ModalConfirm } from "../../../../components/common/ui/ModalConfirm";
 import { useAppContext } from "../../../../core/context/use/useAppContext";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
@@ -29,8 +28,8 @@ const BusinessServices = () => {
     openModalConfirmDelete,
     services,
     loading,
-    success,
-    error,
+    successMessage,
+    errorMessage,
     consumables,
     serviceToDelete,
     serviceToEdit,
@@ -49,7 +48,6 @@ const BusinessServices = () => {
 
   return (
     <>
-      <LoadingCircularProgress loading={loading} />
       <ModalConfirm
         open={openModalConfirmDelete}
         onClose={() => setOpenModalConfirmDelete(false)}
@@ -59,11 +57,17 @@ const BusinessServices = () => {
           serviceToDelete?.name
         )}?`}
       />
+      <ModalAddService
+        open={openModalAdd}
+        onClose={() => setOpenModalAdd(false)}
+        onSubmit={handleSubmit}
+        service={serviceToEdit}
+        isEditing={serviceToEdit !== undefined}
+        consumables={consumables}
+      />
       <CustomSnackbar
-        success={success}
-        error={error}
-        successMessage="Operación realizada con éxito"
-        errorMessage="Error al realizar la operación"
+        successMessage={successMessage}
+        errorMessage={errorMessage}
       />
       <Box sx={{ p: 3 }}>
         <Grid
@@ -115,6 +119,7 @@ const BusinessServices = () => {
             handleEditModal={handleEditModal}
             page={page}
             rowsPerPage={rowsPerPage}
+            loadingServices={loading}
           />
         )}
 
@@ -142,15 +147,6 @@ const BusinessServices = () => {
             }}
           />
         )}
-
-        <ModalAddService
-          open={openModalAdd}
-          onClose={() => setOpenModalAdd(false)}
-          onSubmit={handleSubmit}
-          service={serviceToEdit}
-          isEditing={serviceToEdit !== undefined}
-          consumables={consumables}
-        />
       </Box>
     </>
   );
