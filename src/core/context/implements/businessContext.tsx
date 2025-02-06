@@ -11,6 +11,7 @@ interface IContextProps {
 export interface IBusinessContext {
   businessList: BusinessModel[];
   business: BusinessModel;
+  businessId: number | undefined;
   loading: boolean;
   addBusinessToBusinessList: (newBusiness: BusinessModel) => void;
   onChangeBusiness: (id: number) => void;
@@ -60,6 +61,7 @@ export const BusinessProvider = ({ children }: IContextProps) => {
     () => ({
       businessList,
       business,
+      businessId: business.id,
       loading,
       addBusinessToBusinessList,
       onChangeBusiness,

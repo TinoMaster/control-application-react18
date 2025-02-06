@@ -27,6 +27,7 @@ import {
   SECTIONS_BUSINESS_REPORT,
 } from "./useBusinessReportContext";
 import { SuccessErrorState } from "../../../../../core/types/global.types";
+import { useBoolean } from "../../../../../core/hooks/customs/useBoolean";
 
 interface IContextProps {
   children: ReactNode;
@@ -48,6 +49,9 @@ export interface IBusinessReportContext {
   error: SuccessErrorState;
   todayReports: BusinessFinalSaleModelResponse[];
   openModalReport: boolean;
+  openDetailSaleModal: boolean;
+  setTrueDetailSale: () => void;
+  setFalseDetailSale: () => void;
   handleCloseModalReport: () => void;
   setOpenModalReport: React.Dispatch<React.SetStateAction<boolean>>;
   machinesAlreadySelected: () => (number | undefined)[];
@@ -75,6 +79,11 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
   const [cards, setCards] = useState<CardPayment[]>([]);
 
   const [openModalReport, setOpenModalReport] = useState(false);
+  const [
+    openDetailSaleModal,
+    { setTrue: setTrueDetailSale, setFalse: setFalseDetailSale },
+  ] = useBoolean(false);
+  
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<SuccessErrorState>(
     initialSuccessErrorState
@@ -182,13 +191,14 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
       );
       if (response.status === 200) {
         setSuccess({ status: true, message: "Venta eliminada exitosamente" });
-        // TODO: agregar logica de refrescar la lista y cerrar modal
+        getTodayReports();
+        setFalseDetailSale();
       } else {
         setError({ status: true, message: "Error al eliminar la venta" });
       }
       setLoading(false);
     },
-    []
+    [getTodayReports, setFalseDetailSale]
   );
 
   useEffect(() => {
@@ -214,6 +224,9 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
       error,
       todayReports,
       openModalReport,
+      openDetailSaleModal,
+      setTrueDetailSale,
+      setFalseDetailSale,
       handleCloseModalReport,
       setOpenModalReport,
       machinesAlreadySelected,
@@ -236,6 +249,9 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
     setOpenModalReport,
     handleCloseModalReport,
     openModalReport,
+    openDetailSaleModal,
+    setTrueDetailSale,
+    setFalseDetailSale,
     machinesAlreadySelected,
     workersAlreadySelected,
     onDeleteSale,
