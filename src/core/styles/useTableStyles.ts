@@ -72,6 +72,7 @@ export const useTableStyles = () => {
         marginRight: 1,
       },
       emptyInfoStyle: {
+        width: "100%",
         textAlign: "center",
         color: selectedTheme.text_color,
         borderColor: selectedTheme.secondary_color,

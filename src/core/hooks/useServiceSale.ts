@@ -9,7 +9,7 @@ export const useServiceSale = () => {
   const businessId = business?.id;
   const [serviceSales, setServiceSales] = useState<ServiceSaleModel[]>([]);
   const [loadingServiceSales, setLoadingServiceSales] =
-    useState<boolean>(false);
+    useState<boolean>(true);
 
   const getServiceSales = useCallback(async () => {
     if (!businessId) return;
