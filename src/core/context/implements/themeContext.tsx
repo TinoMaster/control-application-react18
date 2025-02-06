@@ -56,7 +56,7 @@ export const AppThemeProvider = ({ children }: IContextProps) => {
   const { isLoggedIn } = useAuthContext();
   const themeId = localStorage.getItem("themeId");
   const [themes, setThemes] = useState<ThemeModel[]>([]);
-  const [loadingThemes, setLoadingThemes] = useState(false);
+  const [loadingThemes, setLoadingThemes] = useState(true);
   const [selectedTheme, setSelectedTheme] = useState<ThemeModel>(
     themeId ? chooseThemeById(Number(themeId), themes) : defaultTheme
   );

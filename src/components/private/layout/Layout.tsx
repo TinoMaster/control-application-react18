@@ -1,14 +1,15 @@
+import { Box, Toolbar } from "@mui/material";
 import { useState } from "react";
-import { Toolbar, Box, CircularProgress } from "@mui/material";
-import { PrivateRoutes } from "../../../pages/private";
-import { Header } from "../header/Header";
 import { useAppContext } from "../../../core/context/use/useAppContext";
+import { useThemeContext } from "../../../core/context/use/useThemeContext";
 import { ERole } from "../../../core/models/api";
 import { SuperAdminRoutes } from "../../../pages/admin/Admin.routes";
-import { PrivateSidebar } from "../sidebar/Sidebar";
-import { SuperAdminSidebar } from "../../admin/sidebar/Sidebar";
+import { PrivateRoutes } from "../../../pages/private";
 import { HeaderAdmin } from "../../admin/header/header";
-import { useThemeContext } from "../../../core/context/use/useThemeContext";
+import { SuperAdminSidebar } from "../../admin/sidebar/Sidebar";
+import { LoadingCircularProgress } from "../../common/ui/LoadingCircularProgress";
+import { Header } from "../header/Header";
+import { PrivateSidebar } from "../sidebar/Sidebar";
 
 export const PrivateLayout = () => {
   const { selectedTheme, loadingThemes } = useThemeContext();
@@ -28,19 +29,7 @@ export const PrivateLayout = () => {
   };
 
   if (loadingThemes) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          color: "var(--primary-color)",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingCircularProgress loading={loadingThemes} />;
   }
 
   return (

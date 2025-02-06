@@ -1,10 +1,10 @@
-import { ReactNode, useCallback, useEffect, useState } from "react";
-import { AuthContext } from "../use/useAuthContext";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ERole, TRole, UserModel } from "../../models/api";
-import { decodeJWT } from "../../utilities/helpers/jwtDecode";
-import { appService } from "../../services/appService";
 import { EmployeeModel } from "../../models/api/employee.model";
+import { appService } from "../../services/appService";
 import { employeeService } from "../../services/employeeService";
+import { decodeJWT } from "../../utilities/helpers/jwtDecode";
+import { AuthContext } from "../use/useAuthContext";
 
 interface IContextProps {
   children: ReactNode;
@@ -32,7 +32,14 @@ export const AuthProvider = ({ children }: IContextProps) => {
 
   const [reload, setReload] = useState(false);
 
-  const reloadUser = () => setReload(!reload);
+  const reloadUser = useCallback(() => setReload(!reload), [reload]);
+
+  const logout = useCallback(() => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("refreshToken");
+    window.location.href = "/login";
+  }, []);
 
   const getUser = useCallback(
     async (email: string) => {
@@ -53,7 +60,7 @@ export const AuthProvider = ({ children }: IContextProps) => {
       }
       setLoadingUser(false);
     },
-    [role]
+    [role, logout]
   );
 
   useEffect(() => {
@@ -62,29 +69,24 @@ export const AuthProvider = ({ children }: IContextProps) => {
     }
   }, [userEmail, reload, getUser]);
 
-  const isLoggedIn = (): boolean => {
+  const isLoggedIn = useCallback((): boolean => {
     return token !== null && token !== "" && role !== null;
-  };
+  }, [token, role]);
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("refreshToken");
-    window.location.href = "/login";
-  };
+  const contextValue = useMemo(
+    () => ({
+      isLoggedIn,
+      role,
+      user,
+      loadingUser,
+      reloadUser,
+      employee,
+      logout,
+    }),
+    [isLoggedIn, role, user, loadingUser, reloadUser, employee, logout]
+  );
 
   return (
-    <AuthContext.Provider
-      value={{
-        isLoggedIn,
-        role,
-        user,
-        loadingUser,
-        reloadUser,
-        employee,
-        logout,
-      }}
-      children={children}
-    />
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
