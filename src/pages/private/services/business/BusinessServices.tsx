@@ -5,13 +5,13 @@ import {
   Grid2 as Grid,
   TablePagination,
   Typography,
-  darken,
   useMediaQuery,
 } from "@mui/material";
 import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
 import { ModalConfirm } from "../../../../components/common/ui/ModalConfirm";
 import { useAppContext } from "../../../../core/context/use/useAppContext";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
+import { useTableStyles } from "../../../../core/styles/useTableStyles";
 import { formatTextReference } from "../../../../core/utilities/helpers/formatters";
 import { ServiceListDesktop } from "./components/ServiceListDesktop";
 import { ServiceListMobile } from "./components/ServiceListMobile";
@@ -20,6 +20,7 @@ import { useBusinessServices } from "./useBusinessServices";
 
 const BusinessServices = () => {
   const { selectedTheme } = useThemeContext();
+  const { buttonStyle } = useTableStyles();
   const { materialTheme } = useAppContext();
   const {
     page,
@@ -91,13 +92,7 @@ const BusinessServices = () => {
               variant="contained"
               startIcon={<AddIcon />}
               onClick={handleOpenModal}
-              sx={{
-                backgroundColor: selectedTheme.primary_color,
-                color: "#fff",
-                "&:hover": {
-                  backgroundColor: darken(selectedTheme.primary_color, 0.3),
-                },
-              }}
+              sx={buttonStyle}
             >
               Agregar Servicio
             </Button>

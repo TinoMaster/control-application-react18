@@ -9,14 +9,15 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { CustomSnackbar } from "../../../../../components/common/ui/CustomSnackbar";
+import { LoadingCircularProgress } from "../../../../../components/common/ui/loaders/LoadingCircularProgress";
 import { ModalRandomInfo } from "../../../../../components/common/ui/ModalRandomInfo";
 import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
+import { useBusinessReportContext } from "../context/useBusinessReportContext";
 import { ModalReport } from "./modal-report/ModalReport";
 import { SaleCard } from "./sale-card/SaleCard";
-import { useBusinessReportContext } from "../context/useBusinessReportContext";
-import { LoadingCircularProgress } from "../../../../../components/common/ui/loaders/LoadingCircularProgress";
-import { CustomSnackbar } from "../../../../../components/common/ui/CustomSnackbar";
+import { useTableStyles } from "../../../../../core/styles/useTableStyles";
 
 export const SaleReportBox = () => {
   const { business } = useBusinessContext();
@@ -27,10 +28,11 @@ export const SaleReportBox = () => {
     handleCloseModalReport,
     setOpenModalReport,
     loading,
-    success,
-    error,
+    successMessage,
+    errorMessage,
   } = useBusinessReportContext();
   const { selectedTheme } = useThemeContext();
+  const { cardStyle } = useTableStyles();
 
   const [openModalFullMachine, setOpenModalFullMachine] = useState(false);
   const [messageMachineDisponible, setMessageMachineDisponible] = useState("");
@@ -62,10 +64,8 @@ export const SaleReportBox = () => {
     <>
       <LoadingCircularProgress loading={loading} />
       <CustomSnackbar
-        error={error.status}
-        success={success.status}
-        errorMessage={error.message}
-        successMessage={success.message}
+        errorMessage={errorMessage}
+        successMessage={successMessage}
       />
       <ModalRandomInfo
         open={openModalFullMachine}
@@ -84,15 +84,7 @@ export const SaleReportBox = () => {
           <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
             <Card
               sx={{
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                borderColor: selectedTheme.secondary_color,
-                backgroundColor: selectedTheme.background_color,
-                color: selectedTheme.text_color,
-                borderRadius: "8px",
-                boxShadow: `0 0 70px 10px ${selectedTheme.secondary_color}15 , 0 0 5px 2px #00000015`,
+                ...cardStyle,
                 transition: "background-color 0.3s ease",
                 cursor: "pointer",
                 "&:hover": {
@@ -111,7 +103,11 @@ export const SaleReportBox = () => {
                 >
                   <AddIcon fontSize="large" />
                 </IconButton>
-                <Typography variant="h6" component="div">
+                <Typography
+                  variant="h6"
+                  component="div"
+                  sx={{ color: selectedTheme.text_color }}
+                >
                   Agregar Venta
                 </Typography>
               </CardContent>

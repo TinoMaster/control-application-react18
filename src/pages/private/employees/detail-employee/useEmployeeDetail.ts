@@ -1,12 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useStatus } from "../../../../core/hooks/customs/useStatus";
 import { EmployeeModel } from "../../../../core/models/api/employee.model";
 import { employeeService } from "../../../../core/services/employeeService";
 
 export const useEmployeeDetail = () => {
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(false);
+  const {
+    loading,
+    setLoading,
+    setSuccess,
+    successMessage,
+    errorMessage,
+    setError,
+  } = useStatus();
 
   const { id } = useParams();
   const [employee, setEmployee] = useState<EmployeeModel | undefined>(
@@ -18,28 +24,29 @@ export const useEmployeeDetail = () => {
   };
 
   const getEmployee = useCallback(async () => {
+    setLoading();
     if (!id) {
       return;
     }
     const response = await employeeService.getEmployeeById(id!);
     if (response.status === 200) {
       setEmployee(response.data);
+      setSuccess("");
+    } else {
+      setError(response.message);
     }
-  }, [id]);
+  }, [id, setLoading, setSuccess, setError]);
 
   const onDeleteEmployee = async () => {
-    setError(false);
-    setLoading(true);
+    setLoading();
     const response = await employeeService.deleteEmployee(id!);
     if (response.status === 200) {
-      setSuccess(true);
+      setSuccess("Empleado eliminado correctamente");
       setTimeout(() => {
         window.location.href = "/employees/list";
-        setLoading(false);
       }, 1000);
     } else {
-      setError(true);
-      setLoading(false);
+      setError("Error al eliminar empleado");
     }
   };
 
@@ -49,8 +56,8 @@ export const useEmployeeDetail = () => {
 
   return {
     loading,
-    success,
-    error,
+    successMessage,
+    errorMessage,
     employee,
     updateEmployee,
     onDeleteEmployee,

@@ -39,6 +39,7 @@ export const ServiceListDesktop = ({
     bodyTableCellStyle,
     tableContainerStyle,
     bodyTableRowStyle,
+    emptyInfoStyle,
   } = useTableStyles();
   const delayedLoading = useDelayedLoading(loadingServices, 1000);
 
@@ -98,11 +99,7 @@ export const ServiceListDesktop = ({
               ))}
           {!delayedLoading && services.length === 0 && (
             <TableRow>
-              <TableCell
-                colSpan={5}
-                align="center"
-                sx={{ color: selectedTheme.text_color }}
-              >
+              <TableCell colSpan={5} sx={emptyInfoStyle}>
                 No hay servicios registrados
               </TableCell>
             </TableRow>

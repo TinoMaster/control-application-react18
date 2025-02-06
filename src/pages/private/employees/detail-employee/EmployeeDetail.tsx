@@ -1,11 +1,5 @@
-import {
-  Alert,
-  Box,
-  Card,
-  CircularProgress,
-  Modal,
-  Snackbar,
-} from "@mui/material";
+import { Box, Card, CircularProgress, Modal } from "@mui/material";
+import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
 import { EmployeeModel } from "../../../../core/models/api/employee.model";
 import { useTableStyles } from "../../../../core/styles/useTableStyles";
 import { EmployeeDetailAssociatedBusinesses } from "./associatedBusinesses-section/EmployeeDetailAssociatedBusinesses";
@@ -24,8 +18,8 @@ const EmployeeDetail = () => {
   const { cardStyle } = useTableStyles();
   const {
     loading,
-    success,
-    error,
+    successMessage,
+    errorMessage,
     employee,
     updateEmployee,
     onDeleteEmployee,
@@ -40,21 +34,10 @@ const EmployeeDetail = () => {
           )}
         </>
       </Modal>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={success || error}
-        autoHideDuration={4000}
-      >
-        <Alert
-          severity={success ? "success" : "error"}
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {success
-            ? "Empleado eliminado con éxito"
-            : "Error al eliminar el empleado"}
-        </Alert>
-      </Snackbar>
+      <CustomSnackbar
+        successMessage={successMessage}
+        errorMessage={errorMessage}
+      />
       <Box
         sx={{
           width: "100%",

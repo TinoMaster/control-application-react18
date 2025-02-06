@@ -18,7 +18,7 @@ export const globalMaterialTheme = {
 
 export const defaultTheme: ThemeModel = {
   id: 0,
-  name: "Default",
+  name: "oscuro clasico",
   primary_color: "#161616",
   secondary_color: "#027483",
   background_color: "#242424",

@@ -3,15 +3,21 @@ import { formatDateToString } from "../../../../../core/utilities/helpers/dateFo
 import { translateRole } from "../../../../../core/utilities/helpers/translateRole";
 import { EmployeeModel } from "../../../../../core/models/api/employee.model";
 import { ERole } from "../../../../../core/models/api";
+import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
 
 interface Props {
   employee: EmployeeModel;
 }
 
 export const EmployeeDetailDescriptionSection = ({ employee }: Props) => {
+  const { selectedTheme } = useThemeContext();
   return (
     <CardContent>
-      <Grid container spacing={2} sx={{ py: { xs: 0, md: 1 } }}>
+      <Grid
+        container
+        spacing={2}
+        sx={{ py: { xs: 0, md: 1 }, color: selectedTheme.text_color }}
+      >
         {/* Información básica */}
         <Grid
           size={{ xs: 12, md: 6 }}

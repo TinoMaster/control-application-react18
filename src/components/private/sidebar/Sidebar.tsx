@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { useAppContext } from "../../../core/context/use/useAppContext";
-import { useThemeContext } from "../../../core/context/use/useThemeContext";
 import { PRIVATE_NAV_LINKS } from "../../../core/data/global.data";
 import { INavLinkItem } from "../../../core/types/global.types";
 import { filterRoutesByRole } from "../../../core/utilities/helpers/filterRoutesByRole";
@@ -26,7 +25,6 @@ interface SidebarProps {
 
 export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
   const { materialTheme, role } = useAppContext();
-  const { selectedTheme } = useThemeContext();
   const routes: INavLinkItem[] = filterRoutesByRole(PRIVATE_NAV_LINKS, role);
 
   const drawerWidth = 240;
@@ -63,8 +61,7 @@ export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
       <List
         dense
         sx={{
-          backgroundColor: selectedTheme.background_color,
-          color: selectedTheme.text_color,
+          backgroundColor: "var(--bg-dark)",
           height: "100%",
           border: "none",
         }}
@@ -93,8 +90,8 @@ export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
                   to={item.path}
                   style={({ isActive }) => ({
                     textDecoration: "none",
-                    backgroundColor: isActive ? "white" : "transparent",
-                    color: isActive ? "var(--bg-dark)" : "#fefefe",
+                    backgroundColor: isActive ? "#f5f5f5" : "transparent",
+                    color: isActive ? "var(--bg-dark)" : "#f5f5f5",
                     width: "100%",
                     padding: "8px 16px",
                     borderRadius: "4px",

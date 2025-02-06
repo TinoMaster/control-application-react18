@@ -11,7 +11,11 @@ export const EmployeeDetailSalarySection = ({ employee }: Props) => {
   const { selectedTheme } = useThemeContext();
   return (
     <Box sx={{ mt: 3 }}>
-      <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+      <Typography
+        variant="h6"
+        fontWeight="bold"
+        sx={{ mb: 2, color: selectedTheme.text_color }}
+      >
         Salarios
       </Typography>
       <Grid container spacing={2}>

@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
+import { useBoolean } from "../../../../../core/hooks/customs/useBoolean";
 import { useBusinessFinalSale } from "../../../../../core/hooks/useBusinessFinalSale";
 import {
   BusinessFinalSaleModel,
@@ -26,8 +27,7 @@ import {
   CardPayment,
   SECTIONS_BUSINESS_REPORT,
 } from "./useBusinessReportContext";
-import { SuccessErrorState } from "../../../../../core/types/global.types";
-import { useBoolean } from "../../../../../core/hooks/customs/useBoolean";
+import { useStatus } from "../../../../../core/hooks/customs/useStatus";
 
 interface IContextProps {
   children: ReactNode;
@@ -45,8 +45,8 @@ export interface IBusinessReportContext {
   setCards: React.Dispatch<React.SetStateAction<CardPayment[]>>;
   saveBusinessSale: () => void;
   loading: boolean;
-  success: SuccessErrorState;
-  error: SuccessErrorState;
+  successMessage: string;
+  errorMessage: string;
   todayReports: BusinessFinalSaleModelResponse[];
   openModalReport: boolean;
   openDetailSaleModal: boolean;
@@ -58,11 +58,6 @@ export interface IBusinessReportContext {
   workersAlreadySelected: () => EmployeeModel[];
   onDeleteSale: (sale: BusinessFinalSaleModelResponse) => void;
 }
-
-const initialSuccessErrorState: SuccessErrorState = {
-  status: false,
-  message: "",
-};
 
 export const BusinessReportProvider = ({ children }: IContextProps) => {
   const [currentSection, setCurrentSection] = useState(
@@ -83,14 +78,15 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
     openDetailSaleModal,
     { setTrue: setTrueDetailSale, setFalse: setFalseDetailSale },
   ] = useBoolean(false);
-  
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState<SuccessErrorState>(
-    initialSuccessErrorState
-  );
-  const [error, setError] = useState<SuccessErrorState>(
-    initialSuccessErrorState
-  );
+
+  const {
+    loading,
+    successMessage,
+    errorMessage,
+    setLoading,
+    setError,
+    setSuccess,
+  } = useStatus();
 
   const handleCloseModalReport = useCallback(() => {
     setOpenModalReport(false);
@@ -151,9 +147,7 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
   }, [currentSection]);
 
   const saveBusinessSale = useCallback(async () => {
-    setLoading(true);
-    setError(initialSuccessErrorState);
-    setSuccess(initialSuccessErrorState);
+    setLoading();
 
     const dataToSave: BusinessFinalSaleModelToCreate = {
       ...state,
@@ -172,33 +166,36 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
 
     if (response.status === 200) {
       await getTodayReports();
-      setSuccess({ status: true, message: "Venta guardada exitosamente" });
+      setSuccess("Venta guardada exitosamente");
       setOpenModalReport(false);
     } else {
-      setError({ status: true, message: "Error al guardar la venta" });
+      setError("Error al guardar la venta");
     }
-
-    setLoading(false);
-  }, [business, state, cards, getTodayReports]);
+  }, [
+    business,
+    state,
+    cards,
+    getTodayReports,
+    setLoading,
+    setSuccess,
+    setError,
+  ]);
 
   const onDeleteSale = useCallback(
     async (sale: BusinessFinalSaleModelResponse) => {
-      setLoading(true);
-      setError(initialSuccessErrorState);
-      setSuccess(initialSuccessErrorState);
+      setLoading();
       const response = await businessFinalSaleService.deleteBusinessFinalSale(
         sale.id as number
       );
       if (response.status === 200) {
-        setSuccess({ status: true, message: "Venta eliminada exitosamente" });
+        setSuccess("Venta eliminada exitosamente");
         getTodayReports();
         setFalseDetailSale();
       } else {
-        setError({ status: true, message: "Error al eliminar la venta" });
+        setError("Error al eliminar la venta");
       }
-      setLoading(false);
     },
-    [getTodayReports, setFalseDetailSale]
+    [getTodayReports, setFalseDetailSale, setLoading, setSuccess, setError]
   );
 
   useEffect(() => {
@@ -220,8 +217,8 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
       setCards,
       saveBusinessSale,
       loading,
-      success,
-      error,
+      successMessage,
+      errorMessage,
       todayReports,
       openModalReport,
       openDetailSaleModal,
@@ -238,8 +235,8 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
     state,
     cards,
     loading,
-    success,
-    error,
+    successMessage,
+    errorMessage,
     nextSection,
     prevSection,
     saveBusinessSale,

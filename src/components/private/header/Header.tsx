@@ -1,17 +1,9 @@
-import {
-  AppBar,
-  Box,
-  darken,
-  IconButton,
-  Toolbar,
-  Typography,
-} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import UserOptions from "../user-options/UserOptions";
+import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import { useAppContext } from "../../../core/context/use/useAppContext";
 import { useBusinessContext } from "../../../core/context/use/useBusinessContext";
 import { ChooseBusiness } from "../choose-business/ChooseBusiness";
-import { useThemeContext } from "../../../core/context/use/useThemeContext";
+import UserOptions from "../user-options/UserOptions";
 
 interface HeaderProps {
   handleDrawerToggle: () => void;
@@ -20,7 +12,6 @@ interface HeaderProps {
 export const Header = ({ handleDrawerToggle }: HeaderProps) => {
   const { materialTheme } = useAppContext();
   const { business, businessList, onChangeBusiness } = useBusinessContext();
-  const { selectedTheme } = useThemeContext();
   return (
     <AppBar
       position="fixed"
@@ -33,12 +24,12 @@ export const Header = ({ handleDrawerToggle }: HeaderProps) => {
             duration: materialTheme.transitions.duration.leavingScreen,
           }
         ),
-        backgroundColor: darken(selectedTheme.background_color, 0.2),
+        backgroundColor: "var(--bg-dark)",
         borderRadius: "0",
         height: "64px",
         border: "none",
         boxShadow: "none",
-        color: selectedTheme.text_color,
+        color: "#f5f5f5",
       }}
     >
       <Toolbar

@@ -55,10 +55,10 @@ export interface IThemeContext {
 export const AppThemeProvider = ({ children }: IContextProps) => {
   const { isLoggedIn } = useAuthContext();
   const themeId = localStorage.getItem("themeId");
-  const [themes, setThemes] = useState<ThemeModel[]>([]);
+  const [themes, setThemes] = useState<ThemeModel[]>([defaultTheme]);
   const [loadingThemes, setLoadingThemes] = useState(true);
   const [selectedTheme, setSelectedTheme] = useState<ThemeModel>(
-    themeId ? chooseThemeById(Number(themeId), themes) : defaultTheme
+    themeId ? chooseThemeById(Number(themeId), [defaultTheme]) : defaultTheme
   );
 
   const getThemes = useCallback(async () => {
@@ -71,16 +71,29 @@ export const AppThemeProvider = ({ children }: IContextProps) => {
       return;
     }
 
-    const response = await appService.getThemes();
-    if (response.status === 200) {
-      setThemes(response.data || []);
-      if (response.data && !themeId) {
-        console.log(response.data);
-        setSelectedTheme(response.data[0]);
-        localStorage.setItem("themeId", response.data[0]?.id.toString() || "0");
-      } else {
-        setSelectedTheme(chooseThemeById(Number(themeId), response.data || []));
+    try {
+      const response = await appService.getThemes();
+      if (response.status === 200) {
+        // Ensure defaultTheme is always included and no duplicates
+        const allThemes = [...(response.data || [])];
+        if (!allThemes.some((theme) => theme.id === defaultTheme.id)) {
+          allThemes.push(defaultTheme);
+        }
+        setThemes(allThemes);
+
+        // Handle theme selection
+        if (themeId) {
+          const selectedTheme = chooseThemeById(Number(themeId), allThemes);
+          setSelectedTheme(selectedTheme || defaultTheme);
+        } else if (response.data && response.data.length > 0) {
+          setSelectedTheme(response.data[0]);
+          localStorage.setItem("themeId", response.data[0].id.toString());
+        }
       }
+    } catch (error) {
+      console.error("Error fetching themes:", error);
+      setThemes([defaultTheme]);
+      setSelectedTheme(defaultTheme);
     }
     setLoadingThemes(false);
   }, [themeId, isLoggedIn]);

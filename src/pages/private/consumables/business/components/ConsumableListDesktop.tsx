@@ -9,7 +9,8 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
+import { LoadingTable } from "../../../../../components/common/ui/loaders/loadingTable";
+import { useDelayedLoading } from "../../../../../core/hooks/customs/useDelayedLoading";
 import { ConsumableModel } from "../../../../../core/models/api/consumables.model";
 import {
   EUnit,
@@ -17,8 +18,6 @@ import {
 } from "../../../../../core/models/api/unit.model";
 import { useTableStyles } from "../../../../../core/styles/useTableStyles";
 import { formatCurrency } from "../../../../../core/utilities/helpers/formatCurrency";
-import { LoadingTable } from "../../../../../components/common/ui/loaders/loadingTable";
-import { useDelayedLoading } from "../../../../../core/hooks/customs/useDelayedLoading";
 
 interface Props {
   consumables: ConsumableModel[];
@@ -37,13 +36,13 @@ export const ConsumableListDesktop = ({
   handleDeleteConsumable,
   loadingConsumables,
 }: Props) => {
-  const { selectedTheme } = useThemeContext();
   const {
     headerTableCellStyle,
     bodyTableRowStyle,
     bodyTableCellStyle,
     tableContainerStyle,
     iconButtonStyle,
+    emptyInfoStyle,
   } = useTableStyles();
   const delayedLoading = useDelayedLoading(loadingConsumables, 1000);
 
@@ -108,16 +107,7 @@ export const ConsumableListDesktop = ({
               ))}
           {!delayedLoading && consumables.length === 0 && (
             <TableRow>
-              <TableCell
-                colSpan={6}
-                align="center"
-                sx={{
-                  color: selectedTheme.text_color,
-                  padding: "24px 16px",
-                  border: "none",
-                  fontSize: "0.875rem",
-                }}
-              >
+              <TableCell colSpan={6} sx={emptyInfoStyle}>
                 No hay insumos registrados
               </TableCell>
             </TableRow>

@@ -11,17 +11,17 @@ export const useTableStyles = () => {
         backgroundColor: selectedTheme.background_color,
         borderRadius: "8px",
         overflow: "hidden",
-        boxShadow: `0 0 100px 5px ${selectedTheme.secondary_color}50, 0 0 5px 2px #00000015`,
+        boxShadow: `0 0 150px 50px ${selectedTheme.secondary_color}80, 0 0 5px 2px #00000015`,
       },
       tableContainerStyle: {
         backgroundColor: selectedTheme.background_color,
         borderRadius: "8px",
         overflow: "hidden",
-        boxShadow: `0 0 100px 5px ${selectedTheme.secondary_color}50, 0 0 5px 2px #00000015`,
+        boxShadow: `0 0 150px 2px ${selectedTheme.secondary_color}80, 0 0 5px 2px #00000015`,
       },
       headerTableCellStyle: {
-        color: selectedTheme.text_color,
-        backgroundColor: selectedTheme.primary_color,
+        color: "#f5f5f5",
+        backgroundColor: "var(--bg-dark)",
         padding: "12px 16px",
         border: "none",
         fontSize: "0.875rem",
@@ -29,11 +29,7 @@ export const useTableStyles = () => {
       },
       bodyTableRowStyle: {
         "&:hover": {
-          backgroundColor: `${
-            selectedTheme.background_color === "#fff"
-              ? "rgba(0, 0, 0, 0.04)"
-              : "rgba(255, 255, 255, 0.04)"
-          }`,
+          backgroundColor: "rgba(0, 0, 0, 0.07)",
         },
         transition: "background-color 0.2s ease",
       },
@@ -50,10 +46,10 @@ export const useTableStyles = () => {
       },
       buttonStyle: {
         borderRadius: "8px",
-        backgroundColor: selectedTheme.primary_color,
-        color: selectedTheme.text_color,
+        backgroundColor: "var(--bg-dark)",
+        color: "#f5f5f5",
         "&:hover": {
-          backgroundColor: darken(selectedTheme.primary_color, 0.3),
+          backgroundColor: "var(--bg-dark-light)",
         },
       },
       buttonOutlineStyle: {

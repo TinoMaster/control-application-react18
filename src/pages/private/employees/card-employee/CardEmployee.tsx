@@ -33,7 +33,7 @@ export const CardEmployee = ({ employee }: CardEmployeeProps) => {
         avatar={
           <Avatar
             sx={{
-              backgroundColor: selectedTheme.primary_color,
+              backgroundColor: "var(--bg-dark)",
               color: "white",
               width: 56,
               height: 56,
@@ -44,7 +44,11 @@ export const CardEmployee = ({ employee }: CardEmployeeProps) => {
           </Avatar>
         }
         title={
-          <Typography variant="h6" fontSize={"1rem"}>
+          <Typography
+            sx={{ color: selectedTheme.text_color }}
+            variant="h6"
+            fontSize={"1rem"}
+          >
             {employee.user.name}
           </Typography>
         }
@@ -63,7 +67,7 @@ export const CardEmployee = ({ employee }: CardEmployeeProps) => {
             component={Link}
             to={`/employees/${employee.id}`}
             sx={{
-              backgroundColor: selectedTheme.primary_color,
+              backgroundColor: "var(--bg-dark)",
               mt: 1,
               fontSize: "0.7rem",
             }}

@@ -26,6 +26,7 @@ import CustomInput from "../../../../../components/common/ui/CustomInput";
 import { CustomSnackbar } from "../../../../../components/common/ui/CustomSnackbar";
 import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
+import { useStatus } from "../../../../../core/hooks/customs/useStatus";
 import { zodEmployeeToEmployeeMapper } from "../../../../../core/mappers/global.mapper";
 import { ERole } from "../../../../../core/models/api";
 import { EmployeeModel } from "../../../../../core/models/api/employee.model";
@@ -52,9 +53,14 @@ export const ModalEditEmployee = ({
   const { businessList, business } = useBusinessContext();
   const { selectedTheme } = useThemeContext();
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const {
+    loading,
+    setLoading,
+    setSuccess,
+    successMessage,
+    errorMessage,
+    setError,
+  } = useStatus();
   const [expanded, setExpanded] = useState(false);
 
   const handleChange = () => {
@@ -78,8 +84,7 @@ export const ModalEditEmployee = ({
       data.businesses.includes(b.id as number)
     );
 
-    setLoading(true);
-    setError("");
+    setLoading();
 
     const dataToSave: EmployeeModel = zodEmployeeToEmployeeMapper(
       data,
@@ -94,7 +99,7 @@ export const ModalEditEmployee = ({
     const response = await employeeService.updateEmployee(dataToSave);
 
     if (response.status === 200) {
-      setSuccess(true);
+      setSuccess("Empleado actualizado correctamente");
       if (response.data) {
         const updatedEmployee = response.data;
         updateEmployee(updatedEmployee);
@@ -105,7 +110,6 @@ export const ModalEditEmployee = ({
     } else {
       setError(response.message);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -136,10 +140,8 @@ export const ModalEditEmployee = ({
   return (
     <>
       <CustomSnackbar
-        success={success}
-        error={!!error}
-        successMessage="Empleado editado correctamente"
-        errorMessage={error}
+        successMessage={successMessage}
+        errorMessage={errorMessage}
       />
 
       <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>

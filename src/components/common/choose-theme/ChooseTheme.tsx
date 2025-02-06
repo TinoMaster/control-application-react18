@@ -11,6 +11,8 @@ export const ChooseTheme = () => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  console.log("themes", themes)
+
   const handleClickOption = (theme: ThemeModel) => {
     setAnchorEl(null);
     onChangeTheme(theme);
@@ -33,11 +35,11 @@ export const ChooseTheme = () => {
           alignItems: "center",
           justifyContent: "center",
           height: "50px",
-          backgroundColor: selectedTheme.background_color,
+          backgroundColor: "var(--bg-dark)",
         }}
       >
         <Typography variant="body1" sx={{ padding: "0 15px", display: "flex", alignItems: "center", gap: 1 }}>
-          <span style={{ fontWeight: "bold", color: selectedTheme.text_color }}>
+          <span style={{ fontWeight: "bold", color: "#f5f5f5" }}>
             Tema:
           </span>
           <span
@@ -69,7 +71,7 @@ export const ChooseTheme = () => {
           right: 0,
           bottom: 0,
           color: "white",
-          visibility: themes.length > 1 ? "visible" : "hidden",
+          visibility: themes.length > 0 ? "visible" : "hidden",
         }}
       >
         <MoreVertIcon />
