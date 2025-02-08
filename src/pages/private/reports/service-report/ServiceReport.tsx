@@ -19,10 +19,12 @@ import { allowedRole } from "../../../../core/utilities/helpers/allowedRole.util
 import { RenderServiceSaleDesktop } from "./components/RenderServiceSaleDesktop";
 import { RenderServiceSaleMobile } from "./components/RenderServiceSaleMobile";
 import { ModalAddServiceSale } from "./modal-add-service-sale/ModalAddServiceSale";
-import { useServiceReport } from "./useServiceReport";
+import { useServiceReport } from "./hooks/useServiceReport";
+import { useTableStyles } from "../../../../core/styles/useTableStyles";
 
 const ServiceReport = () => {
   const { selectedTheme } = useThemeContext();
+  const { buttonStyle } = useTableStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const {
@@ -123,13 +125,7 @@ const ServiceReport = () => {
                 startIcon={<AddIcon />}
                 disabled={!allowedRole(role, [ERole.EMPLOYEE, ERole.ADMIN])}
                 onClick={handleClickAddService}
-                sx={{
-                  backgroundColor: selectedTheme.primary_color,
-                  color: "white",
-                  "&:hover": {
-                    backgroundColor: darken(selectedTheme.primary_color, 0.1),
-                  },
-                }}
+                sx={buttonStyle}
               >
                 Agregar Servicio Vendido
               </Button>

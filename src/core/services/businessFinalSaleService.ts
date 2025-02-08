@@ -1,7 +1,7 @@
 import { apiConfig } from "../config/api.config";
 import {
   BusinessFinalSaleModelResponse,
-  BusinessFinalSaleModelToCreate
+  BusinessFinalSaleModelToCreate,
 } from "../models/api/businessFinalSale.model";
 import { ByBusinessAndDateRequestModel } from "../models/api/requests/byBusinessAndDateRequest.model";
 import { IResponse } from "../types/request.types";
@@ -22,6 +22,19 @@ class BusinessFinalSaleService {
           method: "POST",
           body: JSON.stringify(requestType),
         }
+      );
+    } catch (error: any) {
+      console.log(error);
+      return handleFetchError(error);
+    }
+  }
+
+  async getLastBusinessFinalSale(
+    businessId: number
+  ): Promise<IResponse<BusinessFinalSaleModelResponse>> {
+    try {
+      return await requestService.fetch<BusinessFinalSaleModelResponse>(
+        `${this.privateUrl}/business-final-sale/last/${businessId}`
       );
     } catch (error: any) {
       console.log(error);

@@ -71,12 +71,7 @@ export const useTableStyles = () => {
         width: "100%",
         textAlign: "center",
         color: selectedTheme.text_color,
-        borderColor: selectedTheme.secondary_color,
-        borderWidth: "1px",
-        borderStyle: "solid",
-        borderRadius: "8px",
         fontSize: "0.875rem",
-        boxShadow: `0 0 100px 5px ${selectedTheme.secondary_color}50, 0 0 5px 2px #00000015`,
         p: 1,
       },
       modalBlurStyle: {

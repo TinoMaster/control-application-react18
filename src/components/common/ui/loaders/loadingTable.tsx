@@ -1,5 +1,6 @@
+import { Box, darken, Skeleton, Stack } from "@mui/material";
 import React from "react";
-import { Box, Skeleton, Stack } from "@mui/material";
+import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 
 interface LoadingTableProps {
   rows?: number;
@@ -14,6 +15,7 @@ export const LoadingTable: React.FC<LoadingTableProps> = ({
   headerHeight = 56,
   rowHeight = 52,
 }) => {
+  const { selectedTheme } = useThemeContext();
   return (
     <Box sx={{ width: "100%", overflow: "hidden" }}>
       {/* Header */}
@@ -25,17 +27,19 @@ export const LoadingTable: React.FC<LoadingTableProps> = ({
           height: headerHeight,
           borderBottom: "1px solid",
           borderColor: "divider",
+          bgcolor: selectedTheme.background_color,
         }}
       >
         {Array(columns)
           .fill(0)
-          .map((_) => (
+          .map(() => (
             <Skeleton
               key={`header-${crypto.randomUUID()}`}
               variant="rounded"
               width={`${100 / columns}%`}
               height={24}
               animation="wave"
+              sx={{ bgcolor: darken(selectedTheme.background_color, 0.1) }}
             />
           ))}
       </Stack>
@@ -53,6 +57,7 @@ export const LoadingTable: React.FC<LoadingTableProps> = ({
               height: rowHeight,
               borderBottom: "1px solid",
               borderColor: "divider",
+              bgcolor: selectedTheme.background_color,
               "&:hover": {
                 bgcolor: "action.hover",
               },
@@ -67,6 +72,7 @@ export const LoadingTable: React.FC<LoadingTableProps> = ({
                   width={`${100 / columns}%`}
                   height={24}
                   animation="wave"
+                  sx={{ bgcolor: darken(selectedTheme.background_color, 0.05) }}
                 />
               ))}
           </Stack>
