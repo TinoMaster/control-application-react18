@@ -40,6 +40,10 @@ import { allowedRole } from "../../../../../../../core/utilities/helpers/allowed
 import { formatDateToString } from "../../../../../../../core/utilities/helpers/dateFormat";
 import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
 import { LoadingCircularProgress } from "../../../../../../../components/common/ui/loaders/LoadingCircularProgress";
+import {
+  filterEmployeesReadyToWork,
+  getTotalSalaryFromEmployees,
+} from "../../../../../../../core/utilities/helpers/globals";
 
 enum ERegisterType {
   INDIVIDUAL = "individual",
@@ -51,7 +55,9 @@ const SaleResumeZodSchema = z
     total: z.string(),
     found: z.string().optional(),
     machines: z.array(z.number()).min(1, "Selecciona al menos una maquina"),
-    workers: z.array(z.custom<EmployeeModel>()).min(1, "Selecciona al menos un trabajador"),
+    workers: z
+      .array(z.custom<EmployeeModel>())
+      .min(1, "Selecciona al menos un trabajador"),
     registerType: z.nativeEnum(ERegisterType),
   })
   .refine((data) => parseInt(data.total) > 0, {
@@ -65,7 +71,7 @@ export const SaleResume = () => {
   const { selectedTheme } = useThemeContext();
   const { role, user } = useAuthContext();
   const { business } = useBusinessContext();
-  const { filterEmployeesReadyToWork, loadingEmployees, getTotalSalary } = useEmployees();
+  const { employees, loadingEmployees } = useEmployees();
   const [loading, setLoading] = useState(false);
   const { dispatch, businessSale, nextSection, machinesAlreadySelected } =
     useBusinessReportContext();
@@ -98,7 +104,7 @@ export const SaleResume = () => {
   const debtsWatch = watch("found");
 
   const handleSelectEmployee = (employeeId: string) => {
-    const employee = filterEmployeesReadyToWork().find(
+    const employee = filterEmployeesReadyToWork(employees).find(
       (e) => e.id === employeeId
     );
     if (employee) {
@@ -130,7 +136,10 @@ export const SaleResume = () => {
   const onSubmit = (data: TSaleResume) => {
     setLoading(true);
 
-    const totalSalary = getTotalSalary(Number(data.total), data.workers);
+    const totalSalary = getTotalSalaryFromEmployees(
+      Number(data.total),
+      data.workers
+    );
     console.log(totalSalary);
 
     dispatch(updateBusinessSaleMachines(data.machines));
@@ -372,7 +381,7 @@ export const SaleResume = () => {
             </Typography>
             <FormControl error={!!errors.workers} fullWidth>
               <Grid container spacing={2}>
-                {filterEmployeesReadyToWork().map((employee) => (
+                {filterEmployeesReadyToWork(employees).map((employee) => (
                   <Grid
                     key={employee.id}
                     size={{ xs: 12, sm: 6 }}

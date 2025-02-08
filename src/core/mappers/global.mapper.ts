@@ -7,7 +7,7 @@ import {
 import { EmployeeModel } from "../models/api/employee.model";
 import { TRegisterOwnerDataModel } from "../models/zod";
 import { RegisterBusinessDataModel } from "../models/zod/registerBusiness";
-import { TRegisterEmployeeDataModel } from "../models/zod/registerEmployee";
+import { TRegisterEmployeeDataModel } from "../../pages/private/employees/new-employee/zod/registerEmployee";
 import { IAuthRequest } from "../types/admin/admin.types";
 
 export const registerFormToRegisterOwnerMapper = (

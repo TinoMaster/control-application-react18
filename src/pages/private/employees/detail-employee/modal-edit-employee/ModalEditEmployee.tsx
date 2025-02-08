@@ -34,7 +34,7 @@ import {
   registerEmployeeSchema,
   TRegisterEmployeeDataModel,
   zEmployeeDefaultValues,
-} from "../../../../../core/models/zod/registerEmployee";
+} from "../../new-employee/zod/registerEmployee";
 import { employeeService } from "../../../../../core/services/employeeService";
 
 interface Props {

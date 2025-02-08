@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useLocalStorage } from "../hooks";
+import { useLocalStorage } from "../../hooks/customs/useLocalStorage";
 
 export const PrivateGuard = () => {
   const [token] = useLocalStorage<string>("token", "");

@@ -5,6 +5,7 @@ import { useAuthContext } from "./core/context/use/useAuthContext";
 import { ERole } from "./core/models/api";
 import SuperAdminContainer from "./pages/admin/SuperAdminContainer";
 import PublicContainer from "./pages/public/PublicContainer";
+import { NotificationProvider } from "./core/context/NotificationContext";
 
 function App() {
   const { isLoggedIn, role } = useAuthContext();
@@ -18,9 +19,11 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
-      {!isLoggedIn() ? <PublicContainer /> : privateContainerToRender()}
-    </BrowserRouter>
+    <NotificationProvider>
+      <BrowserRouter>
+        {!isLoggedIn() ? <PublicContainer /> : privateContainerToRender()}
+      </BrowserRouter>
+    </NotificationProvider>
   );
 }
 

@@ -1,59 +1,15 @@
-import { useCallback, useEffect, useState } from "react";
-import { CardEmployee } from "../card-employee/CardEmployee";
-import { EmployeeModel } from "../../../../core/models/api/employee.model";
-import { employeeService } from "../../../../core/services/employeeService";
-import { Box, Skeleton, Typography } from "@mui/material";
-import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
+import { Box, Typography } from "@mui/material";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
+import { useEmployees } from "../../../../core/hooks/useEmployees";
+import { CardEmployee } from "../card-employee/CardEmployee";
+import { LoadingCards } from "../../../../components/common/ui/loaders/loadingCards";
 
 const EmployeesList = () => {
   const { selectedTheme } = useThemeContext();
-  const { business } = useBusinessContext();
-  const [employees, setEmployees] = useState<EmployeeModel[]>([]);
+  const { employees, loadingEmployees } = useEmployees();
 
-  const [loading, setLoading] = useState(false);
-
-  const getEmployees = useCallback(async () => {
-    if (!business.id) {
-      return;
-    }
-    setLoading(true);
-    const response = await employeeService.getEmployeesByBusinessId(
-      business.id
-    );
-    if (response.status === 200) {
-      setEmployees(response.data || []);
-    }
-    setLoading(false);
-  }, [business.id]);
-
-  useEffect(() => {
-    getEmployees();
-  }, [getEmployees]);
-
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          padding: "16px 0",
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          gap: 2,
-          flexDirection: { xs: "column", sm: "row" },
-        }}
-      >
-        {Array.from({ length: 3 }).map((_, index) => (
-          <Skeleton
-            key={index}
-            variant="rectangular"
-            height={300}
-            width={500}
-            sx={{ width: "100%", margin: "auto", borderRadius: "8px" }}
-          />
-        ))}
-      </Box>
-    );
+  if (loadingEmployees) {
+    return <LoadingCards count={3} contentRows={4} />;
   }
 
   if (employees.length > 0) {

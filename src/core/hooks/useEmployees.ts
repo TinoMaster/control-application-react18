@@ -1,58 +1,51 @@
-import { useCallback, useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useBusinessContext } from "../context/use/useBusinessContext";
-import { EmployeeModel } from "../models/api/employee.model";
 import { employeeService } from "../services/employeeService";
-import { useBoolean } from "./customs/useBoolean";
+import { useNavigate } from "react-router-dom";
+import { EmployeeModel } from "../models/api/employee.model";
+import { useNotification } from "../context/NotificationContext";
 
 export const useEmployees = () => {
   const { businessId } = useBusinessContext();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const { showSuccess, showError } = useNotification();
 
-  const [employees, setEmployees] = useState<EmployeeModel[]>([]);
-  const [
-    loadingEmployees,
-    { setTrue: setTrueLoadingEmployees, setFalse: setFalseLoadingEmployees },
-  ] = useBoolean(false);
-
-  const getEmployeesByBusiness = useCallback(async () => {
-    setTrueLoadingEmployees();
-    const response = await employeeService.getEmployeesByBusinessId(
-      businessId!
-    );
-    if (response.status === 200) {
-      setEmployees(response.data || []);
-    }
-    setFalseLoadingEmployees();
-  }, [businessId, setFalseLoadingEmployees, setTrueLoadingEmployees]);
-
-  const filterEmployeesReadyToWork = () => {
-    return employees.filter((e) => {
-      return e.user.active && (e.percentSalary > 0 || e.fixedSalary > 0);
-    });
-  };
-
-  const getTotalSalary = (total: number, employees: EmployeeModel[]) => {
-    return employees.reduce((acc, e) => {
-      return (
-        acc +
-        (e.percentSalary > 0 ? e.percentSalary  * total : 0) +
-        (e.fixedSalary || 0)
+  const { data: employees = [], isLoading: loadingEmployees } = useQuery({
+    queryKey: ["employees", businessId],
+    queryFn: async () => {
+      const response = await employeeService.getEmployeesByBusinessId(
+        businessId!
       );
-    }, 0);
-  };
+      return response.data || [];
+    },
+    select: (data) =>
+      data.sort((a, b) => b.user.name.localeCompare(a.user.name)),
+    enabled: !!businessId,
+  });
 
-  const filterActiveEmployees = () => {
-    return employees.filter((e) => e.user.active);
-  };
-
-  useEffect(() => {
-    getEmployeesByBusiness();
-  }, [getEmployeesByBusiness]);
+  const { mutate: saveEmployee, isPending: loadingSave } = useMutation({
+    mutationFn: (employee: EmployeeModel) =>
+      employeeService.saveEmployee(employee),
+    onSuccess: () => {
+      showSuccess("Empleado guardado correctamente");
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+      // Retrasamos la navegación para que se pueda ver la notificación
+      setTimeout(() => {
+        navigate("/employees/list");
+      }, 2000);
+    },
+    onError: () => {
+      showError(
+        "Ha ocurrido un error inesperado, revise su conexión a internet e intente nuevamente."
+      );
+    },
+  });
 
   return {
     employees,
     loadingEmployees,
-    filterEmployeesReadyToWork,
-    filterActiveEmployees,
-    getTotalSalary,
+    saveEmployee,
+    loadingSave,
   };
 };

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ERole } from "../api";
+import { ERole } from "../../../../../core/models/api";
 
 export const registerEmployeeSchema = z
   .object({

@@ -5,12 +5,14 @@ import { handleFetchError } from "../utilities/helpers/errorManager";
 import { requestService } from "./RequestService";
 
 class EmployeeService {
-  private urlBase = apiConfig.baseUrl;
+  private urlAdmin = apiConfig.adminUrl;
+  private urlPrivate = apiConfig.privateUrl;
+  private urlSuperAdmin = apiConfig.superadminUrl;
 
   async getEmployees(): Promise<IResponse<EmployeeModel[]>> {
     try {
       return await requestService.fetch<EmployeeModel[]>(
-        `${this.urlBase}/superadmin/employees`
+        `${this.urlSuperAdmin}/employees`
       );
     } catch (error: any) {
       console.log(error);
@@ -21,7 +23,7 @@ class EmployeeService {
   async getEmployeeByUserId(id: number): Promise<IResponse<EmployeeModel>> {
     try {
       return await requestService.fetch<EmployeeModel>(
-        `${this.urlBase}/private/employees/byUserId/${id}`
+        `${this.urlPrivate}/employees/byUserId/${id}`
       );
     } catch (error: any) {
       console.log(error);
@@ -32,7 +34,7 @@ class EmployeeService {
   async getEmployeeById(id: string): Promise<IResponse<EmployeeModel>> {
     try {
       return await requestService.fetch<EmployeeModel>(
-        `${this.urlBase}/admin/employees/${id}`
+        `${this.urlAdmin}/employees/${id}`
       );
     } catch (error: any) {
       console.log(error);
@@ -45,7 +47,7 @@ class EmployeeService {
   ): Promise<IResponse<EmployeeModel[]>> {
     try {
       return await requestService.fetch<EmployeeModel[]>(
-        `${this.urlBase}/admin/employees/byBusiness/${id}`
+        `${this.urlAdmin}/employees/byBusiness/${id}`
       );
     } catch (error: any) {
       console.log(error);
@@ -58,7 +60,7 @@ class EmployeeService {
   ): Promise<IResponse<EmployeeModel>> {
     try {
       return await requestService.fetch<EmployeeModel>(
-        `${this.urlBase}/admin/employees`,
+        `${this.urlAdmin}/employees`,
         {
           method: "POST",
           body: JSON.stringify(employee),
@@ -75,7 +77,7 @@ class EmployeeService {
   ): Promise<IResponse<EmployeeModel>> {
     try {
       return await requestService.fetch<EmployeeModel>(
-        `${this.urlBase}/admin/employees`,
+        `${this.urlAdmin}/employees`,
         {
           method: "PUT",
           body: JSON.stringify(employeeToUpdate),
@@ -90,7 +92,7 @@ class EmployeeService {
   async deleteEmployee(id: string): Promise<IResponse<null>> {
     try {
       return await requestService.fetch<null>(
-        `${this.urlBase}/admin/employees/${id}`,
+        `${this.urlAdmin}/employees/${id}`,
         {
           method: "DELETE",
         }
