@@ -16,10 +16,9 @@ const EmployeesList = () => {
     return (
       <Box
         sx={{
-          padding: "16px 0",
+          padding: {xs: "16px 0", sm: "16px 20px"},
           display: "flex",
           flexWrap: "wrap",
-          justifyContent: "center",
           flexDirection: { xs: "column", sm: "row" },
           gap: 2,
         }}

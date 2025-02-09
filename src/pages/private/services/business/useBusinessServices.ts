@@ -1,81 +1,21 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
+import React, { useState } from "react";
 import { useStatus } from "../../../../core/hooks/customs/useStatus";
+import { useConsumable } from "../../../../core/hooks/useConsumable";
+import { useService } from "../../../../core/hooks/useServices";
 import { ServiceModel } from "../../../../core/models/api";
-import { ConsumableModel } from "../../../../core/models/api/consumables.model";
-import { consumableService } from "../../../../core/services/consumableService";
-import { serviceService } from "../../../../core/services/serviceService";
 
 export const useBusinessServices = () => {
-  const { business } = useBusinessContext();
+  const { services, deleteService, saveService } = useService();
+  const { consumables } = useConsumable();
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openModalAdd, setOpenModalAdd] = useState(false);
   const [openModalConfirmDelete, setOpenModalConfirmDelete] = useState(false);
-  const [services, setServices] = useState<ServiceModel[]>([]);
-  const [consumables, setConsumables] = useState<ConsumableModel[]>([]);
   const [serviceToEdit, setServiceToEdit] = useState<ServiceModel>();
   const [serviceToDelete, setServiceToDelete] = useState<ServiceModel>();
 
-  const {
-    loading,
-    errorMessage,
-    successMessage,
-    setError,
-    setSuccess,
-    setLoading,
-  } = useStatus();
-
-  // Funciones de manejo de datos
-  const addServiceToServices = (service: ServiceModel) => {
-    setServices([...services, service]);
-  };
-
-  const editServiceFromServices = (service: ServiceModel) => {
-    setServices(services.map((s) => (s.id === service.id ? service : s)));
-  };
-
-  const deleteServiceFromServices = (id: number) => {
-    setServices(services.filter((s) => s.id !== id));
-  };
-
-  const getServices = useCallback(async () => {
-    if (!business?.id) return;
-
-    setLoading();
-    try {
-      const response = await serviceService.getServicesByBusinessId(
-        business.id
-      );
-      if (response.status === 200) {
-        setServices(response.data || []);
-        setSuccess("");
-      } else {
-        setError("Ah ocurrido un error al cargar los servicios");
-      }
-    } catch (error) {
-      console.error("Error fetching services:", error);
-      setError("Ah ocurrido un error al cargar los servicios");
-    }
-  }, [business?.id, setError, setSuccess, setLoading]);
-
-  const getConsumables = useCallback(async () => {
-    if (!business?.id) return;
-
-    const response = await consumableService.getConsumablesByBusinessId(
-      business.id
-    );
-
-    if (response.status === 200) {
-      setConsumables(response.data || []);
-    }
-  }, [business?.id]);
-
-  useEffect(() => {
-    getServices();
-    getConsumables();
-  }, [getServices, getConsumables]);
+  const { loading, setLoading, reset } = useStatus();
 
   // Handlers
   const handleChangePage = (_event: unknown, newPage: number) => {
@@ -104,45 +44,32 @@ export const useBusinessServices = () => {
     setServiceToDelete(service);
   };
 
-  const deleteService = async () => {
-    setLoading();
+  const onDeleteService = () => {
     if (!serviceToDelete?.id) return;
-    const id = serviceToDelete?.id;
 
-    try {
-      const response = await serviceService.deleteService(id);
-      if (response.status === 200) {
-        setSuccess("Servicio eliminado correctamente");
-        deleteServiceFromServices(id);
-      } else {
-        setError("Ah ocurrido un error al eliminar el servicio");
-      }
-    } catch (error) {
-      setError("Ah ocurrido un error al eliminar el servicio");
-      console.error("Error deleting service:", error);
-    }
+    setLoading();
+    deleteService(serviceToDelete.id, {
+      onSuccess: () => {
+        setOpenModalConfirmDelete(false);
+      },
+      onSettled: () => {
+        setServiceToDelete(undefined);
+        reset();
+      },
+    });
   };
 
-  const handleSubmit = async (service: ServiceModel) => {
+  const handleSubmit = (service: ServiceModel) => {
     setLoading();
-
-    try {
-      const response = await serviceService.saveService(service);
-      if (response.status === 200) {
-        setSuccess("Servicio guardado correctamente");
+    saveService(service, {
+      onSuccess: () => {
         setOpenModalAdd(false);
-        if (serviceToEdit) {
-          editServiceFromServices(response.data as ServiceModel);
-        } else {
-          addServiceToServices(response.data as ServiceModel);
-        }
-      } else {
-        setError("Ah ocurrido un error al guardar el servicio");
-      }
-    } catch (error) {
-      setError("Ah ocurrido un error al guardar el servicio");
-      console.error("Error saving service:", error);
-    }
+      },
+      onSettled: () => {
+        reset();
+        setServiceToEdit(undefined);
+      },
+    });
   };
 
   return {
@@ -152,15 +79,13 @@ export const useBusinessServices = () => {
     openModalConfirmDelete,
     services,
     loading,
-    successMessage,
-    errorMessage,
     consumables,
     serviceToDelete,
     serviceToEdit,
     setOpenModalAdd,
     setOpenModalConfirmDelete,
     handleSubmit,
-    deleteService,
+    onDeleteService,
     handleChangePage,
     handleChangeRowsPerPage,
     handleOpenModal,

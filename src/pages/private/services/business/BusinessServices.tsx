@@ -7,7 +7,6 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
 import { ModalConfirm } from "../../../../components/common/ui/ModalConfirm";
 import { useAppContext } from "../../../../core/context/use/useAppContext";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
@@ -29,15 +28,13 @@ const BusinessServices = () => {
     openModalConfirmDelete,
     services,
     loading,
-    successMessage,
-    errorMessage,
     consumables,
     serviceToDelete,
     serviceToEdit,
     setOpenModalAdd,
     setOpenModalConfirmDelete,
     handleSubmit,
-    deleteService,
+    onDeleteService,
     handleChangePage,
     handleChangeRowsPerPage,
     handleOpenModal,
@@ -52,7 +49,7 @@ const BusinessServices = () => {
       <ModalConfirm
         open={openModalConfirmDelete}
         onClose={() => setOpenModalConfirmDelete(false)}
-        onConfirm={deleteService}
+        onConfirm={onDeleteService}
         title="Confirmar eliminación"
         message={`¿Está seguro que desea eliminar el servicio ${formatTextReference(
           serviceToDelete?.name
@@ -66,10 +63,7 @@ const BusinessServices = () => {
         isEditing={serviceToEdit !== undefined}
         consumables={consumables}
       />
-      <CustomSnackbar
-        successMessage={successMessage}
-        errorMessage={errorMessage}
-      />
+
       <Box sx={{ p: 3 }}>
         <Grid
           container

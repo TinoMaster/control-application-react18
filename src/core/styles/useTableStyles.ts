@@ -11,7 +11,7 @@ export const useTableStyles = () => {
         backgroundColor: selectedTheme.background_color,
         borderRadius: "8px",
         overflow: "hidden",
-        boxShadow: `0 0 150px 50px ${selectedTheme.secondary_color}80, 0 0 5px 2px #00000015`,
+        boxShadow: `0 0 50px 1px ${selectedTheme.secondary_color}50, 0 0 5px 2px #00000015`,
       },
       tableContainerStyle: {
         backgroundColor: selectedTheme.background_color,

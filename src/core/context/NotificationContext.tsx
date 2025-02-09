@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { CustomSnackbar } from "../../components/common/ui/CustomSnackbar";
 
 interface NotificationContextType {
@@ -16,20 +22,26 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const showSuccess = (message: string) => {
+  const showSuccess = useCallback((message: string) => {
     setSuccessMessage(message);
     // Limpiar el mensaje después de 6 segundos (mismo tiempo que el autoHideDuration del Snackbar)
     setTimeout(() => setSuccessMessage(""), 6000);
-  };
+  }, []);
 
-  const showError = (message: string) => {
+  const showError = useCallback((message: string) => {
     setErrorMessage(message);
     setTimeout(() => setErrorMessage(""), 6000);
-  };
+  }, []);
 
-  // TODO: Agregar este context y dividirlo como los otros
+  const contextValue = useMemo(() => {
+    return {
+      showSuccess,
+      showError,
+    };
+  }, [showSuccess, showError]);
+
   return (
-    <NotificationContext.Provider value={{ showSuccess, showError }}>
+    <NotificationContext.Provider value={contextValue}>
       {children}
       <CustomSnackbar
         successMessage={successMessage}

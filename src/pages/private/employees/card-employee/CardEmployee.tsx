@@ -26,7 +26,7 @@ export const CardEmployee = ({ employee }: CardEmployeeProps) => {
       sx={{
         ...cardStyle,
         width: { xs: "95%", sm: "400px" },
-        mx: "auto",
+        mx: { xs: "auto", sm: 0 },
       }}
     >
       <CardHeader

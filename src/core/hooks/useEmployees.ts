@@ -30,10 +30,7 @@ export const useEmployees = () => {
     onSuccess: () => {
       showSuccess("Empleado guardado correctamente");
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-      // Retrasamos la navegación para que se pueda ver la notificación
-      setTimeout(() => {
-        navigate("/employees/list");
-      }, 2000);
+      navigate("/employees/list");
     },
     onError: () => {
       showError(
