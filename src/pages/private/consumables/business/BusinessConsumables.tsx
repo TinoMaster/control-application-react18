@@ -7,7 +7,6 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
 import { ModalConfirm } from "../../../../components/common/ui/ModalConfirm";
 import { useAppContext } from "../../../../core/context/use/useAppContext";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
@@ -27,8 +26,6 @@ const BusinessConsumables = () => {
 
   const {
     loading,
-    errorMessage,
-    successMessage,
     openModalAdd,
     consumableToDelete,
     consumableToEdit,
@@ -65,10 +62,7 @@ const BusinessConsumables = () => {
         consumable={consumableToEdit}
         isEditing={consumableToEdit !== undefined}
       />
-      <CustomSnackbar
-        successMessage={successMessage}
-        errorMessage={errorMessage}
-      />
+
       <Box sx={{ p: 1 }}>
         <Grid
           container

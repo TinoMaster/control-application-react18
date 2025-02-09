@@ -9,7 +9,7 @@ export const useConsumable = () => {
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useNotification();
 
-  const { data: consumables = [], isLoading: loadingConsumables } = useQuery({
+  const { data: consumables = [] } = useQuery({
     queryKey: ["consumables", businessId],
     queryFn: async () => {
       const response = await consumableService.getConsumablesByBusinessId(
@@ -20,7 +20,7 @@ export const useConsumable = () => {
     enabled: !!businessId,
   });
 
-  const { mutate: saveConsumable, isPending: loadingSave } = useMutation({
+  const { mutate: onSaveConsumable } = useMutation({
     mutationFn: (consumable: ConsumableModel) =>
       consumableService.saveConsumable(consumable),
     onSuccess: () => {
@@ -34,7 +34,7 @@ export const useConsumable = () => {
     },
   });
 
-  const { mutate: deleteConsumable, isPending: loadingDelete } = useMutation({
+  const { mutate: onDeleteConsumable } = useMutation({
     mutationFn: (id: number) => consumableService.deleteConsumable(id),
     onSuccess: () => {
       showSuccess("Consumible eliminado correctamente");
@@ -49,10 +49,7 @@ export const useConsumable = () => {
 
   return {
     consumables,
-    loadingConsumables,
-    saveConsumable,
-    loadingSave,
-    deleteConsumable,
-    loadingDelete,
+    onSaveConsumable,
+    onDeleteConsumable,
   };
 };
