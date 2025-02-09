@@ -14,6 +14,7 @@ export interface ISalesContext {
 
 export const SalesProvider = ({ children }: IContextProps) => {
   const { businessId } = useBusinessContext();
+  // TODO: implementar a partir de este contexto el resto en business final sale que depende de este contexto, como por ejemplo el fondo de la ultima venta
   const [lastSale, setLastSale] = useState<
     BusinessFinalSaleModelResponse | undefined
   >(undefined);
