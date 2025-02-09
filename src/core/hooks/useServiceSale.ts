@@ -1,64 +1,79 @@
-import { useCallback, useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNotification } from "../context/NotificationContext";
+import { useBusinessContext } from "../context/use/useBusinessContext";
+import { ByBusinessAndDateRequestModel } from "../models/api/requests/byBusinessAndDateRequest.model";
 import { ServiceSaleModel } from "../models/api/serviceSale.model";
 import { serviceSaleService } from "../services/serviceSaleService";
-import { ByBusinessAndDateRequestModel } from "../models/api/requests/byBusinessAndDateRequest.model";
-import { useBusinessContext } from "../context/use/useBusinessContext";
 
 export const useServiceSale = () => {
-  const { business } = useBusinessContext();
-  const businessId = business?.id;
-  const [serviceSales, setServiceSales] = useState<ServiceSaleModel[]>([]);
-  const [loadingServiceSales, setLoadingServiceSales] =
-    useState<boolean>(true);
+  const { businessId } = useBusinessContext();
+  const queryClient = useQueryClient();
+  const { showSuccess, showError } = useNotification();
 
-  const getServiceSales = useCallback(async () => {
-    if (!businessId) return;
+  const requestType: ByBusinessAndDateRequestModel = {
+    businessId: businessId || 0,
+    startDate: new Date(),
+    endDate: new Date(),
+  };
 
-    const requestType: ByBusinessAndDateRequestModel = {
-      businessId: businessId,
-      startDate: new Date(),
-      endDate: new Date(),
-    };
-
-    setLoadingServiceSales(true);
-    try {
+  const { data: serviceSales, isLoading: loadingServiceSales } = useQuery({
+    queryKey: ["serviceSales", businessId],
+    queryFn: async () => {
       const response =
         await serviceSaleService.getServiceSalesByBusinessIdAndDate(
           requestType
         );
-      if (response.status === 200) {
-        setServiceSales(response.data || []);
-      }
-      setLoadingServiceSales(false);
-    } catch (error) {
-      console.error("Error fetching service sales:", error);
-      setLoadingServiceSales(false);
-    }
-  }, [businessId]);
+      return response.data || [];
+    },
+    enabled: !!businessId,
+  });
 
-  const addServiceSaleToServiceSales = (serviceSale: ServiceSaleModel) => {
-    setServiceSales([...serviceSales, serviceSale]);
-  };
+  const { mutate: saveServiceSale } = useMutation({
+    mutationFn: (serviceSale: ServiceSaleModel) =>
+      serviceSaleService.saveServiceSale(serviceSale),
+    onSuccess: () => {
+      showSuccess("Venta de servicio creada correctamente");
+      queryClient.invalidateQueries({ queryKey: ["serviceSales"] });
+    },
+    onError: () => {
+      showError(
+        "Ha ocurrido un error inesperado, revise su conexión a internet e intente nuevamente."
+      );
+    },
+  });
 
-  const editServiceSaleFromServiceSales = (serviceSale: ServiceSaleModel) => {
-    setServiceSales(
-      serviceSales.map((s) => (s.id === serviceSale.id ? serviceSale : s))
-    );
-  };
+  const { mutate: editServiceSale } = useMutation({
+    mutationFn: (serviceSale: ServiceSaleModel) =>
+      serviceSaleService.updateServiceSale(serviceSale),
+    onSuccess: () => {
+      showSuccess("Venta de servicio actualizada correctamente");
+      queryClient.invalidateQueries({ queryKey: ["serviceSales"] });
+    },
+    onError: () => {
+      showError(
+        "Ha ocurrido un error inesperado, revise su conexión a internet e intente nuevamente."
+      );
+    },
+  });
 
-  const deleteServiceSaleFromServiceSales = (id: number) => {
-    setServiceSales(serviceSales.filter((s) => s.id !== id));
-  };
-
-  useEffect(() => {
-    getServiceSales();
-  }, [getServiceSales]);
+  const { mutate: deleteServiceSale } = useMutation({
+    mutationFn: (id: number) => serviceSaleService.deleteServiceSale(id),
+    onSuccess: () => {
+      showSuccess("Venta de servicio eliminada correctamente");
+      queryClient.invalidateQueries({ queryKey: ["serviceSales"] });
+    },
+    onError: () => {
+      showError(
+        "Ha ocurrido un error inesperado, revise su conexión a internet e intente nuevamente."
+      );
+    },
+  });
 
   return {
     serviceSales,
     loadingServiceSales,
-    addServiceSaleToServiceSales,
-    editServiceSaleFromServiceSales,
-    deleteServiceSaleFromServiceSales,
+    saveServiceSale,
+    editServiceSale,
+    deleteServiceSale,
   };
 };

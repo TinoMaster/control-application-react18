@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { useAppContext } from "../../../../../core/context/use/useAppContext";
+import { useAuthContext } from "../../../../../core/context/use/useAuthContext";
 import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
+import { useStatus } from "../../../../../core/hooks/customs/useStatus";
 import { useServiceSale } from "../../../../../core/hooks/useServiceSale";
 import { useService } from "../../../../../core/hooks/useServices";
 import { ERole } from "../../../../../core/models/api";
 import { ServiceSaleModel } from "../../../../../core/models/api/serviceSale.model";
-import { serviceSaleService } from "../../../../../core/services/serviceSaleService";
 import { allowedRole } from "../../../../../core/utilities/helpers/allowedRole.util";
-import { useStatus } from "../../../../../core/hooks/customs/useStatus";
-import { useAuthContext } from "../../../../../core/context/use/useAuthContext";
 
 export const useServiceReport = () => {
   const { materialTheme, role } = useAppContext();
@@ -18,9 +17,9 @@ export const useServiceReport = () => {
   const {
     serviceSales,
     loadingServiceSales,
-    editServiceSaleFromServiceSales,
-    addServiceSaleToServiceSales,
-    deleteServiceSaleFromServiceSales,
+    deleteServiceSale,
+    editServiceSale,
+    saveServiceSale,
   } = useServiceSale();
 
   // Estados
@@ -31,14 +30,7 @@ export const useServiceReport = () => {
   const [serviceSaleToEdit, setServiceSaleToEdit] =
     useState<ServiceSaleModel>();
 
-  const {
-    loading,
-    errorMessage,
-    successMessage,
-    setLoading,
-    setError,
-    setSuccess,
-  } = useStatus();
+  const { loading, setLoading, reset } = useStatus();
 
   const allowedToDelete = (businessFinalSale: boolean) => {
     const allowedByRole = allowedRole(role, [ERole.ADMIN, ERole.OWNER]);
@@ -77,30 +69,17 @@ export const useServiceReport = () => {
         businessId: business.id,
       };
 
-      let response;
       if (serviceSaleToEdit) {
-        response = await serviceSaleService.updateServiceSale(serviceData);
-        if (response.status === 200) {
-          editServiceSaleFromServiceSales(response.data as ServiceSaleModel);
-          setSuccess("Venta de servicio actualizada correctamente");
-        } else {
-          setError("Ah ocurrido un error al actualizar la venta de servicio");
-        }
+        editServiceSale(serviceData);
       } else {
-        response = await serviceSaleService.saveServiceSale(serviceData);
-        if (response.status === 200) {
-          addServiceSaleToServiceSales(response.data as ServiceSaleModel);
-          setSuccess("Venta de servicio creada correctamente");
-        } else {
-          setError("Ah ocurrido un error al crear la venta de servicio");
-        }
+        saveServiceSale(serviceData);
       }
 
+      reset();
       setOpenAddServiceModal(false);
       setServiceSaleToEdit(undefined);
     } catch (error) {
       console.error("Error submitting service sale:", error);
-      setError("Ah ocurrido un error al guardar la venta de servicio");
     }
   };
 
@@ -111,18 +90,11 @@ export const useServiceReport = () => {
 
   const handleDeleteServiceSale = async (id: number) => {
     setLoading();
-    try {
-      const response = await serviceSaleService.deleteServiceSale(id);
-      if (response.status === 200) {
-        deleteServiceSaleFromServiceSales(id);
-        setSuccess("Venta de servicio eliminada correctamente");
-      } else {
-        setError("Ah ocurrido un error al eliminar la venta de servicio");
-      }
-    } catch (error) {
-      console.error("Error deleting service sale:", error);
-      setError("Ah ocurrido un error al eliminar la venta de servicio");
-    }
+    deleteServiceSale(id, {
+      onSettled: () => {
+        reset();
+      },
+    });
   };
 
   const handleClickAddService = () => {
@@ -145,8 +117,6 @@ export const useServiceReport = () => {
     openEmptyServiceModal,
     serviceSaleToEdit,
     loading: loadingServiceSales || loading,
-    errorMessage,
-    successMessage,
     setOpenAddServiceModal,
     setServiceSaleToEdit,
     setOpenEmptyServiceModal,

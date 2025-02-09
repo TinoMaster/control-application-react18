@@ -20,7 +20,7 @@ import { useDelayedLoading } from "../../../../../core/hooks/customs/useDelayedL
 import { LoadingTable } from "../../../../../components/common/ui/loaders/loadingTable";
 
 interface Props {
-  serviceSales: ServiceSaleModel[];
+  serviceSales: ServiceSaleModel[] | undefined;
   allowedToEdit: (userId: number, businessFinalSale: boolean) => boolean;
   allowedToDelete: (businessFinalSale: boolean) => boolean;
   handleEditServiceSale: (serviceSale: ServiceSaleModel) => void;
@@ -75,6 +75,7 @@ export const RenderServiceSaleDesktop = ({
             </TableRow>
           )}
           {!loadingDelayed &&
+            serviceSales &&
             serviceSales.length > 0 &&
             serviceSales
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -181,7 +182,7 @@ export const RenderServiceSaleDesktop = ({
                 </TableRow>
               ))}
 
-          {!loadingDelayed && serviceSales.length === 0 && (
+          {!loadingDelayed && serviceSales && serviceSales.length === 0 && (
             <TableRow>
               <TableCell colSpan={8}>
                 <Typography sx={emptyInfoStyle}>

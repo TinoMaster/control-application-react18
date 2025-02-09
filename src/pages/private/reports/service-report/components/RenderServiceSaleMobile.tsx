@@ -16,7 +16,7 @@ import { useTableStyles } from "../../../../../core/styles/useTableStyles";
 import { formatDateToHourString } from "../../../../../core/utilities/helpers/dateFormat";
 
 interface Props {
-  serviceSales: ServiceSaleModel[];
+  serviceSales: ServiceSaleModel[] | undefined;
   allowedToEdit: (userId: number, businessFinalSale: boolean) => boolean;
   allowedToDelete: (businessFinalSale: boolean) => boolean;
   handleEditServiceSale: (serviceSale: ServiceSaleModel) => void;
@@ -39,8 +39,8 @@ export const RenderServiceSaleMobile = ({
   return (
     <Box>
       {serviceSales
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        .map((serviceSale) => (
+        ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        ?.map((serviceSale) => (
           <Card key={serviceSale.id} sx={cardStyle}>
             <CardContent>
               <Grid container spacing={2}>

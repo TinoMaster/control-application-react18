@@ -10,17 +10,16 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { CustomPopover } from "../../../../components/common/ui/CustomPopover";
-import { CustomSnackbar } from "../../../../components/common/ui/CustomSnackbar";
 import { CustomTooltip } from "../../../../components/common/ui/CustomTooltip";
 import { ModalRandomInfo } from "../../../../components/common/ui/ModalRandomInfo";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 import { ERole } from "../../../../core/models/api";
+import { useTableStyles } from "../../../../core/styles/useTableStyles";
 import { allowedRole } from "../../../../core/utilities/helpers/allowedRole.util";
 import { RenderServiceSaleDesktop } from "./components/RenderServiceSaleDesktop";
 import { RenderServiceSaleMobile } from "./components/RenderServiceSaleMobile";
-import { ModalAddServiceSale } from "./modal-add-service-sale/ModalAddServiceSale";
 import { useServiceReport } from "./hooks/useServiceReport";
-import { useTableStyles } from "../../../../core/styles/useTableStyles";
+import { ModalAddServiceSale } from "./modal-add-service-sale/ModalAddServiceSale";
 
 const ServiceReport = () => {
   const { selectedTheme } = useThemeContext();
@@ -38,8 +37,6 @@ const ServiceReport = () => {
     openEmptyServiceModal,
     serviceSaleToEdit,
     loading,
-    errorMessage,
-    successMessage,
     setOpenAddServiceModal,
     setServiceSaleToEdit,
     setOpenEmptyServiceModal,
@@ -157,11 +154,11 @@ const ServiceReport = () => {
         />
       )}
 
-      {serviceSales.length > 5 && (
+      {serviceSales && serviceSales.length > 5 && (
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={serviceSales.length}
+          count={serviceSales?.length ?? 0}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -191,11 +188,6 @@ const ServiceReport = () => {
         onClose={() => {
           setOpenEmptyServiceModal(false);
         }}
-      />
-
-      <CustomSnackbar
-        successMessage={successMessage}
-        errorMessage={errorMessage}
       />
     </Box>
   );
