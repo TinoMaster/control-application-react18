@@ -1,7 +1,6 @@
-import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { ReactNode, useMemo } from "react";
+import { useSales } from "../../hooks/useSales";
 import { BusinessFinalSaleModelResponse } from "../../models/api/businessFinalSale.model";
-import { businessFinalSaleService } from "../../services/businessFinalSaleService";
-import { useBusinessContext } from "../use/useBusinessContext";
 import { SalesContext } from "../use/useSalesContext";
 
 interface IContextProps {
@@ -13,34 +12,14 @@ export interface ISalesContext {
 }
 
 export const SalesProvider = ({ children }: IContextProps) => {
-  const { businessId } = useBusinessContext();
-  // TODO: implementar a partir de este contexto el resto en business final sale que depende de este contexto, como por ejemplo el fondo de la ultima venta
-  const [lastSale, setLastSale] = useState<
-    BusinessFinalSaleModelResponse | undefined
-  >(undefined);
-
-  const getLastSale = useCallback(async () => {
-    const res = await businessFinalSaleService.getLastBusinessFinalSale(
-      businessId as number
-    );
-
-    console.log(res);
-
-    if (res.status === 200) {
-      setLastSale(res.data);
-    }
-  }, [businessId]);
-
-  useEffect(() => {
-    if (!businessId) return;
-    getLastSale();
-  }, [getLastSale, businessId]);
+  const { lastSale, loadingSales } = useSales();
 
   const contextValue = useMemo(() => {
     return {
       lastSale,
+      loadingSales,
     };
-  }, [lastSale]);
+  }, [lastSale, loadingSales]);
 
   return (
     <SalesContext.Provider value={contextValue}>

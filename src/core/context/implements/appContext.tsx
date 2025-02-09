@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 import { AppContext } from "../use/useAppContext";
 import { TRole } from "../../models/api";
 import { Theme, useTheme } from "@mui/material";
@@ -16,10 +16,14 @@ export const AppProvider = ({ children }: IContextProps) => {
   const materialTheme = useTheme();
   const role: TRole = localStorage.getItem("role") as TRole;
 
+  const contextValue = useMemo(() => {
+    return {
+      role,
+      materialTheme,
+    };
+  }, [role, materialTheme]);
+
   return (
-    <AppContext.Provider
-      value={{ role, materialTheme }}
-      children={children}
-    />
+    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );
 };

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { EmployeeModel } from "../models/api/employee.model";
 import { useNotification } from "../context/NotificationContext";
 
-export const useEmployees = () => {
+export const useEmployees = (userId?: number) => {
   const { businessId } = useBusinessContext();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -22,6 +22,19 @@ export const useEmployees = () => {
     select: (data) =>
       data.sort((a, b) => b.user.name.localeCompare(a.user.name)),
     enabled: !!businessId,
+  });
+
+  const {
+    data: employee,
+    isLoading: loadingEmployee,
+    refetch: reloadEmployee,
+  } = useQuery({
+    queryKey: ["employee", userId],
+    queryFn: async () => {
+      const response = await employeeService.getEmployeeByUserId(userId!);
+      return response.data || [];
+    },
+    enabled: !!userId,
   });
 
   const { mutate: saveEmployee, isPending: loadingSave } = useMutation({
@@ -44,5 +57,8 @@ export const useEmployees = () => {
     loadingEmployees,
     saveEmployee,
     loadingSave,
+    employee,
+    loadingEmployee,
+    reloadEmployee,
   };
 };
