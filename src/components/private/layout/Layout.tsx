@@ -29,7 +29,7 @@ export const PrivateLayout = () => {
   };
 
   if (loadingThemes) {
-    return <LoadingCircularProgress loading={loadingThemes} />;
+    return <LoadingCircularProgress loading={loadingThemes} absolute/>;
   }
 
   return (
