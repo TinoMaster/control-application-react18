@@ -3,22 +3,28 @@ import { useBusinessContext } from "../context/use/useBusinessContext";
 import { businessFinalSaleService } from "../services/businessFinalSaleService";
 import { BusinessFinalSaleModelResponse } from "../models/api/businessFinalSale.model";
 
-export const useSales = (): { lastSale: BusinessFinalSaleModelResponse | undefined, loadingSales: boolean } => {
+export const useSales = (): {
+  lastSales: BusinessFinalSaleModelResponse[] | undefined;
+  loadingSales: boolean;
+} => {
   const { businessId } = useBusinessContext();
 
-  const { data: lastSale, isLoading: loadingSales } = useQuery<BusinessFinalSaleModelResponse | undefined>({
+  const { data: lastSales, isLoading: loadingSales } = useQuery<
+    BusinessFinalSaleModelResponse[] | undefined
+  >({
     queryKey: ["sales", businessId],
     queryFn: async () => {
-      const response = await businessFinalSaleService.getLastBusinessFinalSale(
-        businessId as number
-      );
+      const response =
+        await businessFinalSaleService.getLatestBusinessFinalSalesWithAllMachines(
+          businessId as number
+        );
       return response.data;
     },
     enabled: !!businessId,
   });
 
   return {
-    lastSale,
+    lastSales,
     loadingSales,
   };
 };

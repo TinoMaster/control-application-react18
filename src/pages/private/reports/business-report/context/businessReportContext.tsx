@@ -59,6 +59,7 @@ export interface IBusinessReportContext {
   onDeleteSale: (sale: BusinessFinalSaleModelResponse) => void;
 }
 
+//TODO: implementar el poder hacer reportes con varias fechas diferentes
 export const BusinessReportProvider = ({ children }: IContextProps) => {
   const [currentSection, setCurrentSection] = useState(
     SECTIONS_BUSINESS_REPORT.RESUME

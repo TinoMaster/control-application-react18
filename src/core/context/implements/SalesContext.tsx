@@ -8,18 +8,21 @@ interface IContextProps {
 }
 
 export interface ISalesContext {
-  lastSale: BusinessFinalSaleModelResponse | undefined;
+  lastSales: BusinessFinalSaleModelResponse[] | undefined;
+  loadingSales: boolean;
 }
 
 export const SalesProvider = ({ children }: IContextProps) => {
-  const { lastSale, loadingSales } = useSales();
+  const { lastSales, loadingSales } = useSales();
+
+  console.log("lastSales", lastSales);
 
   const contextValue = useMemo(() => {
     return {
-      lastSale,
+      lastSales,
       loadingSales,
     };
-  }, [lastSale, loadingSales]);
+  }, [lastSales, loadingSales]);
 
   return (
     <SalesContext.Provider value={contextValue}>

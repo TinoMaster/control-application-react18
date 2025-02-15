@@ -29,12 +29,12 @@ class BusinessFinalSaleService {
     }
   }
 
-  async getLastBusinessFinalSale(
+  async getLatestBusinessFinalSalesWithAllMachines(
     businessId: number
-  ): Promise<IResponse<BusinessFinalSaleModelResponse>> {
+  ): Promise<IResponse<BusinessFinalSaleModelResponse[]>> {
     try {
-      return await requestService.fetch<BusinessFinalSaleModelResponse>(
-        `${this.privateUrl}/business-final-sale/last/${businessId}`
+      return await requestService.fetch<BusinessFinalSaleModelResponse[]>(
+        `${this.privateUrl}/business-final-sale/latest/${businessId}`
       );
     } catch (error: any) {
       console.log(error);
