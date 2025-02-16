@@ -1,12 +1,12 @@
 import { AccountCircle } from "@mui/icons-material";
 import { Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { useState } from "react";
-import { useAuthContext } from "../../../core/context/use/useAuthContext";
+import { useAuthStore } from "../../../core/store/auth.store";
 
 const UserOptions = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const { logout } = useAuthContext();
+  const logout = useAuthStore((state) => state.logout);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

@@ -17,7 +17,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import { useAuthContext } from "../../../../../../../core/context/use/useAuthContext";
 import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
 import { ERole } from "../../../../../../../core/models/api";
 import { ByBusinessAndDateRequestModel } from "../../../../../../../core/models/api/requests/byBusinessAndDateRequest.model";
@@ -27,15 +26,17 @@ import { updateBusinessSaleServices } from "../../../../../../../core/states/act
 import { useBusinessStore } from "../../../../../../../core/store/business.store";
 import { formatDateToHourString } from "../../../../../../../core/utilities/helpers/dateFormat";
 import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
+import { useAuthStore } from "../../../../../../../core/store/auth.store";
 
 export const SaleServices = () => {
+  const employee = useAuthStore((state) => state.employee);
+  const role = useAuthStore((state) => state.role);
   const { dispatch, nextSection, prevSection } = useBusinessReportContext();
   const [serviceSales, setServiceSales] = useState<ServiceSaleModel[]>([]);
   const [selectedServices, setSelectedServices] = useState<ServiceSaleModel[]>(
     []
   );
   const [modalConfirmMessage, setModalConfirmMessage] = useState<string>("");
-  const { employee, role } = useAuthContext();
   const business = useBusinessStore((state) => state.business);
   const { selectedTheme } = useThemeContext();
 

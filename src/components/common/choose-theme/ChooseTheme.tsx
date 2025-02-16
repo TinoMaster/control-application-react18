@@ -11,8 +11,6 @@ export const ChooseTheme = () => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  console.log("themes", themes)
-
   const handleClickOption = (theme: ThemeModel) => {
     setAnchorEl(null);
     onChangeTheme(theme);
@@ -38,10 +36,16 @@ export const ChooseTheme = () => {
           backgroundColor: "var(--bg-dark)",
         }}
       >
-        <Typography variant="body1" sx={{ padding: "0 15px", display: "flex", alignItems: "center", gap: 1 }}>
-          <span style={{ fontWeight: "bold", color: "#f5f5f5" }}>
-            Tema:
-          </span>
+        <Typography
+          variant="body1"
+          sx={{
+            padding: "0 15px",
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
+          <span style={{ fontWeight: "bold", color: "#f5f5f5" }}>Tema:</span>
           <span
             style={{
               font: "bold",

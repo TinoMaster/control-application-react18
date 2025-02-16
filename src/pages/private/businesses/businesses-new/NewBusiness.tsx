@@ -13,7 +13,6 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import CustomInput from "../../../../components/common/ui/CustomInput";
-import { useAuthContext } from "../../../../core/context/use/useAuthContext";
 import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 import { zodRegisterBusinessToBusinessMapper } from "../../../../core/mappers/global.mapper";
 import { BusinessModel } from "../../../../core/models/api";
@@ -24,10 +23,11 @@ import {
 } from "../../../../core/models/zod/registerBusiness";
 import { businessService } from "../../../../core/services/businessService";
 import { useBusinessStore } from "../../../../core/store/business.store";
+import { useAuthStore } from "../../../../core/store/auth.store";
 
 const NewBusiness = () => {
   const { selectedTheme } = useThemeContext();
-  const { user } = useAuthContext();
+  const user = useAuthStore((state) => state.user);
   const addBusinessToBusinessList = useBusinessStore(
     (state) => state.addBusinessToBusinessList
   );

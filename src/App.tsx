@@ -1,14 +1,15 @@
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
-import PrivateContainer from "./pages/private/PrivateContainer";
-import { useAuthContext } from "./core/context/use/useAuthContext";
-import { ERole } from "./core/models/api";
-import SuperAdminContainer from "./pages/admin/SuperAdminContainer";
-import PublicContainer from "./pages/public/PublicContainer";
 import { NotificationProvider } from "./core/context/NotificationContext";
+import { ERole } from "./core/models/api";
+import { useAuthStore } from "./core/store/auth.store";
+import SuperAdminContainer from "./pages/admin/SuperAdminContainer";
+import PrivateContainer from "./pages/private/PrivateContainer";
+import PublicContainer from "./pages/public/PublicContainer";
 
 function App() {
-  const { isLoggedIn, role } = useAuthContext();
+  const role = useAuthStore((state) => state.role);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   const privateContainerToRender = () => {
     if (role === ERole.SUPERADMIN) {
@@ -21,7 +22,7 @@ function App() {
   return (
     <NotificationProvider>
       <BrowserRouter>
-        {!isLoggedIn() ? <PublicContainer /> : privateContainerToRender()}
+        {!isLoggedIn ? <PublicContainer /> : privateContainerToRender()}
       </BrowserRouter>
     </NotificationProvider>
   );

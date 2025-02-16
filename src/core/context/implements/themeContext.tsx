@@ -7,8 +7,8 @@ import {
   defaultTheme,
   globalMaterialTheme,
 } from "../../styles/chooseTheme";
-import { useAuthContext } from "../use/useAuthContext";
 import { createTheme, ThemeProvider } from "@mui/material";
+import { useAuthStore } from "../../store/auth.store";
 
 const muiTheme = createTheme({
   palette: {
@@ -53,7 +53,7 @@ export interface IThemeContext {
 }
 
 export const AppThemeProvider = ({ children }: IContextProps) => {
-  const { isLoggedIn } = useAuthContext();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const themeId = localStorage.getItem("themeId");
   const [themes, setThemes] = useState<ThemeModel[]>([defaultTheme]);
   const [loadingThemes, setLoadingThemes] = useState(true);
@@ -64,7 +64,7 @@ export const AppThemeProvider = ({ children }: IContextProps) => {
   const getThemes = useCallback(async () => {
     setLoadingThemes(true);
 
-    if (!isLoggedIn()) {
+    if (!isLoggedIn) {
       setThemes([defaultTheme]);
       setSelectedTheme(defaultTheme);
       setLoadingThemes(false);

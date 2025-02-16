@@ -3,11 +3,9 @@ import { Box, Skeleton } from "@mui/material";
 import { BusinessCard } from "../business-card/BusinessCard";
 
 const BusinessesList = () => {
-  const [businessList, loading, business] = useBusinessStore((state) => [
-    state.businessList,
-    state.loading,
-    state.business,
-  ]);
+  const businessList = useBusinessStore((state) => state.businessList);
+  const loading = useBusinessStore((state) => state.loading);
+  const business = useBusinessStore((state) => state.business);
 
   if (loading) {
     return (
@@ -22,9 +20,9 @@ const BusinessesList = () => {
           },
         }}
       >
-        {Array.from({ length: 3 }).map((_, index) => (
+        {Array.from({ length: 3 }).map(() => (
           <Skeleton
-            key={index}
+            key={`business-skeleton-${crypto.randomUUID()}`}
             variant="rectangular"
             height={200}
             width={500}

@@ -7,7 +7,6 @@ import {
   useState,
 } from "react";
 import { useBoolean } from "../../../../../core/hooks/customs/useBoolean";
-import { useStatus } from "../../../../../core/hooks/customs/useStatus";
 import { useBusinessFinalSale } from "../../../../../core/hooks/useBusinessFinalSale";
 import {
   BusinessFinalSaleModel,
@@ -16,7 +15,6 @@ import {
 } from "../../../../../core/models/api/businessFinalSale.model";
 import { EmployeeModel } from "../../../../../core/models/api/employee.model";
 import { MachineModel } from "../../../../../core/models/api/machine.model";
-import { businessFinalSaleService } from "../../../../../core/services/businessFinalSaleService";
 import { resetBusinessSale } from "../../../../../core/states/actions/businessFinalSaleActions";
 import {
   businessFinalSaleReducer,
@@ -41,21 +39,21 @@ export interface IBusinessReportContext {
   businessSale: BusinessFinalSaleModel;
   dispatch: React.Dispatch<any>;
   cancelProcess: () => void;
+  loadingTodayReports: boolean;
+  loadingSave: boolean;
+  loadingDelete: boolean;
   cards: CardPayment[];
   setCards: React.Dispatch<React.SetStateAction<CardPayment[]>>;
   saveBusinessSale: () => void;
-  loading: boolean;
-  successMessage: string;
-  errorMessage: string;
-  todayReports: BusinessFinalSaleModelResponse[];
+  todayReports: BusinessFinalSaleModelResponse[] | undefined;
   openModalReport: boolean;
   openDetailSaleModal: boolean;
   setTrueDetailSale: () => void;
   setFalseDetailSale: () => void;
   handleCloseModalReport: () => void;
   setOpenModalReport: React.Dispatch<React.SetStateAction<boolean>>;
-  machinesAlreadySelected: () => (number | undefined)[];
-  workersAlreadySelected: () => EmployeeModel[];
+  machinesAlreadySelected: () => (number | undefined)[] | undefined;
+  workersAlreadySelected: () => EmployeeModel[] | undefined;
   onDeleteSale: (sale: BusinessFinalSaleModelResponse) => void;
 }
 
@@ -67,10 +65,14 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
   const [state, dispatch] = useReducer(businessFinalSaleReducer, initialState);
   const business = useBusinessStore((state) => state.business);
   const {
-    getTodayReports,
     todayReports,
+    loadingTodayReports,
     machinesAlreadySelected,
     workersAlreadySelected,
+    saveBusinessFinalSale,
+    loadingSave,
+    deleteBusinessFinalSale,
+    loadingDelete,
   } = useBusinessFinalSale();
   const [cards, setCards] = useState<CardPayment[]>([]);
 
@@ -79,15 +81,6 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
     openDetailSaleModal,
     { setTrue: setTrueDetailSale, setFalse: setFalseDetailSale },
   ] = useBoolean(false);
-
-  const {
-    loading,
-    successMessage,
-    errorMessage,
-    setLoading,
-    setError,
-    setSuccess,
-  } = useStatus();
 
   const handleCloseModalReport = useCallback(() => {
     setOpenModalReport(false);
@@ -147,9 +140,7 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
     }
   }, [currentSection]);
 
-  const saveBusinessSale = useCallback(async () => {
-    setLoading();
-
+  const saveBusinessSale = useCallback(() => {
     const dataToSave: BusinessFinalSaleModelToCreate = {
       ...state,
       machines: business.machines?.filter((m) =>
@@ -161,42 +152,25 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
       })),
     };
 
-    const response = await businessFinalSaleService.saveBusinessFinalSale(
-      dataToSave
-    );
-
-    if (response.status === 200) {
-      await getTodayReports();
-      setSuccess("Venta guardada exitosamente");
-      setOpenModalReport(false);
-    } else {
-      setError("Error al guardar la venta");
-    }
-  }, [
-    business,
-    state,
-    cards,
-    getTodayReports,
-    setLoading,
-    setSuccess,
-    setError,
-  ]);
+    saveBusinessFinalSale(dataToSave, {
+      onSuccess: () => {
+        setOpenModalReport(false);
+      },
+    });
+  }, [state, business, cards, saveBusinessFinalSale, setOpenModalReport]);
 
   const onDeleteSale = useCallback(
-    async (sale: BusinessFinalSaleModelResponse) => {
-      setLoading();
-      const response = await businessFinalSaleService.deleteBusinessFinalSale(
-        sale.id as number
-      );
-      if (response.status === 200) {
-        setSuccess("Venta eliminada exitosamente");
-        getTodayReports();
-        setFalseDetailSale();
-      } else {
-        setError("Error al eliminar la venta");
-      }
+    (sale: BusinessFinalSaleModelResponse) => {
+      deleteBusinessFinalSale(sale.id as number, {
+        onSuccess: () => {
+          setFalseDetailSale();
+        },
+        onError: (error: any) => {
+          console.log(error);
+        },
+      });
     },
-    [getTodayReports, setFalseDetailSale, setLoading, setSuccess, setError]
+    [deleteBusinessFinalSale, setFalseDetailSale]
   );
 
   useEffect(() => {
@@ -217,9 +191,9 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
       cards,
       setCards,
       saveBusinessSale,
-      loading,
-      successMessage,
-      errorMessage,
+      loadingTodayReports,
+      loadingSave,
+      loadingDelete,
       todayReports,
       openModalReport,
       openDetailSaleModal,
@@ -235,15 +209,15 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
     currentSection,
     state,
     cards,
-    loading,
-    successMessage,
-    errorMessage,
     nextSection,
     prevSection,
     saveBusinessSale,
     dispatch,
     cancelProcess,
     todayReports,
+    loadingTodayReports,
+    loadingSave,
+    loadingDelete,
     setOpenModalReport,
     handleCloseModalReport,
     openModalReport,

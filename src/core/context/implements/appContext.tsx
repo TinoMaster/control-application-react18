@@ -1,28 +1,34 @@
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useEffect, useMemo } from "react";
 import { AppContext } from "../use/useAppContext";
-import { TRole } from "../../models/api";
 import { Theme, useTheme } from "@mui/material";
+import { useAuthStore } from "../../store/auth.store";
 
 interface IContextProps {
   children: ReactNode;
 }
 
 export interface IAppContext {
-  role: TRole;
   materialTheme: Theme;
 }
 
 export const AppProvider = ({ children }: IContextProps) => {
   const materialTheme = useTheme();
-  const role: TRole = localStorage.getItem("role") as TRole;
+  
+  const reloadUser = useAuthStore((state) => state.reloadUser);
+  const token = useAuthStore((state) => state.token);
+
+  useEffect(() => {
+    // Solo intentamos recargar el usuario si hay un token
+    if (token) {
+      reloadUser();
+    }
+  }, [token, reloadUser]);
 
   const contextValue = useMemo(() => {
     return {
-      role,
       materialTheme,
     };
-  }, [role, materialTheme]);
-
+  }, [materialTheme]);
 
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>

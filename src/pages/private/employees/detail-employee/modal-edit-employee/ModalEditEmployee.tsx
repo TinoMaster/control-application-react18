@@ -50,10 +50,8 @@ export const ModalEditEmployee = ({
   employee,
   updateEmployee,
 }: Props) => {
-  const [businessList, business] = useBusinessStore((state) => [
-    state.businessList,
-    state.business,
-  ]);
+  const businessList = useBusinessStore((state) => state.businessList);
+  const business = useBusinessStore((state) => state.business);
   const { selectedTheme } = useThemeContext();
 
   const {

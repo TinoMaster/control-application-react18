@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Alert,
   Backdrop,
@@ -12,18 +13,17 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import CustomInput from "../../../components/common/ui/CustomInput";
 import {
   loginSchema,
   TLoginSchema,
   zLoginDefaultValues,
 } from "../../../core/models/zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import CustomInput from "../../../components/common/ui/CustomInput";
-import { useState } from "react";
 import { authService } from "../../../core/services";
-import { ILoginResponse } from "../../../core/types/request.types";
+import { useAuthStore } from "../../../core/store/auth.store";
 
 const boxLoginStyle = {
   maxWidth: "400px",
@@ -60,6 +60,8 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
+  const login = useAuthStore((state) => state.login);
+
   const navigate = useNavigate();
 
   const {
@@ -80,7 +82,11 @@ const LoginPage = () => {
       setSuccess(true);
 
       if (response.data.active) {
-        onSuccessLogin(response.data);
+        login(
+          response.data.token,
+          response.data.role,
+          response.data.refreshToken
+        );
       }
 
       setTimeout(() => {
@@ -91,12 +97,6 @@ const LoginPage = () => {
       setError(response.message);
     }
     setLoading(false);
-  };
-
-  const onSuccessLogin = (data: ILoginResponse) => {
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("refreshToken", data.refreshToken);
-    localStorage.setItem("role", data.role);
   };
 
   return (

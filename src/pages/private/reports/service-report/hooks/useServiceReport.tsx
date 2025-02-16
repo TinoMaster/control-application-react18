@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useAppContext } from "../../../../../core/context/use/useAppContext";
-import { useAuthContext } from "../../../../../core/context/use/useAuthContext";
 import { useStatus } from "../../../../../core/hooks/customs/useStatus";
 import { useServiceSale } from "../../../../../core/hooks/useServiceSale";
 import { useService } from "../../../../../core/hooks/useServices";
@@ -8,11 +7,14 @@ import { ERole } from "../../../../../core/models/api";
 import { ServiceSaleModel } from "../../../../../core/models/api/serviceSale.model";
 import { useBusinessStore } from "../../../../../core/store/business.store";
 import { allowedRole } from "../../../../../core/utilities/helpers/allowedRole.util";
+import { useAuthStore } from "../../../../../core/store/auth.store";
 
 export const useServiceReport = () => {
-  const { materialTheme, role } = useAppContext();
+  const user = useAuthStore((state) => state.user);
+  const role = useAuthStore((state) => state.role);
   const business = useBusinessStore((state) => state.business);
-  const { user } = useAuthContext();
+
+  const { materialTheme } = useAppContext();
   const { services } = useService();
   const {
     serviceSales,

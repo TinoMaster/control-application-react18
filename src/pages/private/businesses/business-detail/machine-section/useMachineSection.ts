@@ -2,10 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import { useAuthContext } from "../../../../../core/context/use/useAuthContext";
-import { useBusinessStore } from "../../../../../core/store/business.store";
 import { MachineModel } from "../../../../../core/models/api/machine.model";
 import { machineService } from "../../../../../core/services/machineService";
+import { useBusinessStore } from "../../../../../core/store/business.store";
 
 const valueSchema = z.object({
   value: z.string().min(1, "El campo es requerido"),
@@ -19,7 +18,6 @@ const defaultValue: TValue = {
 
 export const useMachineSection = () => {
   const business = useBusinessStore((state) => state.business);
-  const { reloadUser } = useAuthContext();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -57,7 +55,6 @@ export const useMachineSection = () => {
 
     if (response.status === 200) {
       setSuccess(true);
-      reloadUser();
       handleCloseModal();
     } else {
       setError(true);
@@ -90,7 +87,6 @@ export const useMachineSection = () => {
 
     if (response.status === 200) {
       setSuccess(true);
-      reloadUser();
     } else {
       setError(true);
     }

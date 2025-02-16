@@ -9,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { CustomSnackbar } from "../../../../../components/common/ui/CustomSnackbar";
 import { LoadingCircularProgress } from "../../../../../components/common/ui/loaders/LoadingCircularProgress";
 import { ModalRandomInfo } from "../../../../../components/common/ui/ModalRandomInfo";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
@@ -27,9 +26,9 @@ export const SaleReportBox = () => {
     openModalReport,
     handleCloseModalReport,
     setOpenModalReport,
-    loading,
-    successMessage,
-    errorMessage,
+    loadingTodayReports,
+    loadingSave,
+    loadingDelete,
   } = useBusinessReportContext();
   const { selectedTheme } = useThemeContext();
   const { cardStyle } = useTableStyles();
@@ -43,7 +42,9 @@ export const SaleReportBox = () => {
         "Aun no ha creado ningún puesto o maquina de trabajo, el propietario en los detalles del negocio puede crearlos."
       );
       return false;
-    } else if (business.machines?.length === machinesAlreadySelected().length) {
+    } else if (
+      business.machines?.length === machinesAlreadySelected()?.length
+    ) {
       setMessageMachineDisponible(
         "En este momento todas las máquinas están asignadas a reportes existentes. Para crear un nuevo reporte, es necesario que haya al menos una máquina disponible."
       );
@@ -62,11 +63,10 @@ export const SaleReportBox = () => {
 
   return (
     <>
-      <LoadingCircularProgress loading={loading} />
-      <CustomSnackbar
-        errorMessage={errorMessage}
-        successMessage={successMessage}
+      <LoadingCircularProgress
+        loading={loadingTodayReports || loadingSave || loadingDelete}
       />
+
       <ModalRandomInfo
         open={openModalFullMachine}
         onClose={() => setOpenModalFullMachine(false)}
@@ -75,7 +75,7 @@ export const SaleReportBox = () => {
       />
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
-          {todayReports.map((sale) => (
+          {todayReports?.map((sale) => (
             <Grid key={sale.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
               <SaleCard sale={sale} />
             </Grid>

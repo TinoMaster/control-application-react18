@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAuthContext } from "../../../../../../../../core/context/use/useAuthContext";
 import { useEmployees } from "../../../../../../../../core/hooks/useEmployees";
 import {
   updateBusinessSaleBusinessId,
@@ -24,9 +23,11 @@ import {
   SaleResumeZodSchema,
   TSaleResume,
 } from "../zod/saleResume.zodSchema";
+import { useAuthStore } from "../../../../../../../../core/store/auth.store";
 
 export const useSaleResume = () => {
-  const { role, user } = useAuthContext();
+  const user = useAuthStore((state) => state.user);
+  const role = useAuthStore((state) => state.role);
   const business = useBusinessStore((state) => state.business);
   const { employees, loadingEmployees } = useEmployees();
   const [loading, setLoading] = useState(false);
