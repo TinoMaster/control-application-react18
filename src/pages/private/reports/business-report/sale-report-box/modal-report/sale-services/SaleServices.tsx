@@ -36,7 +36,7 @@ export const SaleServices = () => {
   );
   const [modalConfirmMessage, setModalConfirmMessage] = useState<string>("");
   const { employee, role } = useAuthContext();
-  const { business } = useBusinessStore();
+  const business = useBusinessStore((state) => state.business);
   const { selectedTheme } = useThemeContext();
 
   const loadServiceSales = useCallback(async () => {

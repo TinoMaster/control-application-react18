@@ -5,7 +5,7 @@ import { useNotification } from "../context/NotificationContext";
 import { ServiceModel } from "../models/api";
 
 export const useService = () => {
-  const { businessId } = useBusinessStore();
+  const businessId = useBusinessStore((state) => state.businessId);
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useNotification();
 

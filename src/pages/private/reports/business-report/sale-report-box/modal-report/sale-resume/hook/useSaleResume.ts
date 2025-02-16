@@ -27,7 +27,7 @@ import {
 
 export const useSaleResume = () => {
   const { role, user } = useAuthContext();
-  const { business } = useBusinessStore();
+  const business = useBusinessStore((state) => state.business);
   const { employees, loadingEmployees } = useEmployees();
   const [loading, setLoading] = useState(false);
   const { dispatch, businessSale, nextSection, machinesAlreadySelected } =

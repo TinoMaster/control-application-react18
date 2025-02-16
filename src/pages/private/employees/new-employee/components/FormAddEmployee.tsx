@@ -49,7 +49,7 @@ export const FormAddEmployee = ({
   handleChange,
 }: Props) => {
   const { selectedTheme } = useThemeContext();
-  const { business } = useBusinessStore();
+  const business = useBusinessStore((state) => state.business);
   return (
     <Container maxWidth="sm">
       <Typography variant="h4" gutterBottom>

@@ -6,7 +6,7 @@ import { employeeService } from "../services/employeeService";
 import { useBusinessStore } from "../store/business.store";
 
 export const useEmployees = (userId?: number) => {
-  const { businessId } = useBusinessStore();
+  const businessId = useBusinessStore((state) => state.businessId);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { showSuccess, showError } = useNotification();

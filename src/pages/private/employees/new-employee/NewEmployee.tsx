@@ -14,7 +14,10 @@ import {
 } from "./zod/registerEmployee";
 
 const NewEmployee = () => {
-  const { businessList, business } = useBusinessStore();
+  const [businessList, business] = useBusinessStore((state) => [
+    state.businessList,
+    state.business,
+  ]);
   const { saveEmployee, loadingSave } = useEmployees();
 
   const [expanded, setExpanded] = useState(false);

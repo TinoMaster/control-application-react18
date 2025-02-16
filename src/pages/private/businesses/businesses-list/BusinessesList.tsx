@@ -3,7 +3,11 @@ import { Box, Skeleton } from "@mui/material";
 import { BusinessCard } from "../business-card/BusinessCard";
 
 const BusinessesList = () => {
-  const { businessList, loading, business } = useBusinessStore();
+  const [businessList, loading, business] = useBusinessStore((state) => [
+    state.businessList,
+    state.loading,
+    state.business,
+  ]);
 
   if (loading) {
     return (

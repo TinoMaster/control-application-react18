@@ -28,7 +28,7 @@ import { useBusinessStore } from "../../../core/store/business.store";
 
 const Dashboard = () => {
   const { selectedTheme } = useThemeContext();
-  const { business } = useBusinessStore();
+  const business = useBusinessStore((state) => state.business);
   const theme = useTheme();
 
   const [loading, setLoading] = useState(true);

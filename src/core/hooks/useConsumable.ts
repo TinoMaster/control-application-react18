@@ -5,7 +5,7 @@ import { consumableService } from "../services/consumableService";
 import { ConsumableModel } from "../models/api/consumables.model";
 
 export const useConsumable = () => {
-  const { businessId } = useBusinessStore();
+  const businessId = useBusinessStore((state) => state.businessId);
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useNotification();
 

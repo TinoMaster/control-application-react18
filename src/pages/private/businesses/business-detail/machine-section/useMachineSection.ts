@@ -18,7 +18,7 @@ const defaultValue: TValue = {
 };
 
 export const useMachineSection = () => {
-  const { business } = useBusinessStore();
+  const business = useBusinessStore((state) => state.business);
   const { reloadUser } = useAuthContext();
 
   const [loading, setLoading] = useState(false);

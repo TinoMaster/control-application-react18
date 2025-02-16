@@ -20,7 +20,7 @@ export const SaleReport = () => {
   const { businessSale, cards, saveBusinessSale, dispatch } =
     useBusinessReportContext();
   const { selectedTheme } = useThemeContext();
-  const { business } = useBusinessStore();
+  const business = useBusinessStore((state) => state.business);
   const [modalAddNote, setModalAddNote] = useState(false);
   const [note, setNote] = useState(businessSale.note);
 

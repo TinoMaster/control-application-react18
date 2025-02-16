@@ -28,7 +28,9 @@ import { useBusinessStore } from "../../../../core/store/business.store";
 const NewBusiness = () => {
   const { selectedTheme } = useThemeContext();
   const { user } = useAuthContext();
-  const { addBusinessToBusinessList } = useBusinessStore();
+  const addBusinessToBusinessList = useBusinessStore(
+    (state) => state.addBusinessToBusinessList
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);

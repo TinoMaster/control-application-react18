@@ -7,7 +7,7 @@ export const useSales = (): {
   lastSales: BusinessFinalSaleModelResponse[] | undefined;
   loadingSales: boolean;
 } => {
-  const { businessId } = useBusinessStore();
+  const businessId = useBusinessStore((state) => state.businessId);
 
   const { data: lastSales, isLoading: loadingSales } = useQuery<
     BusinessFinalSaleModelResponse[] | undefined

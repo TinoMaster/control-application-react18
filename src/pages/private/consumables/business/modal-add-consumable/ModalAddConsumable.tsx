@@ -45,7 +45,7 @@ export const ModalAddConsumable = ({
   isEditing = false,
 }: ModalAddConsumableProps) => {
   const { selectedTheme } = useThemeContext();
-  const { business } = useBusinessStore();
+  const business = useBusinessStore((state) => state.business);
 
   const {
     control,

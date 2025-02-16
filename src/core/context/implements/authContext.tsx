@@ -22,7 +22,9 @@ export interface IAuthContext {
 }
 
 export const AuthProvider = ({ children }: IContextProps) => {
-  const { initializeBusiness } = useBusinessStore();
+  const initializeBusiness = useBusinessStore(
+    (state) => state.initializeBusiness
+  );
   const [loadingUser, setLoadingUser] = useState(false);
   const [user, setUser] = useState<UserModel | undefined>(undefined);
   const [employee, setEmployee] = useState<EmployeeModel | undefined>(

@@ -11,7 +11,7 @@ import { allowedRole } from "../../../../../core/utilities/helpers/allowedRole.u
 
 export const useServiceReport = () => {
   const { materialTheme, role } = useAppContext();
-  const { business } = useBusinessStore();
+  const business = useBusinessStore((state) => state.business);
   const { user } = useAuthContext();
   const { services } = useService();
   const {

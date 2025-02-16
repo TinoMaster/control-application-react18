@@ -6,7 +6,7 @@ import { ServiceSaleModel } from "../models/api/serviceSale.model";
 import { serviceSaleService } from "../services/serviceSaleService";
 
 export const useServiceSale = () => {
-  const { businessId } = useBusinessStore();
+  const businessId = useBusinessStore((state) => state.businessId);
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useNotification();
 

@@ -47,7 +47,7 @@ export const ModalAddServiceSale = ({
 }: ModalAddServiceSaleProps) => {
   const { selectedTheme } = useThemeContext();
   const { user } = useAuthContext();
-  const { business } = useBusinessStore();
+  const business = useBusinessStore((state) => state.business);
   const { modalBlurStyle, modalBoxStyle, buttonStyle } = useTableStyles();
   const { services } = useService();
 

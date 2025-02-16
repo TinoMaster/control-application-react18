@@ -20,7 +20,7 @@ import { ModalReport } from "./modal-report/ModalReport";
 import { SaleCard } from "./sale-card/SaleCard";
 
 export const SaleReportBox = () => {
-  const { business } = useBusinessStore();
+  const business = useBusinessStore((state) => state.business);
   const {
     todayReports,
     machinesAlreadySelected,

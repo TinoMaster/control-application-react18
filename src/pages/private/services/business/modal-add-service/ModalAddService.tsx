@@ -46,7 +46,7 @@ export const ModalAddService = ({
   consumables = [],
 }: ModalAddServiceProps) => {
   const { selectedTheme } = useThemeContext();
-  const { business } = useBusinessStore();
+  const business = useBusinessStore((state) => state.business);
   const { modalBlurStyle, modalBoxStyle, buttonStyle, buttonOutlineStyle } =
     useTableStyles();
 

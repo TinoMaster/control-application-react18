@@ -11,7 +11,9 @@ interface HeaderProps {
 
 export const Header = ({ handleDrawerToggle }: HeaderProps) => {
   const { materialTheme } = useAppContext();
-  const { business, businessList, onChangeBusiness } = useBusinessStore();
+  const [business, businessList, onChangeBusiness] = useBusinessStore(
+    (state) => [state.business, state.businessList, state.onChangeBusiness]
+  );
   return (
     <AppBar
       position="fixed"

@@ -65,7 +65,7 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
     SECTIONS_BUSINESS_REPORT.RESUME
   );
   const [state, dispatch] = useReducer(businessFinalSaleReducer, initialState);
-  const { business } = useBusinessStore();
+  const business = useBusinessStore((state) => state.business);
   const {
     getTodayReports,
     todayReports,
