@@ -23,7 +23,7 @@ import {
   updateBusinessSaleDebts,
   updateBusinessSalePaid,
 } from "../../../../../../../core/states/actions/businessFinalSaleActions";
-import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
+import { useBusinessReportStore } from "../../../store/businessReport.store";
 
 interface Debt {
   id: number | string;
@@ -38,9 +38,13 @@ const transformDetModelToDebt = (det: DebtModel): Debt => ({
 });
 
 export const SaleDebts = () => {
+  const nextSection = useBusinessReportStore((state) => state.nextSection);
+  const prevSection = useBusinessReportStore((state) => state.prevSection);
+  const dispatch = useBusinessReportStore((state) => state.dispatch);
+  const businessSale = useBusinessReportStore((state) => state.businessSale);
+
   const { selectedTheme } = useThemeContext();
-  const { nextSection, businessSale, dispatch, prevSection } =
-    useBusinessReportContext();
+
   const [debts, setDebts] = useState<Debt[]>(
     businessSale.debts.map(transformDetModelToDebt)
   );

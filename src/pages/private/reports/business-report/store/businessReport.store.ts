@@ -1,17 +1,10 @@
 import { create } from "zustand";
-import {
-  BusinessFinalSaleModel,
-  BusinessFinalSaleModelResponse,
-  BusinessFinalSaleModelToCreate,
-} from "../../../../../core/models/api/businessFinalSale.model";
-import { MachineModel } from "../../../../../core/models/api/machine.model";
+import { BusinessFinalSaleModel } from "../../../../../core/models/api/businessFinalSale.model";
 import { initialState } from "../../../../../core/states/reducers/businessFinalSaleReducer";
-import { useBusinessStore } from "../../../../../core/store/business.store";
-import { SECTIONS_BUSINESS_REPORT } from "../context/useBusinessReportContext";
-import { IResponse } from "../../../../../core/types/request.types";
-import { MutateOptions } from "@tanstack/react-query";
+import { SECTIONS_BUSINESS_REPORT } from "./data/businessReport.data";
 
 export interface CardPayment {
+  id: string;
   cardNumber: string;
   amount: number;
 }
@@ -24,31 +17,16 @@ interface BusinessReportState {
   openModalReport: boolean;
   openDetailSaleModal: boolean;
   isComplete: boolean;
-  todayReports: BusinessFinalSaleModelResponse[] | undefined;
 
   // Actions
   nextSection: () => void;
   prevSection: () => void;
   cancelProcess: () => void;
   setCards: (cards: CardPayment[]) => void;
-  saveBusinessSale: (
-    saveFunction: (data: BusinessFinalSaleModelToCreate) => void
-  ) => void;
+
   setOpenModalReport: (open: boolean) => void;
   setOpenDetailSaleModal: (open: boolean) => void;
   dispatch: (action: any) => void;
-  onDeleteSale: (
-    sale: BusinessFinalSaleModelResponse,
-    deleteFunction: (
-      variables: number,
-      options?:
-        | MutateOptions<IResponse<boolean>, Error, number, unknown>
-        | undefined
-    ) => Promise<IResponse<boolean>>
-  ) => void;
-  setTodayReports: (
-    reports: BusinessFinalSaleModelResponse[] | undefined
-  ) => void;
 }
 
 export const useBusinessReportStore = create<BusinessReportState>(
@@ -60,7 +38,6 @@ export const useBusinessReportStore = create<BusinessReportState>(
     openModalReport: false,
     openDetailSaleModal: false,
     isComplete: false,
-    todayReports: undefined,
 
     // Actions
     nextSection: () => {
@@ -131,31 +108,6 @@ export const useBusinessReportStore = create<BusinessReportState>(
       set({ cards });
     },
 
-    setTodayReports: (
-      reports: BusinessFinalSaleModelResponse[] | undefined
-    ) => {
-      set({ todayReports: reports });
-    },
-
-    saveBusinessSale: (saveFunction) => {
-      const { businessSale, cards } = get();
-      const business = useBusinessStore.getState().business;
-
-      const dataToSave: BusinessFinalSaleModelToCreate = {
-        ...businessSale,
-        machines: business.machines?.filter((m) =>
-          businessSale.machines.includes(m.id!)
-        ) as MachineModel[],
-        cards: cards.map((card) => ({
-          amount: card.amount,
-          number: card.cardNumber,
-        })),
-      };
-
-      saveFunction(dataToSave);
-      set({ openModalReport: false });
-    },
-
     setOpenModalReport: (open: boolean) => {
       set({ openModalReport: open });
     },
@@ -171,17 +123,6 @@ export const useBusinessReportStore = create<BusinessReportState>(
           ...action.payload,
         },
       }));
-    },
-
-    onDeleteSale: (sale: BusinessFinalSaleModelResponse, deleteFunction) => {
-      deleteFunction(sale.id as number, {
-        onSuccess: () => {
-          set({ openDetailSaleModal: false });
-        },
-        onError: (error) => {
-          console.log(error);
-        },
-      });
     },
   })
 );

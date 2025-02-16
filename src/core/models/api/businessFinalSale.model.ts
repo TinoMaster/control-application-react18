@@ -1,4 +1,4 @@
-import { CardPayment } from "../../../pages/private/reports/business-report/context/useBusinessReportContext";
+import { CardPayment } from "../../../pages/private/reports/business-report/store/businessReport.store";
 import { CardModel } from "./card.model";
 import { DebtModel } from "./debt.model";
 import { EmployeeModel } from "./employee.model";

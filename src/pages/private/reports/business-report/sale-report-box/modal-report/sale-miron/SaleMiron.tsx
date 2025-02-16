@@ -1,12 +1,14 @@
-import { Box, Button, darken, Grid2 as Grid, Typography } from "@mui/material";
-import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
-import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
 import ConstructionIcon from "@mui/icons-material/Construction";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { Box, Button, darken, Grid2 as Grid, Typography } from "@mui/material";
+import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
+import { useBusinessReportStore } from "../../../store/businessReport.store";
 
 export const SaleMiron = () => {
-  const { nextSection, prevSection } = useBusinessReportContext();
+  const nextSection = useBusinessReportStore((state) => state.nextSection);
+  const prevSection = useBusinessReportStore((state) => state.prevSection);
+
   const { selectedTheme } = useThemeContext();
 
   return (

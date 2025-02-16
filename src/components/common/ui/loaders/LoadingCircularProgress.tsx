@@ -8,7 +8,7 @@ interface Props {
 
 export const LoadingCircularProgress = ({
   loading,
-  absolute = false,
+  absolute = true,
 }: Props) => {
   const { selectedTheme } = useThemeContext();
 

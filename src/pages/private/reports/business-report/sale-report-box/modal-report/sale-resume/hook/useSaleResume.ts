@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useBusinessFinalSale } from "../../../../../../../../core/hooks/useBusinessFinalSale";
 import { useEmployees } from "../../../../../../../../core/hooks/useEmployees";
 import {
   updateBusinessSaleBusinessId,
@@ -11,28 +12,31 @@ import {
   updateBusinessSaleTotal,
   updateBusinessSaleWorkers,
 } from "../../../../../../../../core/states/actions/businessFinalSaleActions";
+import { useAuthStore } from "../../../../../../../../core/store/auth.store";
 import { useBusinessStore } from "../../../../../../../../core/store/business.store";
 import { formatDateToString } from "../../../../../../../../core/utilities/helpers/dateFormat";
 import {
   filterEmployeesReadyToWork,
   getTotalSalaryFromEmployees,
 } from "../../../../../../../../core/utilities/helpers/globals";
-import { useBusinessReportContext } from "../../../../context/useBusinessReportContext";
+import { useBusinessReportStore } from "../../../../store/businessReport.store";
 import {
   ERegisterType,
   SaleResumeZodSchema,
   TSaleResume,
 } from "../zod/saleResume.zodSchema";
-import { useAuthStore } from "../../../../../../../../core/store/auth.store";
 
 export const useSaleResume = () => {
   const user = useAuthStore((state) => state.user);
   const role = useAuthStore((state) => state.role);
   const business = useBusinessStore((state) => state.business);
+  const businessSale = useBusinessReportStore((state) => state.businessSale);
+  const dispatch = useBusinessReportStore((state) => state.dispatch);
+  const nextSection = useBusinessReportStore((state) => state.nextSection);
+
+  const { machinesAlreadySelected } = useBusinessFinalSale();
   const { employees, loadingEmployees } = useEmployees();
   const [loading, setLoading] = useState(false);
-  const { dispatch, businessSale, nextSection, machinesAlreadySelected } =
-    useBusinessReportContext();
 
   const defaultRegisterType =
     businessSale.machines?.length === business.machines?.length

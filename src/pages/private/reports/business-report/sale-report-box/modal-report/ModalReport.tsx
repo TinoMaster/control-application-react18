@@ -2,11 +2,11 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { Box, darken, IconButton, Modal, Typography } from "@mui/material";
 import { useThemeContext } from "../../../../../../core/context/use/useThemeContext";
 import { useTableStyles } from "../../../../../../core/styles/useTableStyles";
+import { useBusinessReportStore } from "../../store/businessReport.store";
 import {
   SECTIONS_BUSINESS_REPORT,
   SECTIONS_TRANSLATIONS,
-  useBusinessReportContext,
-} from "../../context/useBusinessReportContext";
+} from "../../store/data/businessReport.data";
 import { SaleCards } from "./sale-cards/SaleCards";
 import { SaleDebts } from "./sale-debts/SaleDebts";
 import { SaleMiron } from "./sale-miron/SaleMiron";
@@ -21,7 +21,10 @@ interface Props {
 
 export const ModalReport = ({ openModal, closeModal }: Props) => {
   const { selectedTheme } = useThemeContext();
-  const { currentSection, cancelProcess } = useBusinessReportContext();
+  const currentSection = useBusinessReportStore(
+    (state) => state.currentSection
+  );
+  const cancelProcess = useBusinessReportStore((state) => state.cancelProcess);
   const { modalBlurStyle, modalBoxStyle } = useTableStyles();
 
   const selectedSection = () => {

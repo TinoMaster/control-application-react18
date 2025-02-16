@@ -1,32 +1,36 @@
+import { Delete } from "@mui/icons-material";
+import BlockIcon from "@mui/icons-material/Block";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
   Box,
+  Button,
+  Grid2 as Grid,
+  IconButton,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Grid2 as Grid,
-  IconButton,
   darken,
-  Button,
 } from "@mui/material";
 import { useState } from "react";
-import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
 import CustomInput from "../../../../../../../components/common/ui/CustomInput";
+import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
 import {
   CardPayment,
-  useBusinessReportContext,
-} from "../../../context/useBusinessReportContext";
-import { Delete } from "@mui/icons-material";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import BlockIcon from "@mui/icons-material/Block";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+  useBusinessReportStore,
+} from "../../../store/businessReport.store";
 
 export const SaleCards = () => {
+  const nextSection = useBusinessReportStore((state) => state.nextSection);
+  const cards = useBusinessReportStore((state) => state.cards);
+  const setCards = useBusinessReportStore((state) => state.setCards);
+  const prevSection = useBusinessReportStore((state) => state.prevSection);
+
   const { selectedTheme } = useThemeContext();
-  const { nextSection, cards, setCards, prevSection } =
-    useBusinessReportContext();
+
   const [cardPayments, setCardPayments] = useState<CardPayment[]>(cards);
   const [newCardNumber, setNewCardNumber] = useState("");
   const [newAmount, setNewAmount] = useState("");

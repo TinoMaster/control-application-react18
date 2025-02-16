@@ -12,24 +12,24 @@ import { useState } from "react";
 import { LoadingCircularProgress } from "../../../../../components/common/ui/loaders/LoadingCircularProgress";
 import { ModalRandomInfo } from "../../../../../components/common/ui/ModalRandomInfo";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
+import { useBusinessFinalSale } from "../../../../../core/hooks/useBusinessFinalSale";
 import { useBusinessStore } from "../../../../../core/store/business.store";
 import { useTableStyles } from "../../../../../core/styles/useTableStyles";
-import { useBusinessReportContext } from "../context/useBusinessReportContext";
+import { useBusinessReportStore } from "../store/businessReport.store";
 import { ModalReport } from "./modal-report/ModalReport";
 import { SaleCard } from "./sale-card/SaleCard";
 
 export const SaleReportBox = () => {
   const business = useBusinessStore((state) => state.business);
+  const { openModalReport, setOpenModalReport } = useBusinessReportStore();
   const {
     todayReports,
-    machinesAlreadySelected,
-    openModalReport,
-    handleCloseModalReport,
-    setOpenModalReport,
     loadingTodayReports,
+    machinesAlreadySelected,
     loadingSave,
     loadingDelete,
-  } = useBusinessReportContext();
+  } = useBusinessFinalSale();
+
   const { selectedTheme } = useThemeContext();
   const { cardStyle } = useTableStyles();
 
@@ -116,7 +116,7 @@ export const SaleReportBox = () => {
         </Grid>
         <ModalReport
           openModal={openModalReport}
-          closeModal={handleCloseModalReport}
+          closeModal={() => setOpenModalReport(false)}
         />
       </Box>
     </>

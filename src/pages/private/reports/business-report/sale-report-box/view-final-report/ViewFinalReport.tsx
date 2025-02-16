@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 import { useThemeContext } from "../../../../../../core/context/use/useThemeContext";
 import { BusinessFinalSaleModelResponse } from "../../../../../../core/models/api/businessFinalSale.model";
-import { CardPayment } from "../../context/useBusinessReportContext";
+import { CardPayment } from "../../store/businessReport.store";
 
 interface Props {
   sale: BusinessFinalSaleModelResponse;

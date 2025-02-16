@@ -10,15 +10,27 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
-import { transformBusinessSaleToBusinessSaleResponse } from "../../../../../../../core/models/api/businessFinalSale.model";
+import { useBusinessFinalSale } from "../../../../../../../core/hooks/useBusinessFinalSale";
+import {
+  BusinessFinalSaleModelToCreate,
+  transformBusinessSaleToBusinessSaleResponse,
+} from "../../../../../../../core/models/api/businessFinalSale.model";
+import { MachineModel } from "../../../../../../../core/models/api/machine.model";
 import { updateBusinessSaleNote } from "../../../../../../../core/states/actions/businessFinalSaleActions";
 import { useBusinessStore } from "../../../../../../../core/store/business.store";
-import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
+import { useBusinessReportStore } from "../../../store/businessReport.store";
 import { ViewFinalReport } from "../../view-final-report/ViewFinalReport";
 
 export const SaleReport = () => {
-  const { businessSale, cards, saveBusinessSale, dispatch } =
-    useBusinessReportContext();
+  const businessSale = useBusinessReportStore((state) => state.businessSale);
+  const dispatch = useBusinessReportStore((state) => state.dispatch);
+  const cards = useBusinessReportStore((state) => state.cards);
+  const setOpenModalReport = useBusinessReportStore(
+    (state) => state.setOpenModalReport
+  );
+
+  const { saveBusinessFinalSale } = useBusinessFinalSale();
+
   const { selectedTheme } = useThemeContext();
   const business = useBusinessStore((state) => state.business);
   const [modalAddNote, setModalAddNote] = useState(false);
@@ -27,6 +39,24 @@ export const SaleReport = () => {
   const handleAddNote = () => {
     dispatch(updateBusinessSaleNote(note));
     setModalAddNote(false);
+  };
+
+  const handleSave = () => {
+    const dataToSave: BusinessFinalSaleModelToCreate = {
+      ...businessSale,
+      machines: business.machines?.filter((m) =>
+        businessSale.machines.includes(m.id!)
+      ) as MachineModel[],
+      cards: cards.map((card) => ({
+        amount: card.amount,
+        number: card.cardNumber,
+      })),
+    };
+    saveBusinessFinalSale(dataToSave, {
+      onSuccess: () => {
+        setOpenModalReport(false);
+      },
+    });
   };
 
   return (
@@ -135,7 +165,7 @@ export const SaleReport = () => {
           cards
         )}
         cards={cards}
-        onSave={saveBusinessSale}
+        onSave={handleSave}
         onAddNote={() => setModalAddNote(true)}
       />
     </>

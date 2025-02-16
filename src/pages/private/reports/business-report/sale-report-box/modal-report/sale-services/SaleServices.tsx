@@ -23,15 +23,18 @@ import { ByBusinessAndDateRequestModel } from "../../../../../../../core/models/
 import { ServiceSaleModel } from "../../../../../../../core/models/api/serviceSale.model";
 import { serviceSaleService } from "../../../../../../../core/services/serviceSaleService";
 import { updateBusinessSaleServices } from "../../../../../../../core/states/actions/businessFinalSaleActions";
+import { useAuthStore } from "../../../../../../../core/store/auth.store";
 import { useBusinessStore } from "../../../../../../../core/store/business.store";
 import { formatDateToHourString } from "../../../../../../../core/utilities/helpers/dateFormat";
-import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
-import { useAuthStore } from "../../../../../../../core/store/auth.store";
+import { useBusinessReportStore } from "../../../store/businessReport.store";
 
 export const SaleServices = () => {
   const employee = useAuthStore((state) => state.employee);
   const role = useAuthStore((state) => state.role);
-  const { dispatch, nextSection, prevSection } = useBusinessReportContext();
+  const dispatch = useBusinessReportStore((state) => state.dispatch);
+  const prevSection = useBusinessReportStore((state) => state.prevSection);
+  const nextSection = useBusinessReportStore((state) => state.nextSection);
+
   const [serviceSales, setServiceSales] = useState<ServiceSaleModel[]>([]);
   const [selectedServices, setSelectedServices] = useState<ServiceSaleModel[]>(
     []

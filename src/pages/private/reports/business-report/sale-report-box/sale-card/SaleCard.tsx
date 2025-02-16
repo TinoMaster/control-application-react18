@@ -18,8 +18,9 @@ import { LoadingCircularProgress } from "../../../../../../components/common/ui/
 import { useThemeContext } from "../../../../../../core/context/use/useThemeContext";
 import { BusinessFinalSaleModelResponse } from "../../../../../../core/models/api/businessFinalSale.model";
 import { formatCurrency } from "../../../../../../core/utilities/helpers/formatCurrency";
-import { useBusinessReportContext } from "../../context/useBusinessReportContext";
 import { ModalDetailSale } from "../modal-detail-sale/ModalDetailSale";
+import { useBusinessReportStore } from "../../store/businessReport.store";
+import { useBusinessFinalSale } from "../../../../../../core/hooks/useBusinessFinalSale";
 
 interface Props {
   sale: BusinessFinalSaleModelResponse;
@@ -27,25 +28,30 @@ interface Props {
 
 export const SaleCard = ({ sale }: Props) => {
   const { selectedTheme } = useThemeContext();
-  const {
-    onDeleteSale,
-    loading,
-    openDetailSaleModal,
-    setFalseDetailSale,
-    setTrueDetailSale,
-  } = useBusinessReportContext();
+  const openDetailSaleModal = useBusinessReportStore(
+    (state) => state.openDetailSaleModal
+  );
+  const setOpenDetailSaleModal = useBusinessReportStore(
+    (state) => state.setOpenDetailSaleModal
+  );
+  const { deleteBusinessFinalSale, loadingTodayReports } =
+    useBusinessFinalSale();
+
+  const handleDeleteSale = (sale: BusinessFinalSaleModelResponse) => {
+    deleteBusinessFinalSale(sale.id || 0);
+  };
 
   const hasDebts = sale.debts && sale.debts.length > 0;
   const pendingAmount = sale.total - sale.paid;
 
   return (
     <>
-      <LoadingCircularProgress loading={loading} />
+      <LoadingCircularProgress loading={loadingTodayReports} />
       <ModalDetailSale
         openDetailSaleModal={openDetailSaleModal}
-        onCloseDetailSaleModal={setFalseDetailSale}
+        onCloseDetailSaleModal={() => setOpenDetailSaleModal(false)}
         sale={sale}
-        onDeleteSale={onDeleteSale}
+        onDeleteSale={handleDeleteSale}
       />
       <Card
         sx={{
@@ -158,7 +164,7 @@ export const SaleCard = ({ sale }: Props) => {
           <Button
             variant="outlined"
             size="small"
-            onClick={setTrueDetailSale}
+            onClick={() => setOpenDetailSaleModal(true)}
             sx={{
               color: selectedTheme.text_color,
               borderColor: selectedTheme.text_color,
