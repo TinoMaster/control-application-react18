@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNotification } from "../context/NotificationContext";
-import { useBusinessContext } from "../context/use/useBusinessContext";
+import { useBusinessStore } from "../store/business.store";
 import { ByBusinessAndDateRequestModel } from "../models/api/requests/byBusinessAndDateRequest.model";
 import { ServiceSaleModel } from "../models/api/serviceSale.model";
 import { serviceSaleService } from "../services/serviceSaleService";
 
 export const useServiceSale = () => {
-  const { businessId } = useBusinessContext();
+  const { businessId } = useBusinessStore();
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useNotification();
 

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useBusinessContext } from "../context/use/useBusinessContext";
+import { useBusinessStore } from "../store/business.store";
 import { businessFinalSaleService } from "../services/businessFinalSaleService";
 import { BusinessFinalSaleModelResponse } from "../models/api/businessFinalSale.model";
 
@@ -7,7 +7,7 @@ export const useSales = (): {
   lastSales: BusinessFinalSaleModelResponse[] | undefined;
   loadingSales: boolean;
 } => {
-  const { businessId } = useBusinessContext();
+  const { businessId } = useBusinessStore();
 
   const { data: lastSales, isLoading: loadingSales } = useQuery<
     BusinessFinalSaleModelResponse[] | undefined

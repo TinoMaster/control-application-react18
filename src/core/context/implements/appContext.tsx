@@ -23,6 +23,7 @@ export const AppProvider = ({ children }: IContextProps) => {
     };
   }, [role, materialTheme]);
 
+
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );

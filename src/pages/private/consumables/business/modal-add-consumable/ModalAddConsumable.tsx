@@ -1,33 +1,33 @@
-import { useEffect } from "react";
-import {
-  Modal,
-  Box,
-  Typography,
-  Grid2 as Grid,
-  Button,
-  IconButton,
-  darken,
-  MenuItem,
-  FormControl,
-  Select,
-  FormHelperText,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
-import CustomInput from "../../../../../components/common/ui/CustomInput";
-import { ConsumableModel } from "../../../../../core/models/api/consumables.model";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormHelperText,
+  Grid2 as Grid,
+  IconButton,
+  MenuItem,
+  Modal,
+  Select,
+  Typography,
+  darken,
+} from "@mui/material";
+import { useEffect } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import CustomInput from "../../../../../components/common/ui/CustomInput";
+import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
+import { ConsumableModel } from "../../../../../core/models/api/consumables.model";
+import {
+  EUnit,
+  TRANSLATE_UNIT,
+} from "../../../../../core/models/api/unit.model";
 import {
   TConsumableModel,
   consumableDefaultValues,
   consumableSchema,
 } from "../../../../../core/models/zod/consumableSchema";
-import {
-  EUnit,
-  TRANSLATE_UNIT,
-} from "../../../../../core/models/api/unit.model";
-import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
+import { useBusinessStore } from "../../../../../core/store/business.store";
 
 interface ModalAddConsumableProps {
   open: boolean;
@@ -45,7 +45,7 @@ export const ModalAddConsumable = ({
   isEditing = false,
 }: ModalAddConsumableProps) => {
   const { selectedTheme } = useThemeContext();
-  const { business } = useBusinessContext();
+  const { business } = useBusinessStore();
 
   const {
     control,

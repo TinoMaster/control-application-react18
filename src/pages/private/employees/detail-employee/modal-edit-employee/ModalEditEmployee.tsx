@@ -24,18 +24,18 @@ import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import CustomInput from "../../../../../components/common/ui/CustomInput";
 import { CustomSnackbar } from "../../../../../components/common/ui/CustomSnackbar";
-import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
 import { useStatus } from "../../../../../core/hooks/customs/useStatus";
 import { zodEmployeeToEmployeeMapper } from "../../../../../core/mappers/global.mapper";
 import { ERole } from "../../../../../core/models/api";
 import { EmployeeModel } from "../../../../../core/models/api/employee.model";
+import { employeeService } from "../../../../../core/services/employeeService";
+import { useBusinessStore } from "../../../../../core/store/business.store";
 import {
   registerEmployeeSchema,
   TRegisterEmployeeDataModel,
   zEmployeeDefaultValues,
 } from "../../new-employee/zod/registerEmployee";
-import { employeeService } from "../../../../../core/services/employeeService";
 
 interface Props {
   open: boolean;
@@ -50,7 +50,7 @@ export const ModalEditEmployee = ({
   employee,
   updateEmployee,
 }: Props) => {
-  const { businessList, business } = useBusinessContext();
+  const { businessList, business } = useBusinessStore();
   const { selectedTheme } = useThemeContext();
 
   const {

@@ -14,19 +14,19 @@ import {
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import CustomInput from "../../../../../components/common/ui/CustomInput";
-import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
 import { ConsumableModel } from "../../../../../core/models/api/consumables.model";
 import { CostModel } from "../../../../../core/models/api/cost.model";
 import { ServiceModel } from "../../../../../core/models/api/service.model";
 import {
-  ServiceSchema,
   serviceDefaultValues,
+  ServiceSchema,
   serviceSchema,
 } from "../../../../../core/models/zod/serviceSchema";
+import { useBusinessStore } from "../../../../../core/store/business.store";
 import { useTableStyles } from "../../../../../core/styles/useTableStyles";
-import { CostItem } from "./components/CostItem";
 import { AddCostModal } from "./components/AddCostModal";
+import { CostItem } from "./components/CostItem";
 
 interface ModalAddServiceProps {
   open: boolean;
@@ -46,7 +46,7 @@ export const ModalAddService = ({
   consumables = [],
 }: ModalAddServiceProps) => {
   const { selectedTheme } = useThemeContext();
-  const { business } = useBusinessContext();
+  const { business } = useBusinessStore();
   const { modalBlurStyle, modalBoxStyle, buttonStyle, buttonOutlineStyle } =
     useTableStyles();
 

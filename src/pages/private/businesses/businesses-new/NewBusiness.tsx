@@ -1,11 +1,3 @@
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import {
-  RegisterBusinessDataModel,
-  registerBusinessSchema,
-  zBusinessDefaultValues,
-} from "../../../../core/models/zod/registerBusiness";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Alert,
@@ -17,18 +9,26 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import CustomInput from "../../../../components/common/ui/CustomInput";
 import { useAuthContext } from "../../../../core/context/use/useAuthContext";
+import { useThemeContext } from "../../../../core/context/use/useThemeContext";
 import { zodRegisterBusinessToBusinessMapper } from "../../../../core/mappers/global.mapper";
 import { BusinessModel } from "../../../../core/models/api";
+import {
+  RegisterBusinessDataModel,
+  registerBusinessSchema,
+  zBusinessDefaultValues,
+} from "../../../../core/models/zod/registerBusiness";
 import { businessService } from "../../../../core/services/businessService";
-import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
-import { useThemeContext } from "../../../../core/context/use/useThemeContext";
+import { useBusinessStore } from "../../../../core/store/business.store";
 
 const NewBusiness = () => {
   const { selectedTheme } = useThemeContext();
   const { user } = useAuthContext();
-  const { addBusinessToBusinessList } = useBusinessContext();
+  const { addBusinessToBusinessList } = useBusinessStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);

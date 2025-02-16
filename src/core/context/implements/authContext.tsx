@@ -1,10 +1,11 @@
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ERole, TRole, UserModel } from "../../models/api";
 import { EmployeeModel } from "../../models/api/employee.model";
-import { appService } from "../../services/appService";
 import { employeeService } from "../../services/employeeService";
 import { decodeJWT } from "../../utilities/helpers/jwtDecode";
 import { AuthContext } from "../use/useAuthContext";
+import { userService } from "../../services/userService";
+import { useBusinessStore } from "../../store/business.store";
 
 interface IContextProps {
   children: ReactNode;
@@ -21,6 +22,7 @@ export interface IAuthContext {
 }
 
 export const AuthProvider = ({ children }: IContextProps) => {
+  const { initializeBusiness } = useBusinessStore();
   const [loadingUser, setLoadingUser] = useState(false);
   const [user, setUser] = useState<UserModel | undefined>(undefined);
   const [employee, setEmployee] = useState<EmployeeModel | undefined>(
@@ -44,8 +46,9 @@ export const AuthProvider = ({ children }: IContextProps) => {
   const getUser = useCallback(
     async (email: string) => {
       setLoadingUser(true);
-      const response = await appService.getUser(email);
-      if (response.status === 200) {
+      const response = await userService.getUser(email);
+      if (response.status === 200 && response.data) {
+        initializeBusiness(response.data);
         setUser(response.data);
         if (role !== ERole.SUPERADMIN && role !== ERole.OWNER) {
           const employeeResponse = await employeeService.getEmployeeByUserId(

@@ -1,7 +1,7 @@
 import MenuIcon from "@mui/icons-material/Menu";
 import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import { useAppContext } from "../../../core/context/use/useAppContext";
-import { useBusinessContext } from "../../../core/context/use/useBusinessContext";
+import { useBusinessStore } from "../../../core/store/business.store";
 import { ChooseBusiness } from "../choose-business/ChooseBusiness";
 import UserOptions from "../user-options/UserOptions";
 
@@ -11,7 +11,7 @@ interface HeaderProps {
 
 export const Header = ({ handleDrawerToggle }: HeaderProps) => {
   const { materialTheme } = useAppContext();
-  const { business, businessList, onChangeBusiness } = useBusinessContext();
+  const { business, businessList, onChangeBusiness } = useBusinessStore();
   return (
     <AppBar
       position="fixed"

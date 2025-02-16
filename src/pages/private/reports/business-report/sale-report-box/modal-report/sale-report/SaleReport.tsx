@@ -9,10 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { useBusinessContext } from "../../../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
 import { transformBusinessSaleToBusinessSaleResponse } from "../../../../../../../core/models/api/businessFinalSale.model";
 import { updateBusinessSaleNote } from "../../../../../../../core/states/actions/businessFinalSaleActions";
+import { useBusinessStore } from "../../../../../../../core/store/business.store";
 import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
 import { ViewFinalReport } from "../../view-final-report/ViewFinalReport";
 
@@ -20,7 +20,7 @@ export const SaleReport = () => {
   const { businessSale, cards, saveBusinessSale, dispatch } =
     useBusinessReportContext();
   const { selectedTheme } = useThemeContext();
-  const { business } = useBusinessContext();
+  const { business } = useBusinessStore();
   const [modalAddNote, setModalAddNote] = useState(false);
   const [note, setNote] = useState(businessSale.note);
 

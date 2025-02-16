@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { useBusinessContext } from "../context/use/useBusinessContext";
+import { useBusinessStore } from "../store/business.store";
 import { BusinessFinalSaleModelResponse } from "../models/api/businessFinalSale.model";
 import { ByBusinessAndDateRequestModel } from "../models/api/requests/byBusinessAndDateRequest.model";
 import { businessFinalSaleService } from "../services/businessFinalSaleService";
 
 export const useBusinessFinalSale = () => {
-  const { business } = useBusinessContext();
+  const { business } = useBusinessStore();
   const businessId = business?.id;
   const [todayReports, setTodayReports] = useState<
     BusinessFinalSaleModelResponse[]

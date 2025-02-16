@@ -6,8 +6,8 @@ import {
   useReducer,
   useState,
 } from "react";
-import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 import { useBoolean } from "../../../../../core/hooks/customs/useBoolean";
+import { useStatus } from "../../../../../core/hooks/customs/useStatus";
 import { useBusinessFinalSale } from "../../../../../core/hooks/useBusinessFinalSale";
 import {
   BusinessFinalSaleModel,
@@ -22,12 +22,12 @@ import {
   businessFinalSaleReducer,
   initialState,
 } from "../../../../../core/states/reducers/businessFinalSaleReducer";
+import { useBusinessStore } from "../../../../../core/store/business.store";
 import {
   BusinessReportContext,
   CardPayment,
   SECTIONS_BUSINESS_REPORT,
 } from "./useBusinessReportContext";
-import { useStatus } from "../../../../../core/hooks/customs/useStatus";
 
 interface IContextProps {
   children: ReactNode;
@@ -65,7 +65,7 @@ export const BusinessReportProvider = ({ children }: IContextProps) => {
     SECTIONS_BUSINESS_REPORT.RESUME
   );
   const [state, dispatch] = useReducer(businessFinalSaleReducer, initialState);
-  const { business } = useBusinessContext();
+  const { business } = useBusinessStore();
   const {
     getTodayReports,
     todayReports,

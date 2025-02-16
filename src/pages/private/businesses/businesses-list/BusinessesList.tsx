@@ -1,9 +1,9 @@
-import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
+import { useBusinessStore } from "../../../../core/store/business.store";
 import { Box, Skeleton } from "@mui/material";
 import { BusinessCard } from "../business-card/BusinessCard";
 
 const BusinessesList = () => {
-  const { businessList, loading, business } = useBusinessContext();
+  const { businessList, loading, business } = useBusinessStore();
 
   if (loading) {
     return (

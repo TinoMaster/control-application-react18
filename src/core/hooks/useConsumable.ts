@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useBusinessContext } from "../context/use/useBusinessContext";
+import { useBusinessStore } from "../store/business.store";
 import { useNotification } from "../context/NotificationContext";
 import { consumableService } from "../services/consumableService";
 import { ConsumableModel } from "../models/api/consumables.model";
 
 export const useConsumable = () => {
-  const { businessId } = useBusinessContext();
+  const { businessId } = useBusinessStore();
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useNotification();
 

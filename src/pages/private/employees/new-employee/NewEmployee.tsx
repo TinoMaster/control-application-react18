@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LoadingCircularProgress } from "../../../../components/common/ui/loaders/LoadingCircularProgress";
-import { useBusinessContext } from "../../../../core/context/use/useBusinessContext";
+import { useBusinessStore } from "../../../../core/store/business.store";
 import { useEmployees } from "../../../../core/hooks/useEmployees";
 import { zodEmployeeToEmployeeMapper } from "../../../../core/mappers/global.mapper";
 import { EmployeeModel } from "../../../../core/models/api/employee.model";
@@ -14,7 +14,7 @@ import {
 } from "./zod/registerEmployee";
 
 const NewEmployee = () => {
-  const { businessList, business } = useBusinessContext();
+  const { businessList, business } = useBusinessStore();
   const { saveEmployee, loadingSave } = useEmployees();
 
   const [expanded, setExpanded] = useState(false);

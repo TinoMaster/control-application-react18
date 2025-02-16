@@ -21,10 +21,10 @@ import {
   UseFormHandleSubmit,
 } from "react-hook-form";
 import CustomInput from "../../../../../components/common/ui/CustomInput";
-import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
 import { ERole } from "../../../../../core/models/api";
 import { BusinessModel } from "../../../../../core/models/api/business.model";
+import { useBusinessStore } from "../../../../../core/store/business.store";
 import { TRegisterEmployeeDataModel } from "../zod/registerEmployee";
 
 interface Props {
@@ -49,7 +49,7 @@ export const FormAddEmployee = ({
   handleChange,
 }: Props) => {
   const { selectedTheme } = useThemeContext();
-  const { business } = useBusinessContext();
+  const { business } = useBusinessStore();
   return (
     <Container maxWidth="sm">
       <Typography variant="h4" gutterBottom>

@@ -18,7 +18,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import CustomInput from "../../../../../components/common/ui/CustomInput";
 import { useAuthContext } from "../../../../../core/context/use/useAuthContext";
-import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
 import { useService } from "../../../../../core/hooks/useServices";
 import { EmployeeModel } from "../../../../../core/models/api/employee.model";
@@ -28,6 +27,7 @@ import {
   ServiceSaleSchema,
 } from "../../../../../core/models/zod/serviceSaleSchema";
 import { employeeService } from "../../../../../core/services/employeeService";
+import { useBusinessStore } from "../../../../../core/store/business.store";
 import { useTableStyles } from "../../../../../core/styles/useTableStyles";
 
 interface ModalAddServiceSaleProps {
@@ -47,7 +47,7 @@ export const ModalAddServiceSale = ({
 }: ModalAddServiceSaleProps) => {
   const { selectedTheme } = useThemeContext();
   const { user } = useAuthContext();
-  const { business } = useBusinessContext();
+  const { business } = useBusinessStore();
   const { modalBlurStyle, modalBoxStyle, buttonStyle } = useTableStyles();
   const { services } = useService();
 

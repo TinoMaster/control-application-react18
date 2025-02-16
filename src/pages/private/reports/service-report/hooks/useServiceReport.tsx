@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { useAppContext } from "../../../../../core/context/use/useAppContext";
 import { useAuthContext } from "../../../../../core/context/use/useAuthContext";
-import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 import { useStatus } from "../../../../../core/hooks/customs/useStatus";
 import { useServiceSale } from "../../../../../core/hooks/useServiceSale";
 import { useService } from "../../../../../core/hooks/useServices";
 import { ERole } from "../../../../../core/models/api";
 import { ServiceSaleModel } from "../../../../../core/models/api/serviceSale.model";
+import { useBusinessStore } from "../../../../../core/store/business.store";
 import { allowedRole } from "../../../../../core/utilities/helpers/allowedRole.util";
 
 export const useServiceReport = () => {
   const { materialTheme, role } = useAppContext();
-  const { business } = useBusinessContext();
+  const { business } = useBusinessStore();
   const { user } = useAuthContext();
   const { services } = useService();
   const {

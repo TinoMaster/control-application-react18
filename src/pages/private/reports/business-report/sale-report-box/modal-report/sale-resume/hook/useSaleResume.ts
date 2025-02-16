@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuthContext } from "../../../../../../../../core/context/use/useAuthContext";
-import { useBusinessContext } from "../../../../../../../../core/context/use/useBusinessContext";
 import { useEmployees } from "../../../../../../../../core/hooks/useEmployees";
 import {
   updateBusinessSaleBusinessId,
@@ -13,6 +12,7 @@ import {
   updateBusinessSaleTotal,
   updateBusinessSaleWorkers,
 } from "../../../../../../../../core/states/actions/businessFinalSaleActions";
+import { useBusinessStore } from "../../../../../../../../core/store/business.store";
 import { formatDateToString } from "../../../../../../../../core/utilities/helpers/dateFormat";
 import {
   filterEmployeesReadyToWork,
@@ -27,7 +27,7 @@ import {
 
 export const useSaleResume = () => {
   const { role, user } = useAuthContext();
-  const { business } = useBusinessContext();
+  const { business } = useBusinessStore();
   const { employees, loadingEmployees } = useEmployees();
   const [loading, setLoading] = useState(false);
   const { dispatch, businessSale, nextSection, machinesAlreadySelected } =

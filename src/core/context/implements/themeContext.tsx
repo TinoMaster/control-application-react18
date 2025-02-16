@@ -1,7 +1,7 @@
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ThemeContext } from "../use/useThemeContext";
 import { ThemeModel } from "../../models/api/theme.model";
-import { appService } from "../../services/appService";
+import { appThemeService } from "../../services/appThemeService";
 import {
   chooseThemeById,
   defaultTheme,
@@ -72,7 +72,7 @@ export const AppThemeProvider = ({ children }: IContextProps) => {
     }
 
     try {
-      const response = await appService.getThemes();
+      const response = await appThemeService.getThemes();
       if (response.status === 200) {
         // Ensure defaultTheme is always included and no duplicates
         const allThemes = [...(response.data || [])];

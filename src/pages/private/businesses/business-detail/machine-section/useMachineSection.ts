@@ -3,7 +3,7 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { useAuthContext } from "../../../../../core/context/use/useAuthContext";
-import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
+import { useBusinessStore } from "../../../../../core/store/business.store";
 import { MachineModel } from "../../../../../core/models/api/machine.model";
 import { machineService } from "../../../../../core/services/machineService";
 
@@ -18,7 +18,7 @@ const defaultValue: TValue = {
 };
 
 export const useMachineSection = () => {
-  const { business } = useBusinessContext();
+  const { business } = useBusinessStore();
   const { reloadUser } = useAuthContext();
 
   const [loading, setLoading] = useState(false);

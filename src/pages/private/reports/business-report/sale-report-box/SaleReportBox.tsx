@@ -12,15 +12,15 @@ import { useState } from "react";
 import { CustomSnackbar } from "../../../../../components/common/ui/CustomSnackbar";
 import { LoadingCircularProgress } from "../../../../../components/common/ui/loaders/LoadingCircularProgress";
 import { ModalRandomInfo } from "../../../../../components/common/ui/ModalRandomInfo";
-import { useBusinessContext } from "../../../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../../../core/context/use/useThemeContext";
+import { useBusinessStore } from "../../../../../core/store/business.store";
+import { useTableStyles } from "../../../../../core/styles/useTableStyles";
 import { useBusinessReportContext } from "../context/useBusinessReportContext";
 import { ModalReport } from "./modal-report/ModalReport";
 import { SaleCard } from "./sale-card/SaleCard";
-import { useTableStyles } from "../../../../../core/styles/useTableStyles";
 
 export const SaleReportBox = () => {
-  const { business } = useBusinessContext();
+  const { business } = useBusinessStore();
   const {
     todayReports,
     machinesAlreadySelected,

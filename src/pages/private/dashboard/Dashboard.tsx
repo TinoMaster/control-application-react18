@@ -23,19 +23,14 @@ import {
   useTheme,
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import { useBusinessContext } from "../../../core/context/use/useBusinessContext";
 import { useThemeContext } from "../../../core/context/use/useThemeContext";
+import { useBusinessStore } from "../../../core/store/business.store";
 
 const Dashboard = () => {
   const { selectedTheme } = useThemeContext();
-  const { business } = useBusinessContext();
+  const { business } = useBusinessStore();
   const theme = useTheme();
 
-  // Estados para los datos
-  /* const [sales, setSales] = useState<BusinessFinalSaleModel[]>([]);
-  const [employees, setEmployees] = useState<EmployeeModel[]>([]);
-  const [clients, setClients] = useState<ClientModel[]>([]);
-  const [products, setProducts] = useState<ProductModel[]>([]); */
   const [loading, setLoading] = useState(true);
 
   // Función para cargar los datos

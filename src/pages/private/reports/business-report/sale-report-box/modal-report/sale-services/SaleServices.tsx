@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
-import { ServiceSaleModel } from "../../../../../../../core/models/api/serviceSale.model";
-import { serviceSaleService } from "../../../../../../../core/services/serviceSaleService";
+import BlockIcon from "@mui/icons-material/Block";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
   Box,
   Button,
@@ -16,17 +16,17 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { ByBusinessAndDateRequestModel } from "../../../../../../../core/models/api/requests/byBusinessAndDateRequest.model";
+import { useCallback, useEffect, useState } from "react";
 import { useAuthContext } from "../../../../../../../core/context/use/useAuthContext";
-import { useBusinessContext } from "../../../../../../../core/context/use/useBusinessContext";
-import { formatDateToHourString } from "../../../../../../../core/utilities/helpers/dateFormat";
 import { useThemeContext } from "../../../../../../../core/context/use/useThemeContext";
-import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import BlockIcon from "@mui/icons-material/Block";
 import { ERole } from "../../../../../../../core/models/api";
+import { ByBusinessAndDateRequestModel } from "../../../../../../../core/models/api/requests/byBusinessAndDateRequest.model";
+import { ServiceSaleModel } from "../../../../../../../core/models/api/serviceSale.model";
+import { serviceSaleService } from "../../../../../../../core/services/serviceSaleService";
 import { updateBusinessSaleServices } from "../../../../../../../core/states/actions/businessFinalSaleActions";
+import { useBusinessStore } from "../../../../../../../core/store/business.store";
+import { formatDateToHourString } from "../../../../../../../core/utilities/helpers/dateFormat";
+import { useBusinessReportContext } from "../../../context/useBusinessReportContext";
 
 export const SaleServices = () => {
   const { dispatch, nextSection, prevSection } = useBusinessReportContext();
@@ -36,7 +36,7 @@ export const SaleServices = () => {
   );
   const [modalConfirmMessage, setModalConfirmMessage] = useState<string>("");
   const { employee, role } = useAuthContext();
-  const { business } = useBusinessContext();
+  const { business } = useBusinessStore();
   const { selectedTheme } = useThemeContext();
 
   const loadServiceSales = useCallback(async () => {

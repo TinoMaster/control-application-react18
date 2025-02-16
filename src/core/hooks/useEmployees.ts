@@ -1,12 +1,12 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useBusinessContext } from "../context/use/useBusinessContext";
-import { employeeService } from "../services/employeeService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { EmployeeModel } from "../models/api/employee.model";
 import { useNotification } from "../context/NotificationContext";
+import { EmployeeModel } from "../models/api/employee.model";
+import { employeeService } from "../services/employeeService";
+import { useBusinessStore } from "../store/business.store";
 
 export const useEmployees = (userId?: number) => {
-  const { businessId } = useBusinessContext();
+  const { businessId } = useBusinessStore();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { showSuccess, showError } = useNotification();

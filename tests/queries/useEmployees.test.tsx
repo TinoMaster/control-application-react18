@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEmployees } from "../../src/core/hooks/useEmployees";
 import { NotificationProvider } from "../../src/core/context/NotificationContext";
 import { BrowserRouter } from "react-router-dom";
-import { useBusinessContext } from "../../src/core/context/use/useBusinessContext";
+import * as businessStore from "../../src/core/store/business.store";
 import { employeeService } from "../../src/core/services/employeeService";
 
 // ====================================
@@ -12,17 +12,17 @@ import { employeeService } from "../../src/core/services/employeeService";
 // ====================================
 
 /**
- * Mock 1: Context de Negocio
- * Este mock simula el hook useBusinessContext que normalmente provee el ID del negocio.
- * Cuando el código real llame a useBusinessContext(), recibirá este objeto simulado.
+ * Mock 1: Zustand Store
+ * Este mock simula el store de Zustand que provee el ID del negocio.
+ * Cuando el código real llame a useBusinessStore(), recibirá este objeto simulado.
  */
-const mockUseBusinessContext = vi.fn().mockReturnValue({
-  businessId: 1,
-});
-
-vi.mock("../../src/core/context/use/useBusinessContext", () => ({
-  useBusinessContext: () => mockUseBusinessContext()
-}));
+const createMockStore = (
+  initialState: Partial<businessStore.BusinessState>
+) => {
+  const store = vi.fn(() => initialState);
+  vi.spyOn(businessStore, "useBusinessStore").mockImplementation(store);
+  return store;
+};
 
 /**
  * Mock 2: Servicio de Empleados
@@ -93,7 +93,7 @@ describe("useEmployees", () => {
   // Limpiamos el estado de los mocks antes de cada test
   beforeEach(() => {
     vi.clearAllMocks();
-    mockUseBusinessContext.mockReturnValue({ businessId: 1 });
+    createMockStore({ businessId: 1 });
   });
 
   it("should fetch and sort employees correctly", async () => {
@@ -121,7 +121,7 @@ describe("useEmployees", () => {
 
   it("should not fetch when businessId is not available", async () => {
     // 1. Sobrescribimos el mock para simular que no hay businessId
-    mockUseBusinessContext.mockReturnValue({ businessId: undefined });
+    createMockStore({ businessId: undefined });
 
     // 2. Renderizamos el hook
     const { result } = renderHook(() => useEmployees(), {
