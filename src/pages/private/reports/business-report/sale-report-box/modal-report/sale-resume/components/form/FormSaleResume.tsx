@@ -20,7 +20,7 @@ interface Props {
   role: TRole;
   dispatch: React.Dispatch<any>;
   business: BusinessModel;
-  machinesAlreadySelected: () => (number | undefined)[];
+  machinesAlreadySelected: () => (number | undefined)[] | undefined;
   employees: EmployeeModel[];
   businessSale: BusinessFinalSaleModel;
   handleSelectEmployee: (employeeId: string) => void;

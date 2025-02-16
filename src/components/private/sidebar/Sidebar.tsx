@@ -17,6 +17,7 @@ import { PRIVATE_NAV_LINKS } from "../../../core/data/global.data";
 import { INavLinkItem } from "../../../core/types/global.types";
 import { filterRoutesByRole } from "../../../core/utilities/helpers/filterRoutesByRole";
 import { ChooseTheme } from "../../common/choose-theme/ChooseTheme";
+import { useAuthStore } from "../../../core/store/auth.store";
 
 interface SidebarProps {
   open: boolean;
@@ -24,7 +25,8 @@ interface SidebarProps {
 }
 
 export const PrivateSidebar = ({ open, handleDrawerToggle }: SidebarProps) => {
-  const { materialTheme, role } = useAppContext();
+  const { materialTheme } = useAppContext();
+  const role = useAuthStore((state) => state.role);
   const routes: INavLinkItem[] = filterRoutesByRole(PRIVATE_NAV_LINKS, role);
 
   const drawerWidth = 240;

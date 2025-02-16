@@ -38,10 +38,10 @@ const BusinessDetail = () => {
         <>{loading && <CircularProgress color="warning" />}</>
       </Modal>
       <CustomSnackbar
-        success={success}
-        error={error}
-        successMessage="Establecimiento eliminado con éxito"
-        errorMessage="Ocurrió un error al eliminar el establecimiento"
+        successMessage={success ? "Establecimiento eliminado con éxito" : ""}
+        errorMessage={
+          error ? "Ocurrió un error al eliminar el establecimiento" : ""
+        }
       />
       <Box
         sx={{

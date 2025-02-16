@@ -10,10 +10,12 @@ import { SuperAdminSidebar } from "../../admin/sidebar/Sidebar";
 import { LoadingCircularProgress } from "../../common/ui/loaders/LoadingCircularProgress";
 import { Header } from "../header/Header";
 import { PrivateSidebar } from "../sidebar/Sidebar";
+import { useAuthStore } from "../../../core/store/auth.store";
 
 export const PrivateLayout = () => {
+  const role = useAuthStore((state) => state.role);
   const { selectedTheme, loadingThemes } = useThemeContext();
-  const { role, materialTheme } = useAppContext();
+  const { materialTheme } = useAppContext();
   const [open, setOpen] = useState(false);
 
   const handleDrawerToggle = () => {
@@ -29,7 +31,7 @@ export const PrivateLayout = () => {
   };
 
   if (loadingThemes) {
-    return <LoadingCircularProgress loading={loadingThemes} absolute/>;
+    return <LoadingCircularProgress loading={loadingThemes} absolute />;
   }
 
   return (

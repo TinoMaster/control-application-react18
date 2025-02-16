@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
-import { MenuPages } from "../../../components/common/menu-pages/MenuPages";
-import { INavLinkItem } from "../../../core/types/global.types";
 import { Outlet } from "react-router-dom";
+import { MenuPages } from "../../../components/common/menu-pages/MenuPages";
 import { ERole } from "../../../core/models/api";
+import { useAuthStore } from "../../../core/store/auth.store";
+import { INavLinkItem } from "../../../core/types/global.types";
 import { filterRoutesByRole } from "../../../core/utilities/helpers/filterRoutesByRole";
-import { useAppContext } from "../../../core/context/use/useAppContext";
 
 const links: INavLinkItem[] = [
   {
@@ -21,7 +21,7 @@ const links: INavLinkItem[] = [
 ];
 
 const BusinessesLayout = () => {
-  const { role } = useAppContext();
+  const role = useAuthStore((state) => state.role);
   const linksToRender = filterRoutesByRole(links, role);
   return (
     <>

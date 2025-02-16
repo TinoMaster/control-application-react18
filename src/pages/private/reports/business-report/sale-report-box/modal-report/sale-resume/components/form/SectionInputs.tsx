@@ -16,7 +16,6 @@ import {
 import { updateBusinessSaleMachines } from "../../../../../../../../../core/states/actions/businessFinalSaleActions";
 import { allowedRole } from "../../../../../../../../../core/utilities/helpers/allowedRole.util";
 import { ERegisterType, TSaleResume } from "../../zod/saleResume.zodSchema";
-import { useSales } from "../../../../../../../../../core/hooks/useSales";
 
 interface Props {
   control: Control<TSaleResume>;
@@ -25,7 +24,7 @@ interface Props {
   role: TRole;
   dispatch: React.Dispatch<any>;
   business: BusinessModel;
-  machinesAlreadySelected: () => (number | undefined)[];
+  machinesAlreadySelected: () => (number | undefined)[] | undefined;
 }
 
 export const SectionInputs = ({
@@ -38,7 +37,6 @@ export const SectionInputs = ({
   machinesAlreadySelected,
 }: Props) => {
   const { selectedTheme } = useThemeContext();
-  const { lastSale } = useSales();
   return (
     <Grid container spacing={2}>
       <Grid size={12}>
@@ -96,7 +94,7 @@ export const SectionInputs = ({
                 {business.machines
                   ?.filter(
                     (machine) =>
-                      !machinesAlreadySelected().includes(machine.id as number)
+                      !machinesAlreadySelected()?.includes(machine.id as number)
                   )
                   .map((machine) => (
                     <MenuItem key={machine.id} value={machine.id}>
@@ -128,7 +126,7 @@ export const SectionInputs = ({
           control={control}
           label="Fondo de hoy"
           type="number"
-          helperText={errors.found?.message || `Ayer ${lastSale?.found ?? 0}`}
+          helperText={errors.found?.message || `Ayer ${0}`}
           startAdornment="$"
           small
         />
